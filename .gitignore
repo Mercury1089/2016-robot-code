@@ -1,0 +1,16 @@
+# ignore dynamically created directories
+bin/
+target/
+build/
+dist/
+
+# ignore all files ending with ~
+*~ 
+
+# ignore class and manifest files
+*.class
+*.mf
+
+# Not sure why these were here - commented for now
+# *.xml
+# *.properties
