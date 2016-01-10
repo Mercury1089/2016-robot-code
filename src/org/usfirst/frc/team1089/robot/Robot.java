@@ -1,3 +1,5 @@
+// Robot for 2016 FIRST Stronghold competition
+
 package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
