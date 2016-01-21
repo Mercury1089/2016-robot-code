@@ -14,13 +14,14 @@ public class Robot extends IterativeRobot {
 	// Deploy NetworkTable to roboRIO
 	NetworkTable nt;
 
-	double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
-	double targetDistanceW;
+	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
+	private double targetDistance;
 	
-	private boolean[]		btnPrev;
-	private boolean[]		btn;
+	private boolean[] btn, btnPrev;
 
-	private Joystick gamepad;
+	private final double HFOV = 29.5;
+	
+	//private Joystick gamepad;
 	
 	public void robotInit() {
 		nt = NetworkTable.getTable("GRIP/myContoursReport");
@@ -36,12 +37,12 @@ public class Robot extends IterativeRobot {
 		getNTInfo();
 		debug();
 		
-		btn = new boolean[11];
+		/*btn = new boolean[11];
 		for (int i = 1; i <= 10; i++) {
-			btn[i] = gamepad.getRawButton(i);
-		}
+			//btn[i] = gamepad.getRawButton(i);
+		}*/
 		
-		btnPrev = Arrays.copyOf(btn, 11);
+		//btnPrev = Arrays.copyOf(btn, 11);
 	}
 
 	public boolean button(int i) {
@@ -52,28 +53,48 @@ public class Robot extends IterativeRobot {
 
 	}
 
+	/**
+	 * <pre>
+	 * private void getNTInfo()
+	 * </pre>
+	 * Gets data from the NetworkTable, then
+	 * calculates distance based on the rectangle and camera's
+	 * horizontal FOV.
+	 */
 	private void getNTInfo() {
 		double[] def = {};
+		
+		// Get data from NetworkTable
 		rectArea = nt.getNumberArray("area", def);
 		rectWidth = nt.getNumberArray("width", def);
 		rectHeight = nt.getNumberArray("height", def);
 		rectCenterX = nt.getNumberArray("centerX", def);
 		rectCenterY = nt.getNumberArray("centerY", def);
-		//calculate distance using width
+		
+		// Calculate distance based off of rectangle width and horizontal FOV of camera in feet.
+		// NOTES:
+		//     > Between .25 and .5 ft. off of actual distance
 		try {
-			targetDistanceW = (20.0 / 12.0) * (480.0 / rectWidth[0]) / 2.0 / Math.tan(Math.toRadians(29.5)); 
+			targetDistance = (20.0 / 12.0) * (480.0 / rectWidth[0]) / 2.0 / Math.tan(Math.toRadians(HFOV)); 
 		} catch (Exception e) {
-			targetDistanceW = Double.NEGATIVE_INFINITY;				//generally .25 ft off
-		}															//most - .5 ft 
+			targetDistance = Double.NEGATIVE_INFINITY;				
+		}															
+		
 	}
-
+	
+	/**
+	 * <pre>
+	 * private void debug()
+	 * </pre>
+	 * Puts data onto the SmartDashboard.
+	 */
 	private void debug() {
 		SmartDashboard.putString("Area:", Arrays.toString(rectArea));
 		SmartDashboard.putString("Width:", Arrays.toString(rectWidth));
 		SmartDashboard.putString("Height:", Arrays.toString(rectHeight));
 		SmartDashboard.putString("Center X:", Arrays.toString(rectCenterX));
 		SmartDashboard.putString("Center Y:", Arrays.toString(rectCenterY));
-		SmartDashboard.putNumber("DistanceW:", targetDistanceW);
+		SmartDashboard.putString("Distance: ", "" + targetDistance + " ft.");
 	}
 
 }
