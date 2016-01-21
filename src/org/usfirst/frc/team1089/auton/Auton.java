@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1089.robot;
+package org.usfirst.frc.team1089.auton;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;

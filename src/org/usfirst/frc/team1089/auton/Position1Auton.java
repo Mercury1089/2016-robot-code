@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1089.robot;
+package org.usfirst.frc.team1089.auton;
 
 public class Position1Auton extends Auton
 {
