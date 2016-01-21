@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1089.auton;
 
 public class Position5Auton extends Auton
-
 {
 	void move() 
 	{
@@ -38,8 +37,4 @@ public class Position5Auton extends Auton
 				}
 		}
 	}
-}
-
-{
-
 }
