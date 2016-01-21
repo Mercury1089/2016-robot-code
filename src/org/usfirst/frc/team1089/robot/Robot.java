@@ -2,46 +2,51 @@
 
 package org.usfirst.frc.team1089.robot;
 
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
+	// Deploy NetworkTable to roboRIO
 	NetworkTable nt;
-	double[] rectWidth, rectHeight, rectCenterX, rectCenterY;
-	
+
+	double[] rectWidth, rectHeight, rectCenterX, rectCenterY, area;
+
+	String testStr;
+	int count = 0;
+
 	public void robotInit() {
-	
+		nt = NetworkTable.getTable("GRIP/myContoursReport");
 	}
 
 	public void autonomousPeriodic() {
 
-    }
+	}
 
-    public void teleopPeriodic() {
-    	nt = NetworkTable.getTable("GRIP/myContoursReport");
-    	   
-    	getNTInfo();
-        debug();
-    }
-    
-    public void testPeriodic() {
-    
-    }
+	public void teleopPeriodic() {
+		// Get values from NetworkTable and put into the SmartDashboard
+		getNTInfo();
+		debug();
+	}
 
-    private void getNTInfo() {
-    	double[] iv = {-1};
-    	
-    	rectWidth = nt.getNumberArray("width", iv);
-    	rectHeight = nt.getNumberArray("height", iv);
-    	rectCenterX = nt.getNumberArray("centerX", iv);
-    	rectCenterY = nt.getNumberArray("centerY", iv);
-    	
-    }
-    
-    private void debug() {
-    	SmartDashboard.putString("Rect Center", "(" + rectCenterX[0] + ", " + rectCenterY[0] + ")");
-    	SmartDashboard.putString("Rect Size", "(" + rectWidth[0] + ", " + rectHeight[0] + ")");
-    }
+	public void testPeriodic() {
+
+	}
+
+	private void getNTInfo() {
+		double[] def = { -1 };
+		area = nt.getNumberArray("area", def);
+		rectWidth = nt.getNumberArray("width", def);
+		rectHeight = nt.getNumberArray("height", def);
+	}
+
+	private void debug() {
+		SmartDashboard.putString("Area", Arrays.toString(area));
+		SmartDashboard.putString("Width", Arrays.toString(rectWidth));
+		SmartDashboard.putString("NT", nt.toString());
+		SmartDashboard.putString("Height", Arrays.toString(rectHeight));
+	}
 }
