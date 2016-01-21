@@ -13,10 +13,8 @@ public class Robot extends IterativeRobot {
 	// Deploy NetworkTable to roboRIO
 	NetworkTable nt;
 
-	double[] rectWidth, rectHeight, rectCenterX, rectCenterY, area;
-
-	String testStr;
-	int count = 0;
+	double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
+	double targetDistanceW;
 
 	public void robotInit() {
 		nt = NetworkTable.getTable("GRIP/myContoursReport");
@@ -27,7 +25,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		// Get values from NetworkTable and put into the SmartDashboard
+		// Get values from NetworkTable and put into SmartDash
 		getNTInfo();
 		debug();
 	}
@@ -37,16 +35,27 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void getNTInfo() {
-		double[] def = { -1 };
-		area = nt.getNumberArray("area", def);
+		double[] def = {};
+		rectArea = nt.getNumberArray("area", def);
 		rectWidth = nt.getNumberArray("width", def);
 		rectHeight = nt.getNumberArray("height", def);
+		rectCenterX = nt.getNumberArray("centerX", def);
+		rectCenterY = nt.getNumberArray("centerY", def);
+		//calculate distance using width
+		try {
+			targetDistanceW = (20.0 / 12.0) * (480.0 / rectWidth[0]) / 2.0 / Math.tan(Math.toRadians(29.5)); 
+		} catch (Exception e) {
+			targetDistanceW = Double.NEGATIVE_INFINITY;
+		}
 	}
 
 	private void debug() {
-		SmartDashboard.putString("Area", Arrays.toString(area));
-		SmartDashboard.putString("Width", Arrays.toString(rectWidth));
-		SmartDashboard.putString("NT", nt.toString());
-		SmartDashboard.putString("Height", Arrays.toString(rectHeight));
+		SmartDashboard.putString("Area:", Arrays.toString(rectArea));
+		SmartDashboard.putString("Width:", Arrays.toString(rectWidth));
+		SmartDashboard.putString("Height:", Arrays.toString(rectHeight));
+		SmartDashboard.putString("Center X:", Arrays.toString(rectCenterX));
+		SmartDashboard.putString("Center Y:", Arrays.toString(rectCenterY));
+		SmartDashboard.putNumber("DistanceW:", targetDistanceW);
 	}
+
 }
