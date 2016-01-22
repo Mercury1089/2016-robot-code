@@ -32,9 +32,9 @@ public class Robot extends IterativeRobot {
 
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
-		// gyro.initGyro();
 		gyro.reset();
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000);
+		// gyro.initGyro();
 		// gyro.calibrate();
 
 		// Motors are inverted; this hasn't solved that problem.
@@ -92,8 +92,15 @@ public class Robot extends IterativeRobot {
 
 	}
 
+	/**
+	 * <pre>
+	 * public void debug()
+	 * </pre>
+	 * 
+	 * Puts info onto the SmartDashboard.
+	 */
 	public void debug() {
-
+		camera.debug();
 		SmartDashboard.putString("Gyro", "" + Camera.round(gyro.getAngle(), 2));
 	}
 

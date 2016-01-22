@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * 
+ * The {@code Camera} class handles targeting and vision using the input from
+ * GRIP from the NetworkTable.
  * @author Mercury 1089
  *
  */
@@ -41,17 +42,14 @@ public class Camera {
 		rectHeight = nt.getNumberArray("height", def);
 		rectCenterX = nt.getNumberArray("centerX", def);
 		rectCenterY = nt.getNumberArray("centerY", def);
-
-		// The try catch is just in case there is no rectangle visible
+		
 		try {
-			// Find the largest target rectangle
 			largestRectArea = rectArea[0];
 			largestRectNum = 0;
 			for (int i = 0; i < rectArea.length; i++) {
 				if (rectArea[i] >= largestRectArea) {
 					largestRectNum = i;
 				}
-
 			}
 
 			// Find width of target in inches
@@ -59,27 +57,25 @@ public class Camera {
 
 			// Calculate distance based off of rectangle width and horizontal
 			// FOV of camera in feet.
-			// > Between .25 and .5 ft. off of actual distance
-			diagTargetDistance = (20.0 / 12.0) * (480.0 / rectWidth[largestRectNum]) / 2.0
-					/ Math.tan(Math.toRadians(Ports.HFOV / 2));
+			//
+			// NOTE: Between .25 and .5 ft. off of actual distance
+			diagTargetDistance = 
+					(20.0 / 12.0) * (480.0 / rectWidth[largestRectNum]) / 2.0 / Math.tan(Math.toRadians(Ports.HFOV / 2));
 
 			horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 6.5 * 6.5);
-
 		} catch (Exception e) {
 			diagTargetDistance = Double.NEGATIVE_INFINITY;
 		}
-		debug();
-
 	}
 
 	/**
 	 * <pre>
-	 * private void debug()
+	 * public void debug()
 	 * </pre>
 	 * 
 	 * Puts information onto the SmartDashboard.
 	 */
-	private void debug() {
+	public void debug() {
 		SmartDashboard.putString("Area:", Arrays.toString(rectArea));
 		SmartDashboard.putString("Width:", Arrays.toString(rectWidth));
 		SmartDashboard.putString("Height:", Arrays.toString(rectHeight));
@@ -90,11 +86,26 @@ public class Camera {
 		SmartDashboard.putString("Target Width Inches", "" + round(targetWidthInches, 2));
 	}
 
-	public static double round(double num, int exp) {
-		int mag = (int) Math.pow(10, exp);
+	/**
+	 * <pre>
+	 * public static double round(double num,
+	 *                            int places)
+	 * </pre>
+	 * Rounds the specified decimal to the specified amount of places.
+	 * 
+	 * @param num    the number to round
+	 * @param places the amount of places to round to
+	 * @return the specified decimal rounded to the specified amount of places 
+	 */
+	public static double round(double num, int places) {
+		// Get decimal place to round to
+		int dec = (int) Math.pow(10, places);
 
-		long v = (long) (num * mag + .5);
-		return ((double) (v)) / mag;
+		// Round number by moving the decimal place, then
+		// truncating and rounding
+		long v = (long) (num * dec + .5);
+		
+		return ((double) (v)) / dec;
 	}
 
 }
