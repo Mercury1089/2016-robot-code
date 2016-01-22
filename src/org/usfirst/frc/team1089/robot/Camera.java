@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * The {@code Camera} class handles targeting and vision using the input from
  * GRIP from the NetworkTable.
- * @author Mercury 1089
  *
  */
 public class Camera {

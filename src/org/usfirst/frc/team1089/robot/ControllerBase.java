@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Joystick;
  * The {@code ControllerBase} class handles all input coming from the 
  * gamepad, left joystick, and right joystick. This has various methods
  * to get input, buttons, etc.
- *
  */
 public class ControllerBase {
 	private final Joystick GAMEPAD, LEFT_STICK, RIGHT_STICK;
@@ -44,6 +43,10 @@ public class ControllerBase {
 		}
 	}
 	
+	/**
+	 * The {@code Joysticks} enum contains 
+	 * namespaces for the gamepad, left joystick, and right joystick
+	 */
 	public enum Joysticks {
 		GAMEPAD,
 		LEFT_STICK,

@@ -64,10 +64,12 @@ public class Robot extends IterativeRobot {
 		for (int i = 1; i <= 10; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
-
+		
+		// Reset gyro with the A button on the gamepad
 		if (button(1))
 			gyro.reset();
-
+		
+		// Rotate 90 deg. with the B button on the gamepad
 		if (button(2)) {
 			if (resetGyro != 1) {
 				gyro.reset();
