@@ -12,24 +12,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	private boolean[] btn, btnPrev;
-
+	private Camera camera = new Camera();
 	private RobotDrive drive;
 	private Joystick gamepad, leftStick, rightStick;
 
-	int count = 0;
-
 	public void robotInit() {
-		
+
 		// First off you can't do this with the robot drive, you will get an
 		// error and it will cause problems
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		drive = new RobotDrive(Ports.PWM.LEFT_TALON, Ports.PWM.RIGHT_TALON);
-		//drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-		//drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
-		//drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-		//drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+		
+		/* 
+		 * Motors are inverted; this hasn't solved that problem.
+		 * 
+		 * drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+		 * drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
+		 * drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+		 * drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+		 */
+		
 		btn = new boolean[11];
 	}
 
@@ -38,19 +42,21 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
+
+		camera.getNTInfo();
+
 	}
 
 	public void teleopPeriodic() {
-
 		drive.tankDrive(leftStick, rightStick);
 
 		// Get values from NetworkTable and put into SmartDash
-		
+
 		btnPrev = Arrays.copyOf(btn, 11);
 		for (int i = 1; i <= 10; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
-
+		camera.getNTInfo();
 	}
 
 	public boolean button(int i) {
@@ -58,6 +64,10 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testPeriodic() {
+
+	}
+
+	public void debug() {
 
 	}
 

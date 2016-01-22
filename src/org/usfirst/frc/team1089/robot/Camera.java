@@ -14,7 +14,11 @@ public class Camera {
 	private double targetWidthInches;
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	private double diagTargetDistance, horizTargetDistance;
-	
+
+	public Camera() {
+		nt = NetworkTable.getTable("GRIP/myContoursReport");
+	}
+
 	/**
 	 * <pre>
 	 * private void getNTInfo()
@@ -23,7 +27,7 @@ public class Camera {
 	 * Gets data from the NetworkTable, then calculates distance based on the
 	 * rectangle and camera's horizontal FOV.
 	 */
-	private void getNTInfo() {
+	public void getNTInfo() {
 		double[] def = {};
 
 		// Get data from NetworkTable
@@ -59,6 +63,7 @@ public class Camera {
 		} catch (Exception e) {
 			diagTargetDistance = Double.NEGATIVE_INFINITY;
 		}
+		debug();
 
 	}
 
@@ -79,7 +84,7 @@ public class Camera {
 		SmartDashboard.putString("Horizontal Distance: ", "" + round(horizTargetDistance, 2) + " ft.");
 		SmartDashboard.putString("Target Width Inches", "" + round(targetWidthInches, 2));
 	}
-	
+
 	public double round(double num, int exp) {
 		int mag = (int) Math.pow(10, exp);
 
@@ -87,5 +92,4 @@ public class Camera {
 		return ((double) (v)) / mag;
 	}
 
-	
 }
