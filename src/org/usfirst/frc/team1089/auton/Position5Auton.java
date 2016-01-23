@@ -5,10 +5,6 @@ public class Position5Auton extends Auton {
 		int forwardTime = 2000; // change as needed
 		int turnTime = 700;
 		switch (state)
-
-{
-	void move() {
-		switch (state)
 		{
 		case (MOVE):
 			if (System.currentTimeMillis() - startTime < 2000) {
