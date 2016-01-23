@@ -4,36 +4,46 @@ package org.usfirst.frc.team1089.robot;
 
 import java.util.Arrays;
 
+import com.sun.org.apache.regexp.internal.RE;
+
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	private boolean[] btn, btnPrev;
-	private Camera camera = new Camera();
+	private Camera camera;
 	private RobotDrive drive;
 	private Joystick gamepad, leftStick, rightStick;
+	private AnalogGyro gyro;
+
+	private double resetGyro;
 
 	public void robotInit() {
 
-		// First off you can't do this with the robot drive, you will get an
-		// error and it will cause problems
+		camera = new Camera("GRIP/myContoursReport");
+
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		drive = new RobotDrive(Ports.PWM.LEFT_TALON, Ports.PWM.RIGHT_TALON);
-		
-		/* 
-		 * Motors are inverted; this hasn't solved that problem.
-		 * 
-		 * drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-		 * drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
-		 * drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-		 * drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
-		 */
-		
+
+		// Set up gyro
+		gyro = new AnalogGyro(Ports.Analog.GYRO);
+		// gyro.initGyro();
+		gyro.reset();
+		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000);
+		// gyro.calibrate();
+
+		// Motors are inverted; this hasn't solved that problem.
+		//
+		// drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+		// drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
+		// drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+		// drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+
 		btn = new boolean[11];
 	}
 
@@ -42,21 +52,36 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
-
 		camera.getNTInfo();
-
+		debug();
 	}
 
 	public void teleopPeriodic() {
 		drive.tankDrive(leftStick, rightStick);
-
-		// Get values from NetworkTable and put into SmartDash
+		resetGyro = 0;
 
 		btnPrev = Arrays.copyOf(btn, 11);
 		for (int i = 1; i <= 10; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
+
+		if (button(1))
+			gyro.reset();
+
+		if (button(2)) {
+			if (resetGyro != 1) {
+				gyro.reset();
+				resetGyro = 1;
+			}
+			while (Math.abs(gyro.getAngle()) <= 60) {
+				drive.tankDrive(0.7, -0.7);
+			}
+			while (Math.abs(gyro.getAngle()) <= 90) {
+				drive.tankDrive(0.35, -0.35);
+			}
+		}
 		camera.getNTInfo();
+		debug();
 	}
 
 	public boolean button(int i) {
@@ -69,6 +94,7 @@ public class Robot extends IterativeRobot {
 
 	public void debug() {
 
+		SmartDashboard.putString("Gyro", "" + Camera.round(gyro.getAngle(), 2));
 	}
 
 }

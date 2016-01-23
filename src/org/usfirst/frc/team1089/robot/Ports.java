@@ -5,7 +5,7 @@ public class Ports {
 	public static final double HFOV = 62.59;
 
 	public static class Analog {
-
+		public static final int GYRO = 0;
 	}
 
 	public static class Digital {

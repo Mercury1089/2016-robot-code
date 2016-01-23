@@ -5,6 +5,11 @@ import java.util.Arrays;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * 
+ * @author Mercury 1089
+ *
+ */
 public class Camera {
 
 	// Deploy NetworkTable to roboRIO
@@ -15,8 +20,8 @@ public class Camera {
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	private double diagTargetDistance, horizTargetDistance;
 
-	public Camera() {
-		nt = NetworkTable.getTable("GRIP/myContoursReport");
+	public Camera(String tableLoc) {
+		nt = NetworkTable.getTable(tableLoc);
 	}
 
 	/**
@@ -85,7 +90,7 @@ public class Camera {
 		SmartDashboard.putString("Target Width Inches", "" + round(targetWidthInches, 2));
 	}
 
-	public double round(double num, int exp) {
+	public static double round(double num, int exp) {
 		int mag = (int) Math.pow(10, exp);
 
 		long v = (long) (num * mag + .5);
