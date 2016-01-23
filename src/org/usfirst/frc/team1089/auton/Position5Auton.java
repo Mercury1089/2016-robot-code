@@ -1,11 +1,14 @@
 package org.usfirst.frc.team1089.auton;
 
-public class Position5Auton extends Auton
+public class Position5Auton extends Auton {
+	void move() {
+		int forwardTime = 2000; // change as needed
+		int turnTime = 700;
+		switch (state)
 
 {
 	void move() {
 		switch (state)
-
 		{
 		case (MOVE):
 			if (System.currentTimeMillis() - startTime < 2000) {
@@ -24,10 +27,9 @@ public class Position5Auton extends Auton
 				state = SHOOT;
 			}
 
-		case (SHOOT): {
-			// Code
 
-		}
+		case (SHOOT):
+			// Code
 		}
 	}
 }
