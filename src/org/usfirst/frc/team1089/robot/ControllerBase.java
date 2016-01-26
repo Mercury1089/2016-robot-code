@@ -16,7 +16,7 @@ public class ControllerBase {
 	 * The {@code GamepadButtons} class contains all the button bindings for the Gamepad.
 	 */
 	public static class GamepadButtons {
-		// Not sure if these are right; change these as necessary.
+		
 		public static final int
 			A = 0,
 			B = 1,

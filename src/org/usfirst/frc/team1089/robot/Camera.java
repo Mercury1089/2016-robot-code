@@ -66,6 +66,26 @@ public class Camera {
 			diagTargetDistance = Double.NEGATIVE_INFINITY;
 		}
 	}
+	
+	public double[] getRectArea(){
+		return rectArea;
+	}
+	
+	public double[] getRectWidth(){
+		return rectWidth;
+	}
+	
+	public double[] getRectHeight(){
+		return rectHeight;
+	}
+	
+	public double[] getCenterX(){
+		return rectCenterX;
+	}
+	
+	public double[] getCenterY(){
+		return rectCenterY;
+	}
 
 	/**
 	 * <pre>

@@ -21,6 +21,9 @@ public class Robot extends IterativeRobot {
 
 	private double resetGyro;
 
+	private boolean targetIsLeft, targetIsRight;
+	private double turningTime = -1.0;
+
 	public void robotInit() {
 
 		camera = new Camera("GRIP/myContoursReport");
@@ -57,18 +60,17 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		drive.tankDrive(leftStick, rightStick);
 		resetGyro = 0;
 
 		btnPrev = Arrays.copyOf(btn, 11);
 		for (int i = 1; i <= 10; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
-		
+
 		// Reset gyro with the A button on the gamepad
 		if (button(1))
 			gyro.reset();
-		
+
 		// Rotate 90 deg. with the B button on the gamepad
 		if (button(2)) {
 			if (resetGyro != 1) {
@@ -82,6 +84,48 @@ public class Robot extends IterativeRobot {
 				drive.tankDrive(0.35, -0.35);
 			}
 		}
+
+		if (button(3) && camera.getCenterX().length == 1) {
+			if (camera.getCenterX()[0] > 322) {
+				targetIsRight = true;
+				targetIsLeft = false;
+			}
+			if (camera.getCenterX()[0] < 318) {
+				targetIsRight = false;
+				targetIsLeft = true;
+			} else {
+				targetIsRight = false;
+				targetIsLeft = false;
+			}
+		}
+
+		if (targetIsRight) {
+			if (turningTime == -1.0){
+				turningTime = System.currentTimeMillis();
+			}
+			drive.drive(0, .3);
+			if (camera.getCenterX()[0] < 322 && camera.getCenterX()[0] > 318 || (System.currentTimeMillis() - turningTime) == 8000) {
+				targetIsRight = false;
+				targetIsLeft = false;
+				turningTime = -1.0;
+			}
+		} else if (targetIsLeft) {
+			if (turningTime == -1.0){
+				turningTime = System.currentTimeMillis();
+			}
+			drive.drive(0, -.3);
+			if (camera.getCenterX()[0] < 322 && camera.getCenterX()[0] > 318 || (System.currentTimeMillis() - turningTime) == 8000) {
+				targetIsRight = false;
+				targetIsLeft = false;
+				turningTime = -1.0;
+			}
+		} else {
+			drive.tankDrive(leftStick, rightStick);
+			targetIsRight = false;
+			targetIsLeft = false;
+			turningTime = -1.0;
+		}
+
 		camera.getNTInfo();
 		debug();
 	}
