@@ -41,11 +41,9 @@ public class Robot extends IterativeRobot {
 		// gyro.calibrate();
 
 		// Motors are inverted; this hasn't solved that problem.
-		//
-		// drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-		// drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
-		// drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-		// drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+		// Invert only two motors. Depends on which side is faulty.
+		drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
+		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
 
 		btn = new boolean[11];
 	}
