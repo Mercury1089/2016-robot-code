@@ -20,9 +20,11 @@ public class Robot extends IterativeRobot {
 	private AnalogGyro gyro;
 
 	private double resetGyro;
+	private double diff;
 
 	private boolean targetIsLeft = false, targetIsRight = false;
 	private double turningTime = -1.0;
+	private double turnAngle;
 
 	public void robotInit() {
 
@@ -65,6 +67,9 @@ public class Robot extends IterativeRobot {
 			btn[i] = gamepad.getRawButton(i);
 		}
 
+		// Teleop Tank
+		drive.tankDrive(leftStick, rightStick);
+		
 		// Reset gyro with the A button on the gamepad
 		if (button(1))
 			gyro.reset();
@@ -82,9 +87,22 @@ public class Robot extends IterativeRobot {
 				drive.tankDrive(0.35, -0.35);
 			}
 		}
-
+		if (camera.getCenterX().length == 1){
+		diff = (160.0 - camera.getCenterX()[0]) / 320;
+		}
+		// Turn yourself towards the target if there is one target.
 		if (button(3) && camera.getCenterX().length == 1) {
-			if (camera.getCenterX()[0] > 155) {
+			boolean inRange = diff * Ports.HFOV <= 1.0;
+			diff = (160.0 - camera.getCenterX()[0]) / 320;
+			//drive.tankDrive(-diff * Ports.HFOV, diff * Ports.HFOV);
+			SmartDashboard.putNumber("Angle", diff * Ports.HFOV);
+			inRange = Math.abs(diff) <= 3;	
+			degreeRotate(diff * Ports.HFOV, 0.4);
+			}
+		if (button(4)){
+			degreeRotate(-90, 0.5);
+		}
+/*			if (camera.getCenterX()[0] > 155) {
 				targetIsRight = true;
 				targetIsLeft = false;
 			} else if (camera.getCenterX()[0] < 145) {
@@ -99,10 +117,10 @@ public class Robot extends IterativeRobot {
 			drive.tankDrive(leftStick, rightStick);
 		}
 		if (targetIsRight) {
-			if (turningTime == -1.0){
+			if (turningTime == -1.0){ 
 				turningTime = System.currentTimeMillis();
 			}
-			drive.tankDrive(-.3, .3);
+			drive.tankDrive(-.3, .3); 
 			if (camera.getCenterX()[0] < 155 && camera.getCenterX()[0] > 145 || (System.currentTimeMillis() - turningTime) >= 8000) {
 				targetIsRight = false;
 				targetIsLeft = false;
@@ -123,10 +141,25 @@ public class Robot extends IterativeRobot {
 			targetIsRight = false;
 			targetIsLeft = false;
 			turningTime = -1.0;
-		}
+			*/
+		
 
 		camera.getNTInfo();
 		debug();
+	}
+	
+	public void degreeRotate(double deg, double s){
+		double startAngle = gyro.getAngle();
+		while(Math.abs(gyro.getAngle() - startAngle) <= Math.abs(deg) - 15){
+			if (deg < 0){
+				s *= -1;
+			}
+			drive.tankDrive(s, -s);
+		}
+		while (Math.abs(gyro.getAngle() - startAngle) <= Math.abs(deg) - 5){
+			drive.tankDrive(s/2, -s/2);
+		}
+		drive.tankDrive(leftStick, rightStick);
 	}
 
 	public boolean button(int i) {
@@ -149,6 +182,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Gyro", "" + Camera.round(gyro.getAngle(), 2));
 		SmartDashboard.putBoolean("TIR", targetIsRight);
 		SmartDashboard.putBoolean("TIL", targetIsLeft);
+		SmartDashboard.putNumber("Difference", diff);
+		// SmartDashboard.putNumber("Debug", debug);
 	}
 
 }

@@ -59,8 +59,8 @@ public class Camera {
 			//
 			// NOTE: Between .25 and .5 ft. off of actual distance
 			diagTargetDistance = 
-					(20.0 / 12.0) * (480.0 / rectWidth[largestRectNum]) / 2.0 / Math.tan(Math.toRadians(Ports.HFOV / 2));
-
+					//(20.0 / 12.0) * (480.0 / rectWidth[largestRectNum]) / 2.0 / Math.tan(Math.toRadians(Ports.HFOV / 2));
+			
 			horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 6.5 * 6.5);
 		} catch (Exception e) {
 			diagTargetDistance = Double.NEGATIVE_INFINITY;
@@ -86,6 +86,10 @@ public class Camera {
 	public double[] getCenterY(){
 		return rectCenterY;
 	}
+	
+	public double getDiagonalDist() {
+		return diagTargetDistance;
+	}
 
 	/**
 	 * <pre>
@@ -103,6 +107,7 @@ public class Camera {
 		SmartDashboard.putString("Diagonal Distance: ", "" + round(diagTargetDistance, 2) + " ft.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + round(horizTargetDistance, 2) + " ft.");
 		SmartDashboard.putString("Target Width Inches", "" + round(targetWidthInches, 2));
+		
 	}
 
 	/**
