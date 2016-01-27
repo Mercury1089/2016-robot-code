@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
 
 	private double resetGyro;
 
-	private boolean targetIsLeft, targetIsRight;
+	private boolean targetIsLeft = false, targetIsRight = false;
 	private double turningTime = -1.0;
 
 	public void robotInit() {
@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 
 		// Motors are inverted; this hasn't solved that problem.
 		// Invert only two motors. Depends on which side is faulty.
-		drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
+		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
 
 		btn = new boolean[11];
@@ -84,11 +84,10 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(3) && camera.getCenterX().length == 1) {
-			if (camera.getCenterX()[0] > 322) {
+			if (camera.getCenterX()[0] > 155) {
 				targetIsRight = true;
 				targetIsLeft = false;
-			}
-			if (camera.getCenterX()[0] < 318) {
+			} else if (camera.getCenterX()[0] < 145) {
 				targetIsRight = false;
 				targetIsLeft = true;
 			} else {
@@ -96,13 +95,15 @@ public class Robot extends IterativeRobot {
 				targetIsLeft = false;
 			}
 		}
-
+		if(!targetIsRight && !targetIsLeft) {
+			drive.tankDrive(leftStick, rightStick);
+		}
 		if (targetIsRight) {
 			if (turningTime == -1.0){
 				turningTime = System.currentTimeMillis();
 			}
-			drive.drive(0, .3);
-			if (camera.getCenterX()[0] < 322 && camera.getCenterX()[0] > 318 || (System.currentTimeMillis() - turningTime) == 8000) {
+			drive.tankDrive(-.3, .3);
+			if (camera.getCenterX()[0] < 155 && camera.getCenterX()[0] > 145 || (System.currentTimeMillis() - turningTime) >= 8000) {
 				targetIsRight = false;
 				targetIsLeft = false;
 				turningTime = -1.0;
@@ -111,8 +112,8 @@ public class Robot extends IterativeRobot {
 			if (turningTime == -1.0){
 				turningTime = System.currentTimeMillis();
 			}
-			drive.drive(0, -.3);
-			if (camera.getCenterX()[0] < 322 && camera.getCenterX()[0] > 318 || (System.currentTimeMillis() - turningTime) == 8000) {
+			drive.tankDrive(.3, -.3);
+			if (camera.getCenterX()[0] < 155 && camera.getCenterX()[0] > 145 || (System.currentTimeMillis() - turningTime) >= 8000) {
 				targetIsRight = false;
 				targetIsLeft = false;
 				turningTime = -1.0;
@@ -146,6 +147,8 @@ public class Robot extends IterativeRobot {
 	public void debug() {
 		camera.debug();
 		SmartDashboard.putString("Gyro", "" + Camera.round(gyro.getAngle(), 2));
+		SmartDashboard.putBoolean("TIR", targetIsRight);
+		SmartDashboard.putBoolean("TIL", targetIsLeft);
 	}
 
 }

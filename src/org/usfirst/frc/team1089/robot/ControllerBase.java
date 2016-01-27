@@ -13,24 +13,22 @@ public class ControllerBase {
 	private final double DEAD_ZONE = 0.1;
 	
 	/**
-	 * The {@code GamepadButtons} class contains all the button bindings for the Gamepad.
+	 * The {@code GamepadButtons} class contains all the button bindings for the
+	 * Gamepad.
 	 */
 	public static class GamepadButtons {
-		
+
 		public static final int
-			A = 0,
-			B = 1,
-			X = 2,
-			Y = 3,
-			UP = 4,
-			LEFT = 5,
-			DOWN = 6,
-			RIGHT = 7,
+			A = 1,
+			B = 2,
+			X = 3,
+			Y = 4,
+			L2 = 5,
+			R2 = 6,
+			BACK = 7,
 			START = 8,
-			SELECT = 9,
-			LEFT_BUMPER = 10,
-			RIGHT_BUMPER = 11;
-		
+			L3 = 9,
+			R3 = 10;
 		/**
 		 * <pre>
 		 * private GamepadButtons()
