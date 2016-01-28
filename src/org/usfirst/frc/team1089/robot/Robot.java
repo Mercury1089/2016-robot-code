@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
 	private double resetGyro;
 	private double diff;
 	private double turnAngle = 0;
+	private double TURN_RADIUS = 1; // FIX THIS
 
 	public void robotInit() {
 
@@ -91,6 +92,10 @@ public class Robot extends IterativeRobot {
 
 	public void testPeriodic() {
 
+	}
+	
+	public double encoderDistToGoal(){
+		return Math.toRadians(turnAngle) * TURN_RADIUS;
 	}
 
 	/**
