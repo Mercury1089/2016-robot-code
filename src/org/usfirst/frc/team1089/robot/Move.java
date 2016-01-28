@@ -7,9 +7,9 @@ public class Move {
 	private RobotDrive drive;
 	private AnalogGyro gyro;
 	
-	public Move(RobotDrive drive, AnalogGyro gyro) {
-		this.gyro = gyro;
-		this.drive = drive;
+	public Move(RobotDrive d, AnalogGyro g) {
+		gyro = g;
+		drive = d;
 	}
 	
 	
@@ -35,16 +35,15 @@ public class Move {
 	 */
 	public void degreeRotate(double deg, double s) {
 		double startAngle = gyro.getAngle();
-		while (Math.abs(gyro.getAngle() - startAngle) <= Math.abs(deg) - 30) {
-			if (deg < 0){
-				s *= -1;
-			}
+		if (deg < 0){
+			s *= -1;
+		}
+		while (Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - 20) {
 			speedRotate(s);
 		}
-		while (Math.abs(gyro.getAngle() - startAngle) <= Math.abs(deg)) {
+		while (Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - 5) {
 			speedRotate(s/2);
 		}
-		
 		stop();
 	}
 }

@@ -18,13 +18,11 @@ public class Robot extends IterativeRobot {
 	private RobotDrive drive;
 	private Joystick gamepad, leftStick, rightStick;
 	private AnalogGyro gyro;
+	private Move moveable;
 
 	private double resetGyro;
 	private double diff;
-
-	private boolean targetIsLeft = false, targetIsRight = false;
-	private double turningTime = -1.0;
-	private double turnAngle;
+	private double turnAngle = 0;
 
 	public void robotInit() {
 
@@ -39,15 +37,14 @@ public class Robot extends IterativeRobot {
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000);
-		// gyro.initGyro();
-		// gyro.calibrate();
 
-		// Motors are inverted; this hasn't solved that problem.
 		// Invert only two motors. Depends on which side is faulty.
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
 
 		btn = new boolean[11];
+		
+		moveable = new Move(drive, gyro);
 	}
 
 	public void autonomousPeriodic() {
@@ -69,7 +66,7 @@ public class Robot extends IterativeRobot {
 
 		// Teleop Tank
 		drive.tankDrive(leftStick, rightStick);
-		
+
 		// Reset gyro with the A button on the gamepad
 		if (button(1))
 			gyro.reset();
@@ -87,79 +84,22 @@ public class Robot extends IterativeRobot {
 				drive.tankDrive(0.35, -0.35);
 			}
 		}
-		if (camera.getCenterX().length == 1){
-		diff = (160.0 - camera.getCenterX()[0]) / 320;
-		}
-		// Turn yourself towards the target if there is one target.
-		if (button(3) && camera.getCenterX().length == 1) {
-			boolean inRange = diff * Ports.HFOV <= 1.0;
-			diff = (160.0 - camera.getCenterX()[0]) / 320;
-			//drive.tankDrive(-diff * Ports.HFOV, diff * Ports.HFOV);
-			SmartDashboard.putNumber("Angle", diff * Ports.HFOV);
-			inRange = Math.abs(diff) <= 3;	
-			degreeRotate(diff * Ports.HFOV, 0.4);
-			}
-		if (button(4)){
-			degreeRotate(-90, 0.5);
-		}
-/*			if (camera.getCenterX()[0] > 155) {
-				targetIsRight = true;
-				targetIsLeft = false;
-			} else if (camera.getCenterX()[0] < 145) {
-				targetIsRight = false;
-				targetIsLeft = true;
-			} else {
-				targetIsRight = false;
-				targetIsLeft = false;
-			}
-		}
-		if(!targetIsRight && !targetIsLeft) {
-			drive.tankDrive(leftStick, rightStick);
-		}
-		if (targetIsRight) {
-			if (turningTime == -1.0){ 
-				turningTime = System.currentTimeMillis();
-			}
-			drive.tankDrive(-.3, .3); 
-			if (camera.getCenterX()[0] < 155 && camera.getCenterX()[0] > 145 || (System.currentTimeMillis() - turningTime) >= 8000) {
-				targetIsRight = false;
-				targetIsLeft = false;
-				turningTime = -1.0;
-			}
-		} else if (targetIsLeft) {
-			if (turningTime == -1.0){
-				turningTime = System.currentTimeMillis();
-			}
-			drive.tankDrive(.3, -.3);
-			if (camera.getCenterX()[0] < 155 && camera.getCenterX()[0] > 145 || (System.currentTimeMillis() - turningTime) >= 8000) {
-				targetIsRight = false;
-				targetIsLeft = false;
-				turningTime = -1.0;
-			}
-		} else {
-			drive.tankDrive(leftStick, rightStick);
-			targetIsRight = false;
-			targetIsLeft = false;
-			turningTime = -1.0;
-			*/
-		
 
+		// Turn yourself towards the target if there is one target.
+		if (camera.getCenterX().length >= 1) {
+			diff = (160.0 - camera.getCenterX()[camera.getLargestRectNum()]) / 320;
+			turnAngle = diff * Ports.HFOV;
+		}
+		
+		if (button(3)){
+			moveable.degreeRotate(turnAngle, 0.6);
+		}
+
+		if (button(4)) { 
+			moveable.degreeRotate(90, 0.6);
+		}
 		camera.getNTInfo();
-		debug();
-	}
-	
-	public void degreeRotate(double deg, double s){
-		double startAngle = gyro.getAngle();
-		while(Math.abs(gyro.getAngle() - startAngle) <= Math.abs(deg) - 15){
-			if (deg < 0){
-				s *= -1;
-			}
-			drive.tankDrive(s, -s);
-		}
-		while (Math.abs(gyro.getAngle() - startAngle) <= Math.abs(deg) - 5){
-			drive.tankDrive(s/2, -s/2);
-		}
-		drive.tankDrive(leftStick, rightStick);
+		debug(); 
 	}
 
 	public boolean button(int i) {
@@ -180,10 +120,8 @@ public class Robot extends IterativeRobot {
 	public void debug() {
 		camera.debug();
 		SmartDashboard.putString("Gyro", "" + Camera.round(gyro.getAngle(), 2));
-		SmartDashboard.putBoolean("TIR", targetIsRight);
-		SmartDashboard.putBoolean("TIL", targetIsLeft);
-		SmartDashboard.putNumber("Difference", diff);
-		// SmartDashboard.putNumber("Debug", debug);
+		SmartDashboard.putNumber("Angle", turnAngle);
+		SmartDashboard.putNumber("Diagonal Distance", camera.getDiagonalDist());
 	}
 
 }

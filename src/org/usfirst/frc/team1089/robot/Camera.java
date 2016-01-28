@@ -59,7 +59,7 @@ public class Camera {
 			//
 			// NOTE: Between .25 and .5 ft. off of actual distance
 			diagTargetDistance = 
-					//(20.0 / 12.0) * (480.0 / rectWidth[largestRectNum]) / 2.0 / Math.tan(Math.toRadians(Ports.HFOV / 2));
+					(20.0 / 12.0) * (480.0 / rectWidth[largestRectNum]) / 2.0 / Math.tan(Math.toRadians(Ports.HFOV / 2));
 			
 			horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 6.5 * 6.5);
 		} catch (Exception e) {
@@ -90,7 +90,10 @@ public class Camera {
 	public double getDiagonalDist() {
 		return diagTargetDistance;
 	}
-
+	
+	public int getLargestRectNum(){
+		return largestRectNum;
+	}
 	/**
 	 * <pre>
 	 * public void debug()
