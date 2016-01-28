@@ -71,33 +71,16 @@ public class Robot extends IterativeRobot {
 		if (button(1))
 			gyro.reset();
 
-		// Rotate 90 deg. with the B button on the gamepad
-		if (button(2)) {
-			if (resetGyro != 1) {
-				gyro.reset();
-				resetGyro = 1;
-			}
-			while (Math.abs(gyro.getAngle()) <= 60) {
-				drive.tankDrive(0.7, -0.7);
-			}
-			while (Math.abs(gyro.getAngle()) <= 90) {
-				drive.tankDrive(0.35, -0.35);
-			}
-		}
-
-		// Turn yourself towards the target if there is one target.
+		// Gets turnAngle if there is one target
 		if (camera.getCenterX().length >= 1) {
 			diff = (160.0 - camera.getCenterX()[camera.getLargestRectNum()]) / 320;
-			turnAngle = diff * Ports.HFOV;
+			turnAngle = diff * Camera.HFOV;
 		}
-		
-		if (button(3)){
+		// Turn yourself towards the target
+		if (button(2)){
 			moveable.degreeRotate(turnAngle, 0.6);
 		}
 
-		if (button(4)) { 
-			moveable.degreeRotate(90, 0.6);
-		}
 		camera.getNTInfo();
 		debug(); 
 	}
@@ -118,10 +101,14 @@ public class Robot extends IterativeRobot {
 	 * Puts info onto the SmartDashboard.
 	 */
 	public void debug() {
-		camera.debug();
-		SmartDashboard.putString("Gyro", "" + Camera.round(gyro.getAngle(), 2));
+		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2));
 		SmartDashboard.putNumber("Angle", turnAngle);
 		SmartDashboard.putNumber("Diagonal Distance", camera.getDiagonalDist());
+		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()));
+		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()));
+		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()));
+		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX()));
+		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()));
+		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
 	}
-
 }

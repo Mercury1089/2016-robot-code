@@ -2,8 +2,6 @@ package org.usfirst.frc.team1089.robot;
 
 public class Ports {
 
-	public static final double HFOV = 62.59;
-
 	public static class Analog {
 		public static final int GYRO = 0;
 	}
@@ -21,7 +19,6 @@ public class Ports {
 	public static class USB {
 		public static final int LEFT_STICK = 1;
 		public static final int RIGHT_STICK = 0;
-
 		public static final int GAMEPAD = 2;
 	}
 

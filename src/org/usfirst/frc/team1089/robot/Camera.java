@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Camera {
 
 	// Deploy NetworkTable to roboRIO
+	public static final double HFOV = 47; //Have to change - Horizontal Field of View for the Camera. In degrees
 	private NetworkTable nt;
 	private double largestRectArea;
 	private int largestRectNum;
@@ -33,7 +34,7 @@ public class Camera {
 	 * rectangle and camera's horizontal FOV.
 	 */
 	public void getNTInfo() {
-		double[] def = {};
+		double[] def = {Double.NEGATIVE_INFINITY};
 
 		// Get data from NetworkTable
 		rectArea = nt.getNumberArray("area", def);
@@ -42,27 +43,27 @@ public class Camera {
 		rectCenterX = nt.getNumberArray("centerX", def);
 		rectCenterY = nt.getNumberArray("centerY", def);
 		
-		try {
+		if(rectArea.length != 0){
 			largestRectArea = rectArea[0];
 			largestRectNum = 0;
-			for (int i = 0; i < rectArea.length; i++) {
+			for (int i = 1; i < rectArea.length; i++) {
 				if (rectArea[i] >= largestRectArea) {
 					largestRectNum = i;
 				}
 			}
-
 			// Find width of target in inches
-			targetWidthInches = rectWidth[largestRectNum] * .8 * (14.0 / rectHeight[largestRectNum]);
+			//targetWidthInches = rectWidth[largestRectNum] * .8 * (14.0 / rectHeight[largestRectNum]);
 
 			// Calculate distance based off of rectangle width and horizontal
 			// FOV of camera in feet.
 			//
 			// NOTE: Between .25 and .5 ft. off of actual distance
 			diagTargetDistance = 
-					(20.0 / 12.0) * (480.0 / rectWidth[largestRectNum]) / 2.0 / Math.tan(Math.toRadians(Ports.HFOV / 2));
+					(20.0 / 12.0) * (/*480.0*/320 / rectWidth[largestRectNum]) / 2.0 / Math.tan(Math.toRadians(Camera.HFOV / 2));
 			
 			horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 6.5 * 6.5);
-		} catch (Exception e) {
+		}
+		else{
 			diagTargetDistance = Double.NEGATIVE_INFINITY;
 		}
 	}
@@ -94,45 +95,8 @@ public class Camera {
 	public int getLargestRectNum(){
 		return largestRectNum;
 	}
-	/**
-	 * <pre>
-	 * public void debug()
-	 * </pre>
-	 * 
-	 * Puts information onto the SmartDashboard.
-	 */
-	public void debug() {
-		SmartDashboard.putString("Area:", Arrays.toString(rectArea));
-		SmartDashboard.putString("Width:", Arrays.toString(rectWidth));
-		SmartDashboard.putString("Height:", Arrays.toString(rectHeight));
-		SmartDashboard.putString("Center X:", Arrays.toString(rectCenterX));
-		SmartDashboard.putString("Center Y:", Arrays.toString(rectCenterY));
-		SmartDashboard.putString("Diagonal Distance: ", "" + round(diagTargetDistance, 2) + " ft.");
-		SmartDashboard.putString("Horizontal Distance: ", "" + round(horizTargetDistance, 2) + " ft.");
-		SmartDashboard.putString("Target Width Inches", "" + round(targetWidthInches, 2));
-		
+	
+	public double getHorizontalDist() {
+		return horizTargetDistance;
 	}
-
-	/**
-	 * <pre>
-	 * public static double round(double num,
-	 *                            int places)
-	 * </pre>
-	 * Rounds the specified decimal to the specified amount of places.
-	 * 
-	 * @param num    the number to round
-	 * @param places the amount of places to round to
-	 * @return the specified decimal rounded to the specified amount of places 
-	 */
-	public static double round(double num, int places) {
-		// Get decimal place to round to
-		int dec = (int) Math.pow(10, places);
-
-		// Round number by moving the decimal place, then
-		// truncating and rounding
-		long v = (long) (num * dec + .5);
-		
-		return ((double) (v)) / dec;
-	}
-
 }
