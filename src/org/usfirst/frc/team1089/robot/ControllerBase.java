@@ -68,43 +68,20 @@ public class ControllerBase {
 		return GAMEPAD.getRawButton(b) && !pressed[b];
 	}
 	
+
 	/**
 	 * <pre>
-	 * public double getAxis(Joysticks js, 
-	 *                       int x)
+	 * public boolean deadzone(Joysticks j)
 	 * </pre>
-	 * Gets a value between -1 and 1 of the axis from the specified joystick, 
-	 * taking into consideration the deadzone.
+	 * Returns true or false
 	 * 
-	 * @param js the joystick to get the axis value from
-	 * @param x  the axis to get a value from
-	 * @return the current value of the axis;
-	 *         0 if axis <= deadzone,
-	 *         the polar end if |a| >= 1 - deadzone
+	 * @param j the joystick to get the axis value from
+	 * @return true if axis is greater than deadzone, false otherwise
 	 */
-	public double getAxis(Joysticks js, int x) {
-		double axis = 0;
-		
-		// Figure out what joystick to get the value from
-		switch(js) {
-			case LEFT_STICK:
-				axis = LEFT_STICK.getRawAxis(x);
-				break;
-			case RIGHT_STICK:
-				axis = RIGHT_STICK.getRawAxis(x);
-				break;
-			default:
-				axis = GAMEPAD.getRawAxis(x);
-				break;
-		}
-		
-		// Check deadzones at both polar ends and at 0
-		if (Math.abs(axis) <= DEAD_ZONE)
-			axis = 0;
-		
-		if (Math.abs(axis) >= 1 - DEAD_ZONE)
-			axis = Math.signum(axis);
-			
-		return axis;
+	public boolean deadzone(Joystick j, int axis){
+		if(Math.abs(j.getRawAxis(axis)) <= 0.1)
+			return false;
+		else
+			return true;
 	}
 }
