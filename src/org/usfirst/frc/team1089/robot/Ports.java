@@ -10,9 +10,17 @@ public class Ports {
 
 	}
 
-	public static class PWM {
+	public static class CAN {
 		public static final int LEFT_TALON = 0;
 		public static final int RIGHT_TALON = 1;
+		public static final int LEFT_FRONT_TALON_ID = 0;
+		public static final int RIGHT_FRONT_TALON_ID = 1;
+		public static final int LEFT_BACK_TALON_ID = 2;
+		public static final int RIGHT_BACK_TALON_ID = 3;
+
+	}
+
+	public static class PWM {
 
 	}
 

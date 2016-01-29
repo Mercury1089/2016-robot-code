@@ -4,9 +4,8 @@ package org.usfirst.frc.team1089.robot;
 
 import java.util.Arrays;
 
-import com.sun.org.apache.regexp.internal.RE;
-
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -16,6 +15,7 @@ public class Robot extends IterativeRobot {
 	private boolean[] btn, btnPrev;
 	private Camera camera;
 	private RobotDrive drive;
+	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick;
 	private AnalogGyro gyro;
 	private Move moveable;
@@ -29,14 +29,19 @@ public class Robot extends IterativeRobot {
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
-		drive = new RobotDrive(Ports.PWM.LEFT_TALON, Ports.PWM.RIGHT_TALON);
+		drive = new RobotDrive(Ports.CAN.LEFT_TALON, Ports.CAN.RIGHT_TALON);
+		
+		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
+		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
+		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
+		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); //TODO Add Constants
 
-		// Invert only two motors. Depends on which side is faulty.
+		// Invert motors
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
 
