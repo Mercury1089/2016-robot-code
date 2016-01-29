@@ -20,9 +20,6 @@ public class Robot extends IterativeRobot {
 	private AnalogGyro gyro;
 	private Move moveable;
 
-	private double resetGyro;
-	private double diff;
-	private double turnAngle = 0;
 	private double TURN_RADIUS = 1; // FIX THIS
 
 	public void robotInit() {
@@ -37,13 +34,13 @@ public class Robot extends IterativeRobot {
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
-		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000);
+		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); //TODO Add Constants
 
 		// Invert only two motors. Depends on which side is faulty.
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
 
-		btn = new boolean[11];
+		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
 		
 		moveable = new Move(drive, gyro);
 	}
@@ -58,10 +55,10 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		resetGyro = 0;
+		
 
-		btnPrev = Arrays.copyOf(btn, 11);
-		for (int i = 1; i <= 10; i++) {
+		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
+		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
 
@@ -69,17 +66,13 @@ public class Robot extends IterativeRobot {
 		drive.tankDrive(leftStick, rightStick);
 
 		// Reset gyro with the A button on the gamepad
-		if (button(1))
+		if (button(ControllerBase.GamepadButtons.A))
 			gyro.reset();
 
 		// Gets turnAngle if there is one target
-		if (camera.getCenterX().length >= 1) {
-			diff = (160.0 - camera.getCenterX()[camera.getLargestRectNum()]) / 320;
-			turnAngle = diff * Camera.HFOV;
-		}
 		// Turn yourself towards the target
-		if (button(2)){
-			moveable.degreeRotate(turnAngle, 0.6);
+		if (button(ControllerBase.GamepadButtons.B)){
+			moveable.degreeRotate(camera.getTurnAngle(), 0.6);
 		}
 
 		camera.getNTInfo();
@@ -95,7 +88,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public double encoderDistToGoal(){
-		return Math.toRadians(turnAngle) * TURN_RADIUS;
+		return Math.toRadians(camera.getTurnAngle()) * TURN_RADIUS;
 	}
 
 	/**
@@ -107,7 +100,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void debug() {
 		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2));
-		SmartDashboard.putNumber("Angle", turnAngle);
+		SmartDashboard.putNumber("Angle", camera.getTurnAngle());
 		SmartDashboard.putNumber("Diagonal Distance", camera.getDiagonalDist());
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()));
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()));
