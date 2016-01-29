@@ -26,24 +26,29 @@ public class Robot extends IterativeRobot {
 
 		camera = new Camera("GRIP/myContoursReport");
 
-		leftStick = new Joystick(Ports.USB.LEFT_STICK);
-		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
-		gamepad = new Joystick(Ports.USB.GAMEPAD);
-		drive = new RobotDrive(Ports.CAN.LEFT_TALON, Ports.CAN.RIGHT_TALON);
-		
 		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 
+		leftBack.changeControlMode(CANTalon.TalonControlMode.Follower);
+		rightBack.changeControlMode(CANTalon.TalonControlMode.Follower);
+		leftBack.set(leftFront.getDeviceID());
+		rightBack.set(rightFront.getDeviceID());
+		
+		leftStick = new Joystick(Ports.USB.LEFT_STICK);
+		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
+		gamepad = new Joystick(Ports.USB.GAMEPAD);
+		drive = new RobotDrive(Ports.CAN.LEFT_FRONT_TALON_ID, Ports.CAN.RIGHT_FRONT_TALON_ID);
+		
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); //TODO Add Constants
 
 		// Invert motors
-		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
-		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);//TODO TEST THESE
+		
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
 		
@@ -51,7 +56,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-
+		leftFront.set(.5);
+		rightFront.set(.5);
 	}
 
 	public void disabledPeriodic() {
