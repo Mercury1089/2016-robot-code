@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)){
-			moveable.degreeRotate(camera.getTurnAngle(), 0.3);
+			moveable.degreeRotate(camera.getTurnAngle(), 0.5);
 		}
 
 		camera.getNTInfo();
