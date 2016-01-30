@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Camera {
 
 	// Have to change - Horizontal Field of View for the Camera. In degrees
-	public static final double HFOV = 47;
-	public static final double CAM_ELEVATION_FEET = 7.5 / 12; 
+	public static final double HFOV = 41;
+	public static final double CAM_ELEVATION_FEET = 9.5 / 12; 
 											
 	
 	// Deploy NetworkTable to roboRIO
@@ -44,7 +44,7 @@ public class Camera {
 	 * rectangle and camera's horizontal FOV.
 	 */
 	public void getNTInfo() {
-		double[] def = { Double.NEGATIVE_INFINITY };
+		double[] def = { -1 };
 
 		// Get data from NetworkTable
 		rectArea = nt.getNumberArray("area", def);
@@ -53,7 +53,7 @@ public class Camera {
 		rectCenterX = nt.getNumberArray("centerX", def);
 		rectCenterY = nt.getNumberArray("centerY", def);
 
-		if (rectArea.length != 0) { // searches array for largest target
+		if (rectArea.length > 0) {						// searches array for largest target
 			largestRectArea = rectArea[0];
 			largestRectNum = 0;
 			for (int i = 1; i < rectArea.length; i++) { // saves an iteration by
@@ -68,7 +68,9 @@ public class Camera {
 
 			// Calculate distance based off of rectangle width and horizontal
 			// FOV of camera in feet.
-			//
+			
+			
+			
 			// NOTE: Between .25 and .5 ft. off of actual distance
 			diagTargetDistance = (TARGET_HEIGHT_INCHES / INCHES_IN_FEET)
 					* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0

@@ -71,6 +71,8 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 
+		camera.getNTInfo();						//get initial info
+		
 		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
 		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
 			btn[i] = gamepad.getRawButton(i);
