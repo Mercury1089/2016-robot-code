@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -19,6 +20,7 @@ public class Robot extends IterativeRobot {
 	private Joystick gamepad, leftStick, rightStick;
 	private AnalogGyro gyro;
 	private Move moveable;
+	private ControllerBase cBase;
 
 	private double TURN_RADIUS = 1; // FIX THIS
 
@@ -36,6 +38,9 @@ public class Robot extends IterativeRobot {
 		leftBack.set(leftFront.getDeviceID());
 		rightBack.set(rightFront.getDeviceID());
 		
+		
+		cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK, Ports.USB.RIGHT_STICK);
+		
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
@@ -47,17 +52,16 @@ public class Robot extends IterativeRobot {
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); //TODO Add Constants
 
 		// Invert motors
-		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);//TODO TEST THESE
+		//drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);//TODO TEST THESE
 		
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
 		
-		moveable = new Move(drive, gyro);
+		moveable = new Move(leftFront, rightFront, gyro);
 	}
 
 	public void autonomousPeriodic() {
-		leftFront.set(.5);
-		rightFront.set(.5);
+
 	}
 
 	public void disabledPeriodic() {
@@ -66,7 +70,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		
 
 		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
 		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
@@ -74,7 +77,21 @@ public class Robot extends IterativeRobot {
 		}
 
 		// Teleop Tank
-		drive.tankDrive(leftStick, rightStick);
+		
+		if (cBase.isOutOfDeadzone(leftStick, 1)){
+			leftFront.set(-leftStick.getRawAxis(1));
+		}
+		else{
+			leftFront.set(0);
+		}
+		if (cBase.isOutOfDeadzone(rightStick, 1)){
+			rightFront.set(rightStick.getRawAxis(1));
+		}
+		else{
+			rightFront.set(0);
+		}
+		
+		
 
 		// Reset gyro with the A button on the gamepad
 		if (button(ControllerBase.GamepadButtons.A))
@@ -83,7 +100,7 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)){
-			moveable.degreeRotate(camera.getTurnAngle(), 0.6);
+			moveable.degreeRotate(camera.getTurnAngle(), 0.3);
 		}
 
 		camera.getNTInfo();

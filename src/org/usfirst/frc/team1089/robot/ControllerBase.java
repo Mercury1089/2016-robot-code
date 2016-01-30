@@ -12,7 +12,7 @@ public class ControllerBase {
 	private boolean[] pressed;
 	private final double DEAD_ZONE = 0.1;
 	public static final int MAX_NUMBER_BUTTONS = 11; 
-	private static final double DEADZONE_LIMIT = 0.1;
+	private static final double DEADZONE_LIMIT = 0.2;
 	
 	/**
 	 * The {@code GamepadButtons} class contains all the button bindings for the
