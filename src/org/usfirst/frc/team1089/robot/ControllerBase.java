@@ -73,14 +73,18 @@ public class ControllerBase {
 
 	/**
 	 * <pre>
-	 * public boolean isOutOfDeadzone(Joysticks j)
+	 * public boolean isOutOfDeadzone(Joystick j)
 	 * </pre>
 	 * Returns true or false
 	 * 
-	 * @param j the joystick to get the axis value from
-	 * @return true if axis is greater than deadzone, false otherwise
+	 * @param j1 the first joystick to get the axis value from
+	 * @param j2 the second joystick to get the axis value from
+	 * @axis the axis value to be checked
+	 * @return true if at least one axis is greater than deadzone, false otherwise
 	 */
-	public boolean isOutOfDeadzone(Joystick j, int axis){
-		return !(Math.abs(j.getRawAxis(axis)) <= DEADZONE_LIMIT);
+	public boolean isOutOfDeadzone(Joystick j1, Joystick j2, int axis){
+		if(!(Math.abs(j1.getRawAxis(axis)) <= DEADZONE_LIMIT) || !(Math.abs(j2.getRawAxis(axis)) <= DEADZONE_LIMIT))
+			return true;
+		return false;
 	}
 }
