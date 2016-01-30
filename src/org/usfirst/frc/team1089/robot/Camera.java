@@ -12,10 +12,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Camera {
 
+	// Have to change - Horizontal Field of View for the Camera. In degrees
+	public static final double HFOV = 47;
+	public static final double CAM_ELEVATION_FEET = 7.5 / 12; 
+											
+	
 	// Deploy NetworkTable to roboRIO
-	public static final double HFOV = 47; // Have to change - Horizontal Field
-											// of View for the Camera. In
-											// degrees
 	private NetworkTable nt;
 	private double largestRectArea;
 	private int largestRectNum;
@@ -72,9 +74,9 @@ public class Camera {
 					* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
 					/ Math.tan(Math.toRadians(Camera.HFOV / 2));
 
-			horizTargetDistance = Math.sqrt(diagTargetDistance
-					* diagTargetDistance - TARGET_ELEVATION_FEET
-					* TARGET_ELEVATION_FEET);
+			horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 
+					(TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) 
+			);
 		} else {
 			diagTargetDistance = Double.POSITIVE_INFINITY;
 		}
