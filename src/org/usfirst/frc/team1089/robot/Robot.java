@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	private boolean[] btn, btnPrev;
 	private Camera camera;
+	private Encoder encoder;
 	private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick;
@@ -28,6 +29,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		camera = new Camera("GRIP/myContoursReport");
+		encoder = new Encoder();
 
 		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
@@ -136,16 +138,18 @@ public class Robot extends IterativeRobot {
 	 * Puts info onto the SmartDashboard.
 	 */
 	public void debug() {
-		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2));
-		SmartDashboard.putNumber("Angle", camera.getTurnAngle());
-		SmartDashboard.putNumber("Diagonal Distance", camera.getDiagonalDist());
+		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2) + " deg.");
+		SmartDashboard.putString("Angle to turn", "" + camera.getTurnAngle() + " deg.");
+		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
-		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()));
-		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()));
-		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()));
-		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX()));
-		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()));
+		SmartDashboard.putString("Distance Travelled Left", "" + encoder.distanceTravelled(leftFront.getEncPosition(), 1.0) + " ft.");
+		SmartDashboard.putString("Distance Travelled Right","" +  encoder.distanceTravelled(rightFront.getEncPosition(), -1.0) + " ft.");
+		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
+		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
+		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()) + " px.");
+		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX())+ " px.");
+		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
 	}
 }
