@@ -17,13 +17,14 @@ public class Robot extends IterativeRobot {
 	private boolean[] btn, btnPrev;
 	private Camera camera;
 	private Encoder encoder;
-	private RobotDrive drive;
+	//private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick;
 	private AnalogGyro gyro;
 	private Move moveable;
 	private ControllerBase cBase;
-
+	private DriveTrain drive;
+	
 	private double TURN_RADIUS = 1; // FIX THIS
 
 	public void robotInit() {
@@ -31,7 +32,7 @@ public class Robot extends IterativeRobot {
 		camera = new Camera("GRIP/myContoursReport");
 		encoder = new Encoder();
 
-		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
+		/*leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
@@ -42,6 +43,9 @@ public class Robot extends IterativeRobot {
 		rightBack.changeControlMode(CANTalon.TalonControlMode.Follower);
 		leftBack.set(leftFront.getDeviceID());
 		rightBack.set(rightFront.getDeviceID());
+*/		
+		
+		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack);
 		
 		
 		cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK, Ports.USB.RIGHT_STICK);
@@ -49,7 +53,7 @@ public class Robot extends IterativeRobot {
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
-		drive = new RobotDrive(Ports.CAN.LEFT_FRONT_TALON_ID, Ports.CAN.RIGHT_FRONT_TALON_ID);
+		//drive = new RobotDrive(Ports.CAN.LEFT_FRONT_TALON_ID, Ports.CAN.RIGHT_FRONT_TALON_ID);
 		
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
@@ -83,22 +87,13 @@ public class Robot extends IterativeRobot {
 			btn[i] = gamepad.getRawButton(i);
 		}
 
-		// Teleop Tank
+		// Teleop Tank with DriveTrain
 		
-		if (cBase.isOutOfDeadzone(leftStick, 1)){
-			leftFront.set(-leftStick.getRawAxis(1));
-		}
-		else{
-			leftFront.set(0);
-		}
-		if (cBase.isOutOfDeadzone(rightStick, 1)){
-			rightFront.set(rightStick.getRawAxis(1));
-		}
-		else{
-			rightFront.set(0);
-		}
-		
-		
+		if(cBase.isOutOfDeadzone(leftStick, rightStick, 1))
+			drive.tankDrive(leftStick.getRawAxis(1), rightStick.getRawAxis(1));
+		else
+			drive.tankDrive(0, 0);
+	
 
 		// Reset gyro with the A button on the gamepad
 		if (button(ControllerBase.GamepadButtons.A))
