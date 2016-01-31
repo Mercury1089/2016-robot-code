@@ -21,7 +21,6 @@ public class Robot extends IterativeRobot {
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick;
 	private AnalogGyro gyro;
-	private Move moveable;
 	private ControllerBase cBase;
 	private DriveTrain drive;
 	
@@ -32,12 +31,18 @@ public class Robot extends IterativeRobot {
 		camera = new Camera("GRIP/myContoursReport");
 		encoder = new Encoder();
 
+		// Set up gyro
+		gyro = new AnalogGyro(Ports.Analog.GYRO);
+		gyro.reset();
+		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); //TODO Add Constants
+		
+		
 		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 		
-		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack);
+		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 		
 		cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK, Ports.USB.RIGHT_STICK);
 		
@@ -45,16 +50,9 @@ public class Robot extends IterativeRobot {
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		//drive = new RobotDrive(Ports.CAN.LEFT_FRONT_TALON_ID, Ports.CAN.RIGHT_FRONT_TALON_ID);
-		
-		// Set up gyro
-		gyro = new AnalogGyro(Ports.Analog.GYRO);
-		gyro.reset();
-		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); //TODO Add Constants
-		
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
 		
-		moveable = new Move(leftFront, rightFront, gyro);
 	}
 
 	public void autonomousPeriodic() {
@@ -90,7 +88,7 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)){
-			moveable.degreeRotate(camera.getTurnAngle(), 0.5);
+			drive.degreeRotate(camera.getTurnAngle(), 0.5);
 		}
 		if (button(ControllerBase.GamepadButtons.Y)){
 			leftFront.setEncPosition(0);
