@@ -10,7 +10,7 @@ public class Move {
 	private AnalogGyro gyro;
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
-	private static final double TIER_3_DEGREES_FROM_TARGET = 2;
+	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	public Move(CANTalon lM, CANTalon rM, AnalogGyro g) {
 		gyro = g;

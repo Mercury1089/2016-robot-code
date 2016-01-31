@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -33,6 +34,8 @@ public class Robot extends IterativeRobot {
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 
+		leftFront.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		rightFront.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		leftBack.changeControlMode(CANTalon.TalonControlMode.Follower);
 		rightBack.changeControlMode(CANTalon.TalonControlMode.Follower);
 		leftBack.set(leftFront.getDeviceID());
@@ -104,7 +107,11 @@ public class Robot extends IterativeRobot {
 		if (button(ControllerBase.GamepadButtons.B)){
 			moveable.degreeRotate(camera.getTurnAngle(), 0.5);
 		}
-
+		if (button(ControllerBase.GamepadButtons.Y)){
+			leftFront.setEncPosition(0);
+			rightFront.setEncPosition(0);
+		}
+		
 		camera.getNTInfo();
 		debug(); 
 	}
@@ -132,6 +139,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2));
 		SmartDashboard.putNumber("Angle", camera.getTurnAngle());
 		SmartDashboard.putNumber("Diagonal Distance", camera.getDiagonalDist());
+		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
+		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()));
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()));
 		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()));
