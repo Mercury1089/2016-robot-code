@@ -32,21 +32,12 @@ public class Robot extends IterativeRobot {
 		camera = new Camera("GRIP/myContoursReport");
 		encoder = new Encoder();
 
-		/*leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
+		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
-
-		leftFront.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		rightFront.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		leftBack.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightBack.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftBack.set(leftFront.getDeviceID());
-		rightBack.set(rightFront.getDeviceID());
-*/		
 		
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack);
-		
 		
 		cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK, Ports.USB.RIGHT_STICK);
 		
@@ -59,9 +50,6 @@ public class Robot extends IterativeRobot {
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); //TODO Add Constants
-
-		// Invert motors
-		//drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);//TODO TEST THESE
 		
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
@@ -138,8 +126,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
-		SmartDashboard.putString("Distance Travelled Left", "" + encoder.distanceTravelled(leftFront.getEncPosition(), 1.0) + " ft.");
-		SmartDashboard.putString("Distance Travelled Right","" +  encoder.distanceTravelled(rightFront.getEncPosition(), -1.0) + " ft.");
+		SmartDashboard.putString("Distance Travelled Left", "" + Utilities.round(encoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
+		SmartDashboard.putString("Distance Travelled Right","" +  Utilities.round(encoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4)+ " ft.");
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
 		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()) + " px.");

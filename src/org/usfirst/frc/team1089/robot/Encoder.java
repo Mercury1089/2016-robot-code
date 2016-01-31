@@ -7,6 +7,6 @@ public class Encoder {
 	public final double DISTANCE_PER_TICK_FEET = DISTANCE_PER_TICK_INCHES / 12;
 	
 	public double distanceTravelled(double count, double sign){
-		return count * DISTANCE_PER_TICK_INCHES * sign ;
+		return count * DISTANCE_PER_TICK_FEET * sign ;
 	}
 }
