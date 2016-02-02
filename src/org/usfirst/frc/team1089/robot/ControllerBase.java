@@ -79,7 +79,7 @@ public class ControllerBase {
 	 * 
 	 * @param j1 the first joystick to get the axis value from
 	 * @param j2 the second joystick to get the axis value from
-	 * @axis the axis value to be checked
+	 * @param axis the axis value to be checked
 	 * @return true if at least one axis is greater than deadzone, false otherwise
 	 */
 	public boolean isOutOfDeadzone(Joystick j1, Joystick j2, int axis){
