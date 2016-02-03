@@ -10,9 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class ControllerBase {
 	private final Joystick GAMEPAD, LEFT_STICK, RIGHT_STICK;
 	private boolean[] pressed;
-	private final double DEAD_ZONE = 0.1;
 	public static final int MAX_NUMBER_BUTTONS = 11; 
-	private static final double DEADZONE_LIMIT = 0.2;
 	
 	/**
 	 * The {@code GamepadButtons} class contains all the button bindings for the
@@ -70,21 +68,4 @@ public class ControllerBase {
 		return GAMEPAD.getRawButton(b) && !pressed[b];
 	}
 	
-
-	/**
-	 * <pre>
-	 * public boolean isOutOfDeadzone(Joystick j)
-	 * </pre>
-	 * Returns true or false
-	 * 
-	 * @param j1 the first joystick to get the axis value from
-	 * @param j2 the second joystick to get the axis value from
-	 * @axis the axis value to be checked
-	 * @return true if at least one axis is greater than deadzone, false otherwise
-	 */
-	public boolean isOutOfDeadzone(Joystick j1, Joystick j2, int axis){
-		if(!(Math.abs(j1.getRawAxis(axis)) <= DEADZONE_LIMIT) || !(Math.abs(j2.getRawAxis(axis)) <= DEADZONE_LIMIT))
-			return true;
-		return false;
-	}
 }

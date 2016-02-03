@@ -49,9 +49,9 @@ public class Robot extends IterativeRobot {
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
-		//drive = new RobotDrive(Ports.CAN.LEFT_FRONT_TALON_ID, Ports.CAN.RIGHT_FRONT_TALON_ID);
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
+		
 		
 	}
 
@@ -65,22 +65,17 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-
 		camera.getNTInfo();						//get initial info
 		
 		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
+		
 		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
 
 		// Teleop Tank with DriveTrain
+		drive.tankDrive(leftStick, rightStick);
 		
-		if(cBase.isOutOfDeadzone(leftStick, rightStick, 1))
-			drive.tankDrive(leftStick.getRawAxis(1), rightStick.getRawAxis(1));
-		else
-			drive.tankDrive(0, 0);
-	
-
 		// Reset gyro with the A button on the gamepad
 		if (button(ControllerBase.GamepadButtons.A))
 			gyro.reset();
@@ -95,6 +90,14 @@ public class Robot extends IterativeRobot {
 			rightFront.setEncPosition(0);
 		}
 		
+		if (button(ControllerBase.GamepadButtons.X)){
+			drive.moveDistance(1440);			
+		}
+		else {
+			leftFront.changeControlMode(TalonControlMode.PercentVbus);
+			rightFront.changeControlMode(TalonControlMode.PercentVbus);
+		}
+			
 		camera.getNTInfo();
 		debug(); 
 	}

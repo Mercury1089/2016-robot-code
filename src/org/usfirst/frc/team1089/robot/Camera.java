@@ -21,16 +21,17 @@ public class Camera {
 	private NetworkTable nt;
 	private double largestRectArea;
 	private int largestRectNum;
-	private double targetWidthInches;
+	private double perceivedOpeningWidth;
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	private double diagTargetDistance, horizTargetDistance;
 	private double diff;
 
-	public static final double HORIZONTAL_CAMERA_RES = 320; // 480
-	private static final double TARGET_HEIGHT_INCHES = 20;
+	public static final double HORIZONTAL_CAMERA_RES = 320;
+	private static final double TARGET_WIDTH_INCHES = 20;
+	private static final double TARGET_HEIGHT_INCHES = 14;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
-
+	
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
 	}
@@ -72,16 +73,17 @@ public class Camera {
 			
 			
 			// NOTE: Between .25 and .5 ft. off of actual distance
-			diagTargetDistance = (TARGET_HEIGHT_INCHES / INCHES_IN_FEET)
-					* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
-					/ Math.tan(Math.toRadians(Camera.HFOV / 2));
-
-			horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 
-					(TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) 
-			);
-		} else {
+					diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
+							* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
+							/ Math.tan(Math.toRadians(Camera.HFOV / 2));
+		} 
+		else {
 			diagTargetDistance = Double.POSITIVE_INFINITY;
 		}
+		
+		horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 
+				(TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) 
+		);
 	}
 
 	public double getTurnAngle() {
