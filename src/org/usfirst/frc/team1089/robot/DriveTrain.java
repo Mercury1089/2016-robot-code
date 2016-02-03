@@ -43,8 +43,8 @@ public class DriveTrain {
 		}
 	}
 
-	public void moveDistance(double ticks, double startPosition) {
-		if (Robot.isMoving) {
+	public void moveDistance(double endPosL, double endPosR) {
+	/*	if (Robot.isMoving) {
 			if ((lft.getEncPosition() > (startPosition + ticks - 5))
 					&& (lft.getEncPosition() < (startPosition + ticks + 5))) {
 				Robot.isMoving = false;
@@ -61,8 +61,15 @@ public class DriveTrain {
 			lft.set(startPosition + ticks);
 			rft.set(-startPosition - ticks);
 			Robot.isMoving = true;
-		}
-
+		}*/
+		lft.changeControlMode(CANTalon.TalonControlMode.Position);
+		rft.changeControlMode(CANTalon.TalonControlMode.Position);
+		lft.setAllowableClosedLoopErr(5);
+		rft.setAllowableClosedLoopErr(5);
+		lft.enableControl();
+		rft.enableControl();
+		lft.set(endPosL);
+		rft.set(endPosR);
 	}
 
 	/**

@@ -99,13 +99,13 @@ public class Robot extends IterativeRobot {
 
 		if (button(ControllerBase.GamepadButtons.X)) {
 			isMoving = true;
-			startMovingValue = leftFront.getEncPosition();
+			drive.moveDistance(leftFront.getEncPosition() + 1440, rightFront.getEncPosition() - 1440);
 		} else if (!isMoving) {
 			leftFront.changeControlMode(TalonControlMode.PercentVbus);
 			rightFront.changeControlMode(TalonControlMode.PercentVbus);
 		}
-		if (isMoving) {
-			drive.moveDistance(1440, startMovingValue);
+		if (isMoving && (leftFront.getEncVelocity() == 0) && (rightFront.getEncVelocity() == 0)) {
+			isMoving = false;
 		}
 
 		camera.getNTInfo();
