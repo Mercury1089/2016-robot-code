@@ -1,5 +1,9 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Perceived Opening Width" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="328" y="63"/>
+		<width>248</width>
+	</widget>
 	<widget field="Distance Travelled Left" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="353" y="361"/>
 	</widget>

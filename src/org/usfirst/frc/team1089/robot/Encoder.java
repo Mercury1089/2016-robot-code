@@ -9,4 +9,7 @@ public class Encoder {
 	public double distanceTravelled(double count, double sign){
 		return count * DISTANCE_PER_TICK_FEET * sign ;
 	}
+	public double convertDistanceToEncoderTicks(double distance, double sign){
+		return distance / (DISTANCE_PER_TICK_FEET * sign);
+	}
 }
