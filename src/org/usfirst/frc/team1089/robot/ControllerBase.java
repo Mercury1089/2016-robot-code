@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  * The {@code ControllerBase} class handles all input coming from the 
  * gamepad, left joystick, and right joystick. This has various methods
- * Conflicting comment.
  * to get input, buttons, etc.
  */
 public class ControllerBase {
