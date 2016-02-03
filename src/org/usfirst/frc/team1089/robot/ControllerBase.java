@@ -17,7 +17,6 @@ public class ControllerBase {
 	 * Gamepad.
 	 */
 	public static class GamepadButtons {
-
 		public static final int
 			A = 1,
 			B = 2,

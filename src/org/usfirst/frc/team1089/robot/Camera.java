@@ -64,8 +64,8 @@ public class Camera {
 				}
 			}
 			// Find width of target in inches
-			// targetWidthInches = rectWidth[largestRectNum] * .8 * (14.0 /
-			// rectHeight[largestRectNum]);
+			perceivedOpeningWidth = 
+					rectWidth[largestRectNum] * .8 * (TARGET_HEIGHT_INCHES / rectHeight[largestRectNum]);
 
 			// Calculate distance based off of rectangle width and horizontal
 			// FOV of camera in feet.
@@ -127,5 +127,9 @@ public class Camera {
 
 	public double getHorizontalDist() {
 		return horizTargetDistance;
+	}
+	
+	public double getOpeningWidth() {
+		return perceivedOpeningWidth;
 	}
 }

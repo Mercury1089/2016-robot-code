@@ -107,7 +107,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testPeriodic() {
-
+		
 	}
 	
 	public double encoderDistToGoal(){
@@ -135,5 +135,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX())+ " px.");
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
+		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
 	}
 }
