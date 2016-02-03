@@ -2,6 +2,7 @@
 
 package org.usfirst.frc.team1089.robot;
 
+import org.usfirst.frc.team1089.auton.*;
 import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -55,6 +56,11 @@ public class Robot extends IterativeRobot {
 
 	}
 
+	public void autonomousInit() {
+		int position = 1; // but really get this from Smart Dashboard....
+		Defense defense = new Moat(); // but really get this from Smart Dashboard...
+		Auton auton = new StrongholdAuton(position, defense);
+	}
 	public void autonomousPeriodic() {
 
 	}
