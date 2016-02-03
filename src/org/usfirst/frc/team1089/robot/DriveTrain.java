@@ -108,6 +108,17 @@ public class DriveTrain {
 		stop();
 	}
 
+	/**
+	 * <pre>
+	 * public boolean isOutOfDeadzone(Joystick j)
+	 * </pre>
+	 * Returns true or false
+	 * 
+	 * @param j1 the first joystick to get the axis value from
+	 * @param j2 the second joystick to get the axis value from
+	 * @param axis the axis value to be checked
+	 * @return true if at least one axis is greater than deadzone, false otherwise
+	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
 	}
