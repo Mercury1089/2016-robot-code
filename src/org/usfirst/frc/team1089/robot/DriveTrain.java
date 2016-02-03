@@ -3,9 +3,7 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain {
 
@@ -45,20 +43,26 @@ public class DriveTrain {
 		}
 	}
 
-	public void moveDistance(double ticks) {
-		lft.changeControlMode(CANTalon.TalonControlMode.Position);
-		rft.changeControlMode(CANTalon.TalonControlMode.Position);
-		// lft.setPID(0.5, 0.001, 0.0);
-		// rft.setPID(0.5, 0.001, 0.0);
-		// SmartDashboard.putNumber("P", lft.getP());
-		lft.enableControl();
-		rft.enableControl();
-		double startPosition = lft.getPosition();
-		while (lft.getPosition() <= startPosition + ticks) {
-			lft.set(ticks);
-			rft.set(-ticks);
+	public void moveDistance(double ticks, double startPosition) {
+		if (Robot.isMoving) {
+			if ((lft.getEncPosition() > (startPosition + ticks - 5))
+					&& (lft.getEncPosition() < (startPosition + ticks + 5))) {
+				Robot.isMoving = false;
+
+			}
+		} else {
+			lft.changeControlMode(CANTalon.TalonControlMode.Position);
+			rft.changeControlMode(CANTalon.TalonControlMode.Position);
+			// lft.setPID(0.5, 0.001, 0.0);
+			// rft.setPID(0.5, 0.001, 0.0);
+			// SmartDashboard.putNumber("P", lft.getP());
+			lft.enableControl();
+			rft.enableControl();
+			lft.set(startPosition + ticks);
+			rft.set(-startPosition - ticks);
+			Robot.isMoving = true;
 		}
-		Timer.delay(3000);
+
 	}
 
 	/**
@@ -112,12 +116,17 @@ public class DriveTrain {
 	 * <pre>
 	 * public boolean isOutOfDeadzone(Joystick j)
 	 * </pre>
+	 * 
 	 * Returns true or false
 	 * 
-	 * @param j1 the first joystick to get the axis value from
-	 * @param j2 the second joystick to get the axis value from
-	 * @param axis the axis value to be checked
-	 * @return true if at least one axis is greater than deadzone, false otherwise
+	 * @param j1
+	 *            the first joystick to get the axis value from
+	 * @param j2
+	 *            the second joystick to get the axis value from
+	 * @param axis
+	 *            the axis value to be checked
+	 * @return true if at least one axis is greater than deadzone, false
+	 *         otherwise
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
