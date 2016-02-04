@@ -58,8 +58,8 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		int position = 1; // but really get this from Smart Dashboard....
-		Defense defense = new Moat(); // but really get this from Smart Dashboard...
-		Auton auton = new StrongholdAuton(position, defense);
+		//Defense defense = new Moat(); // but really get this from Smart Dashboard...
+		//Auton auton = new StrongholdAuton(position, defense);
 	}
 	public void autonomousPeriodic() {
 

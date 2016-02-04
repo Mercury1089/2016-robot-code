@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveTrain {
 
-	private CANTalon lft, rft, lbt, rbt;
+	public CANTalon lft, rft, lbt, rbt;
 	private AnalogGyro gyro;
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
