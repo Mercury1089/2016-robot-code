@@ -2,15 +2,17 @@
 
 package org.usfirst.frc.team1089.robot;
 
-import org.usfirst.frc.team1089.auton.*;
 import java.util.Arrays;
+
+import org.usfirst.frc.team1089.auton.StrongholdAuton;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
@@ -27,7 +29,14 @@ public class Robot extends IterativeRobot {
 	private double startMovingValue;
 
 	private double TURN_RADIUS = 1; // FIX THIS
-
+	
+	private String autonAim;
+	
+	Command autonCommand, autonShootCommand;
+	SendableChooser autonChooser, autonShootChooser;
+	private StrongholdAuton auton;
+	private DefenseEnum defenseEnum;
+	
 	public void robotInit() {
 
 		camera = new Camera("GRIP/myContoursReport");
@@ -53,16 +62,31 @@ public class Robot extends IterativeRobot {
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
+		
+		autonChooser = new SendableChooser();
+		autonChooser.addDefault("Default", defenseEnum.DO_NOTHING);
+		autonChooser.addObject("Low Bar", defenseEnum.LOW_BAR);
+		autonChooser.addObject("Moat", defenseEnum.MOAT);
+		autonChooser.addObject("Ramparts", defenseEnum.RAMPARTS);
+		autonChooser.addObject("RockWall", defenseEnum.ROCK_WALL);
+		autonChooser.addObject("RoughTerrain", defenseEnum.ROUGH_TERRAIN);
+		SmartDashboard.putData("Defense:", autonChooser);
 
+		autonShootChooser = new SendableChooser();
+		autonShootChooser.addDefault("Don't Shoot", "Don't Shoot");
+		autonShootChooser.addObject("High Goal", "High Goal");
+		autonShootChooser.addObject("Low Goal", "Low Goal");
+		autonAim = (String)autonShootChooser.getSelected();
+		SmartDashboard.putString("Aim:", autonAim);
 	}
 
 	public void autonomousInit() {
-		int position = 1; // but really get this from Smart Dashboard....
-		Defense defense = new Moat(); // but really get this from Smart Dashboard...
-		Auton auton = new StrongholdAuton(position, defense);
+		//autonCommand = (Command)autonChooser.getSelected();
+		//autonCommand.start();
+		auton = new StrongholdAuton(drive, defenseEnum);
 	}
 	public void autonomousPeriodic() {
-
+		auton.move();
 	}
 
 	public void disabledPeriodic() {
