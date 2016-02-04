@@ -18,6 +18,7 @@ public class DriveTrain {
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.2;
+	private static final double MOVE_THRESH = 50;
 
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		lft = leftFront;
@@ -67,8 +68,8 @@ public class DriveTrain {
 	}
 
 	public void moveDistance(double endPosL, double endPosR) {
-		lft.setPID(0.5, 0.001, 0.0);
-		rft.setPID(0.5, 0.001, 0.0);
+		lft.setPID(0.6, 0.0000, 0.0);
+		rft.setPID(0.6, 0.0000, 0.0);
 		isMoving = true;
 		lft.changeControlMode(CANTalon.TalonControlMode.Position);
 		rft.changeControlMode(CANTalon.TalonControlMode.Position);
@@ -79,17 +80,18 @@ public class DriveTrain {
 
 	}
 
-	public void checkMove(double endPosL, double endPosR) {
+	public boolean checkMove(double endPosL, double endPosR) {
 		double leftVel = lft.getEncVelocity();
 		double rightVel = rft.getEncVelocity();
-		if (isMoving && (lft.getEncPosition() > endPosL - 100 && lft.getEncPosition() < endPosL + 100)
-				&& (rft.getEncPosition() > endPosR - 100 && rft.getEncPosition() < endPosR + 100) && leftVel == 0
+		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH && lft.getEncPosition() < endPosL + MOVE_THRESH)
+				&& (rft.getEncPosition() > endPosR - MOVE_THRESH && rft.getEncPosition() < endPosR + MOVE_THRESH) && leftVel == 0
 				&& rightVel == 0) {
 
 			isMoving = false;
 			lft.changeControlMode(TalonControlMode.PercentVbus);
 			rft.changeControlMode(TalonControlMode.PercentVbus);
 		}
+		return isMoving;
 	}
 
 	/**

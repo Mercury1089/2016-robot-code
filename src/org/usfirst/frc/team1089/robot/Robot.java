@@ -27,6 +27,8 @@ public class Robot extends IterativeRobot {
 	private double endPosL, endPosR;
 
 	private double TURN_RADIUS = 1; // FIX THIS
+	int count = 0;
+	int counter = 0;
 
 	public void robotInit() {
 
@@ -43,6 +45,10 @@ public class Robot extends IterativeRobot {
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
+		leftFront.enableBrakeMode(true);
+		rightFront.enableBrakeMode(true);
+		leftBack.enableBrakeMode(true);
+		rightBack.enableBrakeMode(true);
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 
@@ -64,7 +70,16 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-
+		if (counter < 4) {
+			endPosL = leftFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, 1.0);
+			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
+			drive.moveDistance(endPosL, endPosR);
+			counter++;
+			while (drive.checkMove(endPosL, endPosR)) { 
+				count++;
+				SmartDashboard.putNumber("Count", count);
+			}
+		}
 	}
 
 	public void disabledPeriodic() {
@@ -105,7 +120,7 @@ public class Robot extends IterativeRobot {
 			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
 			drive.moveDistance(endPosL, endPosR);
 		}
-		
+
 		drive.checkMove(endPosL, endPosR);
 
 		camera.getNTInfo();
