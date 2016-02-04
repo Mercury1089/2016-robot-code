@@ -3,12 +3,16 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
 
 	private CANTalon lft, rft, lbt, rbt;
 	private AnalogGyro gyro;
+	public static boolean isMoving = false;
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
@@ -30,46 +34,57 @@ public class DriveTrain {
 	}
 
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
-		if (isOutOfDeadzone(leftStick, 1)) {
-			lft.set(-leftStick.getRawAxis(1));
-		} else {
-			lft.set(0);
-		}
+		if (!isMoving) {
+			if (isOutOfDeadzone(leftStick, 1)) {
+				lft.set(-leftStick.getRawAxis(1));
+			} else {
+				lft.set(0);
+			}
 
-		if (isOutOfDeadzone(rightStick, 1)) {
-			rft.set(rightStick.getRawAxis(1));
-		} else {
-			rft.set(0);
+			if (isOutOfDeadzone(rightStick, 1)) {
+				rft.set(rightStick.getRawAxis(1));
+			} else {
+				rft.set(0);
+			}
 		}
 	}
 
 	public void moveDistance(double endPosL, double endPosR) {
-	/*	if (Robot.isMoving) {
-			if ((lft.getEncPosition() > (startPosition + ticks - 5))
-					&& (lft.getEncPosition() < (startPosition + ticks + 5))) {
-				Robot.isMoving = false;
-
-			}
-		} else {
-			lft.changeControlMode(CANTalon.TalonControlMode.Position);
-			rft.changeControlMode(CANTalon.TalonControlMode.Position);
-			// lft.setPID(0.5, 0.001, 0.0);
-			// rft.setPID(0.5, 0.001, 0.0);
-			// SmartDashboard.putNumber("P", lft.getP());
-			lft.enableControl();
-			rft.enableControl();
-			lft.set(startPosition + ticks);
-			rft.set(-startPosition - ticks);
-			Robot.isMoving = true;
-		}*/
+		/*
+		 * if (Robot.isMoving) { if ((lft.getEncPosition() > (startPosition +
+		 * ticks - 5)) && (lft.getEncPosition() < (startPosition + ticks + 5)))
+		 * { Robot.isMoving = false;
+		 * 
+		 * } } else { lft.changeControlMode(CANTalon.TalonControlMode.Position);
+		 * rft.changeControlMode(CANTalon.TalonControlMode.Position); //
+		 *
+		 * SmartDashboard.putNumber("P", lft.getP()); lft.enableControl();
+		 * rft.enableControl(); lft.set(startPosition + ticks);
+		 * rft.set(-startPosition - ticks); Robot.isMoving = true; }
+		 */
+		lft.setPID(0.5, 0.001, 0.0);
+		rft.setPID(0.5, 0.001, 0.0);
+		isMoving = true;
 		lft.changeControlMode(CANTalon.TalonControlMode.Position);
 		rft.changeControlMode(CANTalon.TalonControlMode.Position);
-		lft.setAllowableClosedLoopErr(5);
-		rft.setAllowableClosedLoopErr(5);
 		lft.enableControl();
 		rft.enableControl();
 		lft.set(endPosL);
 		rft.set(endPosR);
+
+	}
+
+	public void checkMove(double endPosL, double endPosR) {
+		double leftVel = lft.getEncVelocity();
+		double rightVel = rft.getEncVelocity();
+		if (isMoving && (lft.getEncPosition() > endPosL - 100 && lft.getEncPosition() < endPosL + 100)
+				&& (rft.getEncPosition() > endPosR - 100 && rft.getEncPosition() < endPosR + 100) && leftVel == 0
+				&& rightVel == 0) {
+
+			isMoving = false;
+			lft.changeControlMode(TalonControlMode.PercentVbus);
+			rft.changeControlMode(TalonControlMode.PercentVbus);
+		}
 	}
 
 	/**

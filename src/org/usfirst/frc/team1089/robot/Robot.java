@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
@@ -23,8 +24,7 @@ public class Robot extends IterativeRobot {
 	private AnalogGyro gyro;
 	private ControllerBase cBase;
 	private DriveTrain drive;
-	public static boolean isMoving = false;
-	private double startMovingValue;
+	private double endPosL, endPosR;
 
 	private double TURN_RADIUS = 1; // FIX THIS
 
@@ -58,9 +58,11 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		int position = 1; // but really get this from Smart Dashboard....
-		Defense defense = new Moat(); // but really get this from Smart Dashboard...
+		Defense defense = new Moat(); // but really get this from Smart
+										// Dashboard...
 		Auton auton = new StrongholdAuton(position, defense);
 	}
+
 	public void autonomousPeriodic() {
 
 	}
@@ -76,17 +78,19 @@ public class Robot extends IterativeRobot {
 
 		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
 
-		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
+		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) { 
 			btn[i] = gamepad.getRawButton(i);
 		}
 
 		// Teleop Tank with DriveTrain
+		
 		drive.tankDrive(leftStick, rightStick);
+		
 
 		// Reset gyro with the A button on the gamepad
 		if (button(ControllerBase.GamepadButtons.A))
 			gyro.reset();
-
+ 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)) {
@@ -98,15 +102,15 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			isMoving = true;
-			drive.moveDistance(leftFront.getEncPosition() + 1440, rightFront.getEncPosition() - 1440);
-		} else if (!isMoving) {
-			leftFront.changeControlMode(TalonControlMode.PercentVbus);
-			rightFront.changeControlMode(TalonControlMode.PercentVbus);
+			endPosL = leftFront.getEncPosition() + 1440;
+			endPosR = rightFront.getEncPosition() - 1440;
+			drive.moveDistance(endPosL, endPosR);
 		}
-		if (isMoving && (leftFront.getEncVelocity() == 0) && (rightFront.getEncVelocity() == 0)) {
-			isMoving = false;
-		}
+		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
+		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
+		SmartDashboard.putNumber("end pos L", endPosL);
+		SmartDashboard.putNumber("end pos R", endPosR);
+		drive.checkMove(endPosL, endPosR);
 
 		camera.getNTInfo();
 		debug();
