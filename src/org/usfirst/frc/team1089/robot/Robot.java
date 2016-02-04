@@ -101,8 +101,8 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			endPosL = leftFront.getEncPosition() + 1440;
-			endPosR = rightFront.getEncPosition() - 1440;
+			endPosL = leftFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, 1.0);
+			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
 			drive.moveDistance(endPosL, endPosR);
 		}
 		
