@@ -78,19 +78,18 @@ public class Robot extends IterativeRobot {
 
 		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
 
-		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) { 
+		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
 
 		// Teleop Tank with DriveTrain
-		
+
 		drive.tankDrive(leftStick, rightStick);
-		
 
 		// Reset gyro with the A button on the gamepad
 		if (button(ControllerBase.GamepadButtons.A))
 			gyro.reset();
- 
+
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)) {
@@ -106,10 +105,7 @@ public class Robot extends IterativeRobot {
 			endPosR = rightFront.getEncPosition() - 1440;
 			drive.moveDistance(endPosL, endPosR);
 		}
-		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
-		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
-		SmartDashboard.putNumber("end pos L", endPosL);
-		SmartDashboard.putNumber("end pos R", endPosR);
+		
 		drive.checkMove(endPosL, endPosR);
 
 		camera.getNTInfo();
@@ -152,5 +148,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
 		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
+		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
+		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
+		SmartDashboard.putNumber("end pos L", endPosL);
+		SmartDashboard.putNumber("end pos R", endPosR);
 	}
 }

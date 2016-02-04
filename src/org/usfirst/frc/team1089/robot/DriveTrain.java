@@ -46,22 +46,27 @@ public class DriveTrain {
 			} else {
 				rft.set(0);
 			}
+		} else {
+
+			if (isOutOfDeadzone(leftStick, 1)) {
+
+				isMoving = false; // driver takes over during CAN turning
+				lft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+				rft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+
+			}
+
+			if (isOutOfDeadzone(rightStick, 1)) {
+
+				isMoving = false; // driver takes over during CAN turning
+				lft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+				rft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+
+			}
 		}
 	}
 
 	public void moveDistance(double endPosL, double endPosR) {
-		/*
-		 * if (Robot.isMoving) { if ((lft.getEncPosition() > (startPosition +
-		 * ticks - 5)) && (lft.getEncPosition() < (startPosition + ticks + 5)))
-		 * { Robot.isMoving = false;
-		 * 
-		 * } } else { lft.changeControlMode(CANTalon.TalonControlMode.Position);
-		 * rft.changeControlMode(CANTalon.TalonControlMode.Position); //
-		 *
-		 * SmartDashboard.putNumber("P", lft.getP()); lft.enableControl();
-		 * rft.enableControl(); lft.set(startPosition + ticks);
-		 * rft.set(-startPosition - ticks); Robot.isMoving = true; }
-		 */
 		lft.setPID(0.5, 0.001, 0.0);
 		rft.setPID(0.5, 0.001, 0.0);
 		isMoving = true;
