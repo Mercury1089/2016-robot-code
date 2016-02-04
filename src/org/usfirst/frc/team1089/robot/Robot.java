@@ -29,6 +29,7 @@ public class Robot extends IterativeRobot {
 	private double startMovingValue;
 
 	private SendableChooser autonChooser, autonShootChooser;
+	private DefenseEnum defenseEnum;
 	private String autonAim;
 	private double TURN_RADIUS = 1; // FIX THIS
 
