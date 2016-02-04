@@ -2,16 +2,16 @@
 
 package org.usfirst.frc.team1089.robot;
 
-import java.util.Arrays;
+import org.usfirst.frc.team1089.auton.*;
 
-import org.usfirst.frc.team1089.auton.StrongholdAuton;
+import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -28,15 +28,10 @@ public class Robot extends IterativeRobot {
 	public static boolean isMoving = false;
 	private double startMovingValue;
 
-	private double TURN_RADIUS = 1; // FIX THIS
-	
+	private SendableChooser autonChooser, autonShootChooser;
 	private String autonAim;
-	
-	Command autonCommand, autonShootCommand;
-	SendableChooser autonChooser, autonShootChooser;
-	private StrongholdAuton auton;
-	private DefenseEnum defenseEnum;
-	
+	private double TURN_RADIUS = 1; // FIX THIS
+
 	public void robotInit() {
 
 		camera = new Camera("GRIP/myContoursReport");
@@ -62,7 +57,21 @@ public class Robot extends IterativeRobot {
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
-		
+
+	}
+
+	public void autonomousInit() {
+		int position = 1; // but really get this from Smart Dashboard....
+		Defense defense = new Moat(); // but really get this from Smart Dashboard...
+		Auton auton = new StrongholdAuton(position, defense);
+	}
+	public void autonomousPeriodic() {
+
+	}
+
+	public void disabledPeriodic() {
+		camera.getNTInfo();
+		debug();
 		autonChooser = new SendableChooser();
 		autonChooser.addDefault("Default", defenseEnum.DO_NOTHING);
 		autonChooser.addObject("Low Bar", defenseEnum.LOW_BAR);
@@ -78,20 +87,6 @@ public class Robot extends IterativeRobot {
 		autonShootChooser.addObject("Low Goal", "Low Goal");
 		autonAim = (String)autonShootChooser.getSelected();
 		SmartDashboard.putString("Aim:", autonAim);
-	}
-
-	public void autonomousInit() {
-		//autonCommand = (Command)autonChooser.getSelected();
-		//autonCommand.start();
-		auton = new StrongholdAuton(drive, defenseEnum);
-	}
-	public void autonomousPeriodic() {
-		auton.move();
-	}
-
-	public void disabledPeriodic() {
-		camera.getNTInfo();
-		debug();
 	}
 
 	public void teleopPeriodic() {
