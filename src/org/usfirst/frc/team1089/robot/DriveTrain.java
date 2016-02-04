@@ -3,17 +3,22 @@ package org.usfirst.frc.team1089.robot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
 
 	public CANTalon lft, rft, lbt, rbt;
 	private AnalogGyro gyro;
+	public static boolean isMoving = false;
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.2;
+	private static final double MOVE_THRESH = 50;
 
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		lft = leftFront;
@@ -30,39 +35,63 @@ public class DriveTrain {
 	}
 
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
-		if (isOutOfDeadzone(leftStick, 1)) {
-			lft.set(-leftStick.getRawAxis(1));
-		} else {
-			lft.set(0);
-		}
+		if (!isMoving) {
+			if (isOutOfDeadzone(leftStick, 1)) {
+				lft.set(-leftStick.getRawAxis(1));
+			} else {
+				lft.set(0);
+			}
 
-		if (isOutOfDeadzone(rightStick, 1)) {
-			rft.set(rightStick.getRawAxis(1));
+			if (isOutOfDeadzone(rightStick, 1)) {
+				rft.set(rightStick.getRawAxis(1));
+			} else {
+				rft.set(0);
+			}
 		} else {
-			rft.set(0);
+
+			if (isOutOfDeadzone(leftStick, 1)) {
+
+				isMoving = false; // driver takes over during CAN turning
+				lft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+				rft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+
+			}
+
+			if (isOutOfDeadzone(rightStick, 1)) {
+
+				isMoving = false; // driver takes over during CAN turning
+				lft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+				rft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+
+			}
 		}
 	}
 
-	public void moveDistance(double ticks, double startPosition) {
-		if (Robot.isMoving) {
-			if ((lft.getEncPosition() > (startPosition + ticks - 5))
-					&& (lft.getEncPosition() < (startPosition + ticks + 5))) {
-				Robot.isMoving = false;
+	public void moveDistance(double endPosL, double endPosR) {
+		lft.setPID(0.6, 0.0000, 0.0);
+		rft.setPID(0.6, 0.0000, 0.0);
+		isMoving = true;
+		lft.changeControlMode(CANTalon.TalonControlMode.Position);
+		rft.changeControlMode(CANTalon.TalonControlMode.Position);
+		lft.enableControl();
+		rft.enableControl();
+		lft.set(endPosL);
+		rft.set(endPosR);
 
-			}
-		} else {
-			lft.changeControlMode(CANTalon.TalonControlMode.Position);
-			rft.changeControlMode(CANTalon.TalonControlMode.Position);
-			// lft.setPID(0.5, 0.001, 0.0);
-			// rft.setPID(0.5, 0.001, 0.0);
-			// SmartDashboard.putNumber("P", lft.getP());
-			lft.enableControl();
-			rft.enableControl();
-			lft.set(startPosition + ticks);
-			rft.set(-startPosition - ticks);
-			Robot.isMoving = true;
+	}
+
+	public boolean checkMove(double endPosL, double endPosR) {
+		double leftVel = lft.getEncVelocity();
+		double rightVel = rft.getEncVelocity();
+		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH && lft.getEncPosition() < endPosL + MOVE_THRESH)
+				&& (rft.getEncPosition() > endPosR - MOVE_THRESH && rft.getEncPosition() < endPosR + MOVE_THRESH) && leftVel == 0
+				&& rightVel == 0) {
+
+			isMoving = false;
+			lft.changeControlMode(TalonControlMode.PercentVbus);
+			rft.changeControlMode(TalonControlMode.PercentVbus);
 		}
-
+		return isMoving;
 	}
 
 	/**

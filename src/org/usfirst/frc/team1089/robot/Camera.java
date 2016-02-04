@@ -14,9 +14,8 @@ public class Camera {
 
 	// Have to change - Horizontal Field of View for the Camera. In degrees
 	public static final double HFOV = 41;
-	public static final double CAM_ELEVATION_FEET = 9.5 / 12; 
-											
-	
+	public static final double CAM_ELEVATION_FEET = 9.5 / 12;
+
 	// Deploy NetworkTable to roboRIO
 	private NetworkTable nt;
 	private double largestRectArea;
@@ -28,10 +27,10 @@ public class Camera {
 
 	public static final double HORIZONTAL_CAMERA_RES = 320;
 	private static final double TARGET_WIDTH_INCHES = 20;
-	private static final double TARGET_HEIGHT_INCHES = 14;
+	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
-	
+
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
 	}
@@ -54,7 +53,7 @@ public class Camera {
 		rectCenterX = nt.getNumberArray("centerX", def);
 		rectCenterY = nt.getNumberArray("centerY", def);
 
-		if (rectArea.length > 0) {						// searches array for largest target
+		if (rectArea.length > 0) { // searches array for largest target
 			largestRectArea = rectArea[0];
 			largestRectNum = 0;
 			for (int i = 1; i < rectArea.length; i++) { // saves an iteration by
@@ -64,26 +63,24 @@ public class Camera {
 				}
 			}
 			// Find width of target in inches
-			perceivedOpeningWidth = 
-					rectWidth[largestRectNum] * .8 * (TARGET_HEIGHT_INCHES / rectHeight[largestRectNum]);
+			perceivedOpeningWidth = rectWidth[largestRectNum] * .8
+					* (TARGET_HEIGHT_INCHES / rectHeight[largestRectNum]);
 
 			// Calculate distance based off of rectangle width and horizontal
 			// FOV of camera in feet.
-			
-			
-			
+
 			// NOTE: Between .25 and .5 ft. off of actual distance
-					diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
-							* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
-							/ Math.tan(Math.toRadians(Camera.HFOV / 2));
-		} 
-		else {
+			diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
+					* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
+					/ Math.tan(Math.toRadians(Camera.HFOV / 2));
+		} else {
+			perceivedOpeningWidth = 0;
+
 			diagTargetDistance = Double.POSITIVE_INFINITY;
 		}
-		
-		horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance - 
-				(TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) 
-		);
+
+		horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance
+				- (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET));
 	}
 
 	public double getTurnAngle() {
@@ -128,7 +125,7 @@ public class Camera {
 	public double getHorizontalDist() {
 		return horizTargetDistance;
 	}
-	
+
 	public double getOpeningWidth() {
 		return perceivedOpeningWidth;
 	}

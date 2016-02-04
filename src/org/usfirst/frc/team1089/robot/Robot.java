@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
@@ -23,10 +24,11 @@ public class Robot extends IterativeRobot {
 	private AnalogGyro gyro;
 	private ControllerBase cBase;
 	private DriveTrain drive;
-	public static boolean isMoving = false;
-	private double startMovingValue;
+	private double endPosL, endPosR;
 
 	private double TURN_RADIUS = 1; // FIX THIS
+	int count = 0;
+	int counter = 0;
 
 	public void robotInit() {
 
@@ -43,6 +45,10 @@ public class Robot extends IterativeRobot {
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
+		leftFront.enableBrakeMode(true);
+		rightFront.enableBrakeMode(true);
+		leftBack.enableBrakeMode(true);
+		rightBack.enableBrakeMode(true);
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 
@@ -57,12 +63,20 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
-		int position = 1; // but really get this from Smart Dashboard....
-		//Defense defense = new Moat(); // but really get this from Smart Dashboard...
-		//Auton auton = new StrongholdAuton(position, defense);
+		int position = 1;
 	}
-	public void autonomousPeriodic() {
 
+	public void autonomousPeriodic() {
+		if (counter < 4) {
+			endPosL = leftFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, 1.0);
+			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
+			drive.moveDistance(endPosL, endPosR);
+			counter++;
+			while (drive.checkMove(endPosL, endPosR)) { 
+				count++;
+				SmartDashboard.putNumber("Count", count);
+			}
+		}
 	}
 
 	public void disabledPeriodic() {
@@ -81,6 +95,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		// Teleop Tank with DriveTrain
+
 		drive.tankDrive(leftStick, rightStick);
 
 		// Reset gyro with the A button on the gamepad
@@ -98,15 +113,12 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			isMoving = true;
-			startMovingValue = leftFront.getEncPosition();
-		} else if (!isMoving) {
-			leftFront.changeControlMode(TalonControlMode.PercentVbus);
-			rightFront.changeControlMode(TalonControlMode.PercentVbus);
+			endPosL = leftFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, 1.0);
+			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
+			drive.moveDistance(endPosL, endPosR);
 		}
-		if (isMoving) {
-			drive.moveDistance(1440, startMovingValue);
-		}
+
+		drive.checkMove(endPosL, endPosR);
 
 		camera.getNTInfo();
 		debug();
@@ -148,5 +160,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
 		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
+		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
+		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
+		SmartDashboard.putNumber("end pos L", endPosL);
+		SmartDashboard.putNumber("end pos R", endPosR);
 	}
 }
