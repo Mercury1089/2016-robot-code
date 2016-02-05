@@ -30,8 +30,8 @@ public class Camera {
 	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
-	private static final double DIAG_DIST_MIN = 5.0;
-	private static final double DIAG_DIST_MAX = 7.0;
+	private static final double HORIZ_DIST_MIN = 5.0;
+	private static final double HORIZ_DIST_MAX = 7.0;
 	private static final double TURN_ANGLE_MIN = -1.0;
 	private static final double TURN_ANGLE_MAX = 1.0;
 	private static final double IN_LINE_MIN = .4; // TODO FIX
@@ -137,7 +137,7 @@ public class Camera {
 	}
 
 	public boolean isInDistance() {
-		return getDiagonalDist() > DIAG_DIST_MIN && getDiagonalDist() < DIAG_DIST_MAX;
+		return getHorizontalDist() > HORIZ_DIST_MIN && getDiagonalDist() < HORIZ_DIST_MAX;
 	}
 
 	public boolean isInTurnAngle() {
