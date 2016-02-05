@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
 	private double endPosL, endPosR;
 
 	private DefenseEnum defenseEnum;
-	private SendableChooser autonChooser, autonShootChooser;
+	private SendableChooser autonChooser, autonShootChooser, autonPosChooser;
 	private String autonAim;
 	private double TURN_RADIUS_INCHES = 15.126; // TODO FIX THIS
 	int counter = 0;
@@ -102,8 +102,13 @@ public class Robot extends IterativeRobot {
 		autonChooser.addObject("Ramparts", DefenseEnum.RAMPARTS);
 		autonChooser.addObject("RockWall", DefenseEnum.ROCK_WALL);
 		autonChooser.addObject("RoughTerrain", DefenseEnum.ROUGH_TERRAIN);
-		SmartDashboard.putData("Defense:", autonChooser);
+		SmartDashboard.putData("Defense: ", autonChooser);
 
+		autonPosChooser = new SendableChooser();
+		autonPosChooser.addDefault("1 through 3", 1);
+		autonPosChooser.addObject("4 through 5", 4);
+		SmartDashboard.putData("Position: ", autonPosChooser);
+		
 		autonShootChooser = new SendableChooser();
 		autonShootChooser.addDefault("Don't Shoot", "Don't Shoot");
 		autonShootChooser.addObject("High Goal", "High Goal");
