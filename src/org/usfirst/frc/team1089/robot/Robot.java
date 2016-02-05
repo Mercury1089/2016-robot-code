@@ -22,7 +22,7 @@ public class Robot extends IterativeRobot {
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick;
 	private AnalogGyro gyro;
-	private ControllerBase cBase;
+	//private ControllerBase cBase;
 	private DriveTrain drive;
 	private double endPosL, endPosR;
 
@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 
-		cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK, Ports.USB.RIGHT_STICK);
+		//cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK, Ports.USB.RIGHT_STICK);
 
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
@@ -96,12 +96,12 @@ public class Robot extends IterativeRobot {
 		camera.getNTInfo();
 		debug();
 		autonChooser = new SendableChooser();
-		autonChooser.addDefault("Default", defenseEnum.DO_NOTHING);
-		autonChooser.addObject("Low Bar", defenseEnum.LOW_BAR);
-		autonChooser.addObject("Moat", defenseEnum.MOAT);
-		autonChooser.addObject("Ramparts", defenseEnum.RAMPARTS);
-		autonChooser.addObject("RockWall", defenseEnum.ROCK_WALL);
-		autonChooser.addObject("RoughTerrain", defenseEnum.ROUGH_TERRAIN);
+		autonChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
+		autonChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
+		autonChooser.addObject("Moat", DefenseEnum.MOAT);
+		autonChooser.addObject("Ramparts", DefenseEnum.RAMPARTS);
+		autonChooser.addObject("RockWall", DefenseEnum.ROCK_WALL);
+		autonChooser.addObject("RoughTerrain", DefenseEnum.ROUGH_TERRAIN);
 		SmartDashboard.putData("Defense:", autonChooser);
 
 		autonShootChooser = new SendableChooser();

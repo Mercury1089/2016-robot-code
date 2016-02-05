@@ -8,15 +8,15 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveTrain {
 
-	public CANTalon lft, rft, lbt, rbt;
+	private CANTalon lft, rft, lbt, rbt;
 	private AnalogGyro gyro;
-	public static boolean isMoving = false;
+	private static boolean isMoving = false;
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.2;
-	private static final double MOVE_THRESH = 50;
+	private static final double MOVE_THRESH_TICKS = 50;
 	private double endPosL, endPosR;
 	private double startPosL, startPosR;
 	private double changePosTicks;
@@ -101,8 +101,8 @@ public class DriveTrain {
 		double leftVel = lft.getEncVelocity();
 		double rightVel = rft.getEncVelocity();
 
-		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH && lft.getEncPosition() < endPosL + MOVE_THRESH)
-				&& (rft.getEncPosition() > endPosR - MOVE_THRESH && rft.getEncPosition() < endPosR + MOVE_THRESH)
+		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH_TICKS && lft.getEncPosition() < endPosL + MOVE_THRESH_TICKS)
+				&& (rft.getEncPosition() > endPosR - MOVE_THRESH_TICKS && rft.getEncPosition() < endPosR + MOVE_THRESH_TICKS)
 				&& leftVel == 0 && rightVel == 0) {
 
 			setToManual();
@@ -171,10 +171,8 @@ public class DriveTrain {
 	 * 
 	 * Returns true or false
 	 * 
-	 * @param j1
-	 *            the first joystick to get the axis value from
-	 * @param j2
-	 *            the second joystick to get the axis value from
+	 * @param j
+	 *            the joystick to get the axis value from
 	 * @param axis
 	 *            the axis value to be checked
 	 * @return true if at least one axis is greater than deadzone, false
