@@ -19,6 +19,7 @@ public class DriveTrain {
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.2;
 	private static final double MOVE_THRESH = 50;
+	private double endPosL, endPosR;
 
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		lft = leftFront;
@@ -67,7 +68,9 @@ public class DriveTrain {
 		}
 	}
 
-	public void moveDistance(double endPosL, double endPosR) {
+	public void moveDistance(double startPosL, double startPosR, double changePos) {
+		endPosL = startPosL + changePos;
+		endPosR = startPosR - changePos;
 		lft.setPID(0.6, 0.0000, 0.0);
 		rft.setPID(0.6, 0.0000, 0.0);
 		isMoving = true;
@@ -80,9 +83,10 @@ public class DriveTrain {
 
 	}
 
-	public boolean checkMove(double endPosL, double endPosR) {
+	public boolean checkMove() {
 		double leftVel = lft.getEncVelocity();
 		double rightVel = rft.getEncVelocity();
+		
 		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH && lft.getEncPosition() < endPosL + MOVE_THRESH)
 				&& (rft.getEncPosition() > endPosR - MOVE_THRESH && rft.getEncPosition() < endPosR + MOVE_THRESH) && leftVel == 0
 				&& rightVel == 0) {

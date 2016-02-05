@@ -73,9 +73,9 @@ public class Robot extends IterativeRobot {
 		if (counter < 4) {
 			endPosL = leftFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, 1.0);
 			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
-			drive.moveDistance(endPosL, endPosR);
+			drive.moveDistance(leftFront.getEncPosition(), rightFront.getEncPosition(), MercEncoder.convertDistanceToEncoderTicks(1, 1.0));
 			counter++;
-			while (drive.checkMove(endPosL, endPosR)) { 
+			while (drive.checkMove()) { 
 				count++;
 				SmartDashboard.putNumber("Count", count);
 			}
@@ -116,12 +116,10 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			endPosL = leftFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, 1.0);
-			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
-			drive.moveDistance(endPosL, endPosR);
+			drive.moveDistance(leftFront.getEncPosition(), rightFront.getEncPosition(), MercEncoder.convertDistanceToEncoderTicks(1, 1.0));
 		}
 
-		drive.checkMove(endPosL, endPosR);
+		drive.checkMove();
 
 		camera.getNTInfo();
 		debug();
