@@ -87,7 +87,6 @@ public class DriveTrain {
 		rft.enableControl();
 		lft.set(endPosL);
 		rft.set(endPosR);
-
 	}
 
 	public boolean checkMove() {

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Camera {
 
 	// Have to change - Horizontal Field of View for the Camera. In degrees
-	public static final double HFOV = 41;
+	public static final double HFOV_DEGREES = 41;
 	public static final double CAM_ELEVATION_FEET = 9.5 / 12; 
 											
 	
@@ -74,15 +74,14 @@ public class Camera {
 
 			// Calculate distance based off of rectangle width and horizontal
 			// FOV of camera in feet.
-			
-			
-			
 			// NOTE: Between .25 and .5 ft. off of actual distance
-					diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
-							* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
-							/ Math.tan(Math.toRadians(Camera.HFOV / 2));
+			diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
+					* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
+					/ Math.tan(Math.toRadians(Camera.HFOV_DEGREES / 2));
 		} 
 		else {
+			perceivedOpeningWidth = 0;
+			
 			diagTargetDistance = Double.POSITIVE_INFINITY;
 		}
 		
@@ -92,10 +91,10 @@ public class Camera {
 	}
 
 	public double getTurnAngle() {
-		if (getCenterX().length >= 1) {
+		if (getCenterX().length > 0) {
 			diff = ((Camera.HORIZONTAL_CAMERA_RES / 2) - getCenterX()[getLargestRectNum()])
 					/ Camera.HORIZONTAL_CAMERA_RES;
-			return diff * Camera.HFOV;
+			return diff * Camera.HFOV_DEGREES;
 		}
 
 		return 0;
