@@ -20,6 +20,8 @@ public class DriveTrain {
 	private static final double DEADZONE_LIMIT = 0.2;
 	private static final double MOVE_THRESH = 50;
 	private double endPosL, endPosR;
+	private double startPosL, startPosR;
+	private double changePosTicks;
 
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		lft = leftFront;
@@ -51,31 +53,39 @@ public class DriveTrain {
 		} else {
 
 			if (isOutOfDeadzone(leftStick, 1)) {
-
-				isMoving = false; // driver takes over during CAN turning
-				lft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-				rft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-
+				setToManual();
 			}
 
 			if (isOutOfDeadzone(rightStick, 1)) {
-
-				isMoving = false; // driver takes over during CAN turning
-				lft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-				rft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-
+				setToManual();
 			}
 		}
 	}
 
-	public void moveDistance(double startPosL, double startPosR, double changePos) {
-		endPosL = startPosL + changePos;
-		endPosR = startPosR - changePos;
+	public void moveDistance(double changePos) {
+		changePosTicks = MercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		startPosL = lft.getEncPosition();
+		startPosR = rft.getEncPosition();
+		endPosL = startPosL + changePosTicks;
+		endPosR = startPosR - changePosTicks;
 		lft.setPID(0.6, 0.0000, 0.0);
 		rft.setPID(0.6, 0.0000, 0.0);
-		isMoving = true;
-		lft.changeControlMode(CANTalon.TalonControlMode.Position);
-		rft.changeControlMode(CANTalon.TalonControlMode.Position);
+		setToAuto();
+		lft.enableControl();
+		rft.enableControl();
+		lft.set(endPosL);
+		rft.set(endPosR);
+	}
+
+	public void turnDistance(double changePos) {
+		changePosTicks = MercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		startPosL = lft.getEncPosition();
+		startPosR = rft.getEncPosition();
+		endPosL = startPosL + changePosTicks;
+		endPosR = startPosR + changePosTicks;
+		lft.setPID(0.6, 0.0000, 0.0);
+		rft.setPID(0.6, 0.0000, 0.0);
+		setToAuto();
 		lft.enableControl();
 		rft.enableControl();
 		lft.set(endPosL);
@@ -86,16 +96,20 @@ public class DriveTrain {
 	public boolean checkMove() {
 		double leftVel = lft.getEncVelocity();
 		double rightVel = rft.getEncVelocity();
-		
-		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH && lft.getEncPosition() < endPosL + MOVE_THRESH)
-				&& (rft.getEncPosition() > endPosR - MOVE_THRESH && rft.getEncPosition() < endPosR + MOVE_THRESH) && leftVel == 0
-				&& rightVel == 0) {
 
-			isMoving = false;
-			lft.changeControlMode(TalonControlMode.PercentVbus);
-			rft.changeControlMode(TalonControlMode.PercentVbus);
+		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH && lft.getEncPosition() < endPosL + MOVE_THRESH)
+				&& (rft.getEncPosition() > endPosR - MOVE_THRESH && rft.getEncPosition() < endPosR + MOVE_THRESH)
+				&& leftVel == 0 && rightVel == 0) {
+
+			setToManual();
 		}
 		return isMoving;
+	}
+	
+	public void waitMove(){
+		while (checkMove()){
+		}
+		return;
 	}
 
 	/**
@@ -141,6 +155,7 @@ public class DriveTrain {
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_3_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 			speedRotate(s / 4);
+
 		}
 		stop();
 	}
@@ -163,6 +178,18 @@ public class DriveTrain {
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
+	}
+
+	private void setToManual() {
+		isMoving = false;
+		lft.changeControlMode(TalonControlMode.PercentVbus);
+		rft.changeControlMode(TalonControlMode.PercentVbus);
+	}
+
+	private void setToAuto() {
+		isMoving = true;
+		lft.changeControlMode(CANTalon.TalonControlMode.Position);
+		rft.changeControlMode(CANTalon.TalonControlMode.Position);
 	}
 
 }

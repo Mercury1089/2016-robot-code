@@ -26,8 +26,7 @@ public class Robot extends IterativeRobot {
 	private DriveTrain drive;
 	private double endPosL, endPosR;
 
-	private double TURN_RADIUS = 1; // FIX THIS
-	int count = 0;
+	private double TURN_RADIUS_INCHES = 13.5; // TODO FIX THIS
 	int counter = 0;
 
 	public void robotInit() {
@@ -70,15 +69,25 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		if (counter < 4) {
-			endPosL = leftFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, 1.0);
-			endPosR = rightFront.getEncPosition() + MercEncoder.convertDistanceToEncoderTicks(1, -1.0);
-			drive.moveDistance(leftFront.getEncPosition(), rightFront.getEncPosition(), MercEncoder.convertDistanceToEncoderTicks(1, 1.0));
+		switch (counter) {
+		case 0:
+			drive.moveDistance(1);
+			drive.waitMove();
 			counter++;
-			while (drive.checkMove()) { 
-				count++;
-				SmartDashboard.putNumber("Count", count);
-			}
+			break;
+			
+		case 1:
+			drive.moveDistance(1);
+			drive.waitMove();
+			counter++;
+			break;
+			
+		case 2:
+			drive.moveDistance(1);
+			drive.waitMove();
+			counter++;
+			break;
+			
 		}
 	}
 
@@ -116,7 +125,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			drive.moveDistance(leftFront.getEncPosition(), rightFront.getEncPosition(), MercEncoder.convertDistanceToEncoderTicks(1, 1.0));
+			drive.moveDistance(encoderDistToGoalFeet());
 		}
 
 		drive.checkMove();
@@ -133,8 +142,9 @@ public class Robot extends IterativeRobot {
 
 	}
 
-	public double encoderDistToGoal() {
-		return Math.toRadians(camera.getTurnAngle()) * TURN_RADIUS;
+	public double encoderDistToGoalFeet() {
+		// return Math.toRadians(camera.getTurnAngle()) * TURN_RADIUS_INCHES;
+		return Math.toRadians(90) * TURN_RADIUS_INCHES / 12;
 	}
 
 	/**
@@ -165,5 +175,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
 		SmartDashboard.putNumber("end pos L", endPosL);
 		SmartDashboard.putNumber("end pos R", endPosR);
+		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
+		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 	}
 }
