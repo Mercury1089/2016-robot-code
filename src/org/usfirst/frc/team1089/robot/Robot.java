@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
@@ -26,6 +27,9 @@ public class Robot extends IterativeRobot {
 	private DriveTrain drive;
 	private double endPosL, endPosR;
 
+	private DefenseEnum defenseEnum; 
+	private SendableChooser autonChooser, autonShootChooser;
+	private String autonAim;
 	private double TURN_RADIUS_INCHES = 13.5; // TODO FIX THIS
 	int counter = 0;
 
@@ -62,38 +66,29 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
-		int position = 1; // but really get this from Smart Dashboard....
-		Defense defense = new Moat(); // but really get this from Smart
-										// Dashboard...
-		Auton auton = new StrongholdAuton(position, defense);
+		int position = 1;
 	}
-
 	public void autonomousPeriodic() {
-		switch (counter) {
-		case 0:
-			drive.moveDistance(1);
-			drive.waitMove();
-			counter++;
-			break;
-			
-		case 1:
-			drive.moveDistance(1);
-			drive.waitMove();
-			counter++;
-			break;
-			
-		case 2:
-			drive.moveDistance(1);
-			drive.waitMove();
-			counter++;
-			break;
-			
-		}
 	}
 
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
+		autonChooser = new SendableChooser();
+		autonChooser.addDefault("Default", defenseEnum.DO_NOTHING);
+		autonChooser.addObject("Low Bar", defenseEnum.LOW_BAR);
+		autonChooser.addObject("Moat", defenseEnum.MOAT);
+		autonChooser.addObject("Ramparts", defenseEnum.RAMPARTS);
+		autonChooser.addObject("RockWall", defenseEnum.ROCK_WALL);
+		autonChooser.addObject("RoughTerrain", defenseEnum.ROUGH_TERRAIN);
+		SmartDashboard.putData("Defense:", autonChooser);
+
+		autonShootChooser = new SendableChooser();
+		autonShootChooser.addDefault("Don't Shoot", "Don't Shoot");
+		autonShootChooser.addObject("High Goal", "High Goal");
+		autonShootChooser.addObject("Low Goal", "Low Goal");
+		autonAim = (String)autonShootChooser.getSelected();
+		SmartDashboard.putString("Aim:", autonAim);
 	}
 
 	public void teleopPeriodic() {
@@ -107,7 +102,6 @@ public class Robot extends IterativeRobot {
 		}
 
 		// Teleop Tank with DriveTrain
-
 		drive.tankDrive(leftStick, rightStick);
 
 		// Reset gyro with the A button on the gamepad

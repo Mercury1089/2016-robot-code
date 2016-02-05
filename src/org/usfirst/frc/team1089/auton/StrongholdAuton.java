@@ -1,16 +1,21 @@
 package org.usfirst.frc.team1089.auton;
 
-public class StrongholdAuton extends Auton {
-	private int position;
+import org.usfirst.frc.team1089.robot.DriveTrain;
+
+public class StrongholdAuton{
+	
 	private Defense defense;
-	public StrongholdAuton(int position, Defense defense) {
-		this.position = position;
-		this.defense = defense;
+	private DefenseEnum defenseEnum;
+	protected DriveTrain drive;
+	
+	public StrongholdAuton(DriveTrain d, DefenseEnum dE) {
+		drive = d;
+		defenseEnum = dE;
 	}
-	@Override
-	void move() {
-		// moveForward(5 feet) // In other words - approach the defense
-		defense.breach();
+	
+	public void move() {
 		
+		defense.breach();
+		//shooter.shoot();
 	}
 }

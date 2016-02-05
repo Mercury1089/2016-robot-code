@@ -5,12 +5,10 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
 
-	private CANTalon lft, rft, lbt, rbt;
+	public CANTalon lft, rft, lbt, rbt;
 	private AnalogGyro gyro;
 	public static boolean isMoving = false;
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
@@ -51,7 +49,6 @@ public class DriveTrain {
 				rft.set(0);
 			}
 		} else {
-
 			if (isOutOfDeadzone(leftStick, 1)) {
 				setToManual();
 			}
