@@ -67,8 +67,28 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		int position = 1;
 	}
+
 	public void autonomousPeriodic() {
-		
+		switch (counter) {
+		case 0:
+			drive.moveDistance(1);
+			drive.waitMove();
+			counter++;
+			break;
+			
+		case 1:
+			drive.moveDistance(1);
+			drive.waitMove();
+			counter++;
+			break;
+			
+		case 2:
+			drive.moveDistance(1);
+			drive.waitMove();
+			counter++;
+			break;
+			
+		}
 	}
 
 	public void disabledPeriodic() {
