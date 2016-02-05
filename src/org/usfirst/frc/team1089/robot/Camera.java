@@ -28,7 +28,7 @@ public class Camera {
 
 	public static final double HORIZONTAL_CAMERA_RES = 320;
 	private static final double TARGET_WIDTH_INCHES = 20;
-	private static final double TARGET_HEIGHT_INCHES = 14;
+	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
 	private static final double DIAG_DIST_MIN = 5.0;
