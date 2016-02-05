@@ -67,6 +67,10 @@ public class DriveTrain {
 		endPosR = startPosR - changePosTicks;
 		lft.setPID(0.6, 0.0000, 0.0);
 		rft.setPID(0.6, 0.0000, 0.0);
+		lft.configPeakOutputVoltage(12.0, -12.0);
+		lft.configNominalOutputVoltage(0, 0);
+		rft.configPeakOutputVoltage(12.0, -12.0);
+		rft.configNominalOutputVoltage(0.0, 0.0);
 		setToAuto();
 		lft.enableControl();
 		rft.enableControl();
@@ -80,8 +84,12 @@ public class DriveTrain {
 		startPosR = rft.getEncPosition();
 		endPosL = startPosL + changePosTicks;
 		endPosR = startPosR + changePosTicks;
-		lft.setPID(0.6, 0.0000, 0.0);
-		rft.setPID(0.6, 0.0000, 0.0);
+		lft.setPID(0.3, 0.0001, 0.0);
+		rft.setPID(0.3, 0.0001, 0.0);
+		lft.configPeakOutputVoltage(6.0, -6.0);
+		lft.configNominalOutputVoltage(0, 0);
+		rft.configPeakOutputVoltage(6.0, -6.0);
+		rft.configNominalOutputVoltage(0.0, 0.0);
 		setToAuto();
 		lft.enableControl();
 		rft.enableControl();
