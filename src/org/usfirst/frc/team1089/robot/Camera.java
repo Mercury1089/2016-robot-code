@@ -25,15 +25,15 @@ public class Camera {
 	private double diagTargetDistance, horizTargetDistance;
 	private double diff;
 
-	public static final double HORIZONTAL_CAMERA_RES = 320;
+	public static final double HORIZONTAL_CAMERA_RES_PIXELS = 320;
 	private static final double TARGET_WIDTH_INCHES = 20;
 	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
-	private static final double DIAG_DIST_MIN = 5.0;
-	private static final double DIAG_DIST_MAX = 7.0;
-	private static final double TURN_ANGLE_MIN = -1.0;
-	private static final double TURN_ANGLE_MAX = 1.0;
+	private static final double DIAG_DIST_MIN_FEET = 5.0;
+	private static final double DIAG_DIST_MAX_FEET = 7.0;
+	private static final double TURN_ANGLE_MIN_DEGREES = -1.0;
+	private static final double TURN_ANGLE_MAX_DEGREES = 1.0;
 	private static final double IN_LINE_MIN = .4; // TODO FIX
 
 	public Camera(String tableLoc) {
@@ -71,11 +71,11 @@ public class Camera {
 			perceivedOpeningWidth = rectWidth[largestRectNum] * .8
 					* (TARGET_HEIGHT_INCHES / rectHeight[largestRectNum]);
 
-			// Calculate distance based off of rectangle width and horizontal
-			// FOV of camera in feet.
+			// Calculate distance in feet based off of rectangle width and horizontal
+			// FOV of camera
 			// NOTE: Between .25 and .5 ft. off of actual distance
 			diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
-					* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
+					* (HORIZONTAL_CAMERA_RES_PIXELS / rectWidth[largestRectNum]) / 2.0
 					/ Math.tan(Math.toRadians(Camera.HFOV_DEGREES / 2));
 		} else {
 			largestRectNum = 0;
@@ -91,8 +91,8 @@ public class Camera {
 
 	public double getTurnAngle() {
 		if (rectArea.length > 0) {
-			diff = ((Camera.HORIZONTAL_CAMERA_RES / 2) - getCenterX()[getLargestRectNum()])
-					/ Camera.HORIZONTAL_CAMERA_RES;
+			diff = ((Camera.HORIZONTAL_CAMERA_RES_PIXELS / 2) - getCenterX()[getLargestRectNum()])
+					/ Camera.HORIZONTAL_CAMERA_RES_PIXELS;
 			return diff * Camera.HFOV_DEGREES;
 		}
 
@@ -137,11 +137,11 @@ public class Camera {
 	}
 
 	public boolean isInDistance() {
-		return getDiagonalDist() > DIAG_DIST_MIN && getDiagonalDist() < DIAG_DIST_MAX;
+		return getDiagonalDist() > DIAG_DIST_MIN_FEET && getDiagonalDist() < DIAG_DIST_MAX_FEET;
 	}
 
 	public boolean isInTurnAngle() {
-		return getTurnAngle() > TURN_ANGLE_MIN && getTurnAngle() < TURN_ANGLE_MAX;
+		return getTurnAngle() > TURN_ANGLE_MIN_DEGREES && getTurnAngle() < TURN_ANGLE_MAX_DEGREES;
 	}
 
 	public boolean isInLineWithGoal() {

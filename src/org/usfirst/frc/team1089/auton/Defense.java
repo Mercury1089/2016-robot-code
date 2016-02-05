@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1089.auton;
 
 import org.usfirst.frc.team1089.robot.DriveTrain;
-import org.usfirst.frc.team1089.robot.MercEncoder;
 
 public class Defense extends StrongholdAuton{
 	private DefenseEnum defenseEnum;
