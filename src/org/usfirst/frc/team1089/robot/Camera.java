@@ -51,12 +51,17 @@ public class Camera {
 	public void getNTInfo() {
 		double[] def = { -1 };
 
-		// Get data from NetworkTable
-		rectArea = nt.getNumberArray("area", def);
-		rectWidth = nt.getNumberArray("width", def);
-		rectHeight = nt.getNumberArray("height", def);
-		rectCenterX = nt.getNumberArray("centerX", def);
-		rectCenterY = nt.getNumberArray("centerY", def);
+		// we cannot get arrays atomically but at least we can make sure they have the same size 
+		do
+		{
+			// Get data from NetworkTable
+			rectArea = nt.getNumberArray("area", def);
+			rectWidth = nt.getNumberArray("width", def);
+			rectHeight = nt.getNumberArray("height", def);
+			rectCenterX = nt.getNumberArray("centerX", def);
+			rectCenterY = nt.getNumberArray("centerY", def);
+		} while (!(rectArea.length == rectWidth.length && rectArea.length == rectHeight.length
+				&& rectArea.length == rectCenterX.length && rectArea.length == rectCenterY.length));
 
 		if (rectArea.length > 0) { // searches array for largest target
 			largestRectArea = rectArea[0];
@@ -67,7 +72,7 @@ public class Camera {
 					largestRectNum = i;
 				}
 			}
-			// Find width of target in inches
+			// Find perceived width of opening in inches
 			perceivedOpeningWidth = rectWidth[largestRectNum] * .8
 					* (TARGET_HEIGHT_INCHES / rectHeight[largestRectNum]);
 
@@ -78,7 +83,9 @@ public class Camera {
 					* (HORIZONTAL_CAMERA_RES_PIXELS / rectWidth[largestRectNum]) / 2.0
 					/ Math.tan(Math.toRadians(Camera.HFOV_DEGREES / 2));
 		} else {
-			largestRectNum = 0;
+			largestRectArea = 0;
+			
+			largestRectNum = -1; // no such thing
 
 			perceivedOpeningWidth = 0;
 
