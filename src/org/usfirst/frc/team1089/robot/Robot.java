@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot {
 	private DriveTrain drive;
 	private double endPosL, endPosR;
 
-	private DefenseEnum defenseEnum; 
+	private DefenseEnum defenseEnum;
 	private SendableChooser autonChooser, autonShootChooser;
 	private String autonAim;
 	private double TURN_RADIUS_INCHES = 13.5; // TODO FIX THIS
@@ -67,8 +67,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		int position = 1;
 	}
+
 	public void autonomousPeriodic() {
-		
+
 	}
 
 	public void disabledPeriodic() {
@@ -87,8 +88,13 @@ public class Robot extends IterativeRobot {
 		autonShootChooser.addDefault("Don't Shoot", "Don't Shoot");
 		autonShootChooser.addObject("High Goal", "High Goal");
 		autonShootChooser.addObject("Low Goal", "Low Goal");
-		autonAim = (String)autonShootChooser.getSelected();
-		SmartDashboard.putString("Aim:", autonAim);
+		/*if (autonShootChooser.getSelected() != null) {
+			autonAim = (String) autonShootChooser.getSelected();
+		}
+		else{
+			autonAim = "";
+		}
+		SmartDashboard.putString("Aim:", autonAim);*/
 	}
 
 	public void teleopPeriodic() {
@@ -119,7 +125,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			drive.moveDistance(encoderDistToGoalFeet());
+			drive.turnDistance(encoderDistToGoalFeet());
 		}
 
 		drive.checkMove();
@@ -137,8 +143,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public double encoderDistToGoalFeet() {
-		// return Math.toRadians(camera.getTurnAngle()) * TURN_RADIUS_INCHES;
-		return Math.toRadians(90) * TURN_RADIUS_INCHES / 12;
+		return Math.toRadians(camera.getTurnAngle()) * TURN_RADIUS_INCHES;
+	
 	}
 
 	/**
@@ -171,5 +177,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("end pos R", endPosR);
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
+		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
 	}
 }

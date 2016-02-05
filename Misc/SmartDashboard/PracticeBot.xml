@@ -1,8 +1,33 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Is in line with goal" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="188" y="309"/>
+	</widget>
+	<widget field="Defense:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="0" y="49"/>
+	</widget>
+	<widget field="Is in turn angle" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="191" y="331"/>
+	</widget>
+	<widget field="Is in range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="188" y="287"/>
+	</widget>
+	<widget field="end pos R" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="188" y="266"/>
+	</widget>
+	<widget field="end pos L" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="156" y="245"/>
+	</widget>
+	<widget field="rightFront error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="381"/>
+	</widget>
+	<widget field="leftFront error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="245"/>
+	</widget>
 	<widget field="Perceived Opening Width" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="328" y="63"/>
-		<width>248</width>
+		<location x="318" y="56"/>
+		<width>272</width>
+		<height>20</height>
 	</widget>
 	<widget field="Distance Travelled Left" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="353" y="361"/>
@@ -29,7 +54,7 @@
 		<location x="2" y="297"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.VideoStreamViewerExtension">
-		<location x="31" y="63"/>
+		<location x="308" y="82"/>
 		<width>273</width>
 		<height>181</height>
 		<property name="Camera IP Address or mDNS name" value="10.10.89.11"/>
