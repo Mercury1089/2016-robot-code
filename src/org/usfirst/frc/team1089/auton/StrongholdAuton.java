@@ -26,9 +26,7 @@ public class StrongholdAuton{
 			else
 				drive.degreeRotate(-45, 0.5);	
 		}
-		else{
-			drive.degreeRotate(camera.getTurnAngle(), 0.5);
-		}
+		drive.degreeRotate(camera.getTurnAngle(), 0.5);
 		drive.moveDistance(CENTERED_MOVE_DISTANCE);
 		//shooter.shoot();
 	}
