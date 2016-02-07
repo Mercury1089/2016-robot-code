@@ -17,6 +17,7 @@ public class DriveTrain {
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.2;
 	private static final double MOVE_THRESH_TICKS = 50;
+	public static final double AXLE_TRACK_INCHES = 15.126*2; // TODO FIX THIS
 	private double endPosL, endPosR;
 	private double startPosL, startPosR;
 	private double changePosTicks;
@@ -186,6 +187,10 @@ public class DriveTrain {
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
+	}
+	
+	public static double arcLength(double angle) {
+		return -Math.toRadians(angle) * (AXLE_TRACK_INCHES/2) / 12;
 	}
 
 	private void setToManual() {
