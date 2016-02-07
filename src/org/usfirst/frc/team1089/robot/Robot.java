@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 	private DefenseEnum defenseEnum;
 	private SendableChooser autonChooser, autonShootChooser, autonPosChooser;
 	private String autonAim;
-	private double TURN_RADIUS_INCHES = 15.126; // TODO FIX THIS
+	private double AXLE_TRACK_INCHES = 15.126*2; // TODO FIX THIS
 	int counter = 0;
 
 	@Override
@@ -155,7 +155,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			drive.turnDistance(encoderDistToGoalFeet());
+			drive.turnDistance(arcLength(10));
 		}
 
 		drive.checkMove();
@@ -178,8 +178,8 @@ public class Robot extends IterativeRobot {
 		return btn[i] && !btnPrev[i];
 	}
 	
-	public double encoderDistToGoalFeet() {
-		return -Math.toRadians(10) * TURN_RADIUS_INCHES / 12;
+	public double arcLength(double angle) {
+		return -Math.toRadians(angle) * (AXLE_TRACK_INCHES/2) / 12;
 	
 	}
 
