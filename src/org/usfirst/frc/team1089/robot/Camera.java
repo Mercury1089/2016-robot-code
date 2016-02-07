@@ -35,6 +35,7 @@ public class Camera {
 	private static final double TURN_ANGLE_MIN_DEGREES = -1.0;
 	private static final double TURN_ANGLE_MAX_DEGREES = 1.0;
 	private static final double IN_LINE_MIN = .4; // TODO FIX
+	private static final int MAX_NT_RETRY = 5;
 
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
@@ -50,9 +51,10 @@ public class Camera {
 	 */
 	public void getNTInfo() {
 		double[] def = { -1 };
+		boolean is_coherent = false; // Did we get coherent arrays form the NT?
+		int retry_count = 0;
 
 		// we cannot get arrays atomically but at least we can make sure they have the same size
-		// TODO add condition to exit the loop if we cannot get coherent data
 		do
 		{
 			// Get data from NetworkTable
@@ -61,10 +63,13 @@ public class Camera {
 			rectHeight = nt.getNumberArray("height", def);
 			rectCenterX = nt.getNumberArray("centerX", def);
 			rectCenterY = nt.getNumberArray("centerY", def);
-		} while (!(rectArea.length == rectWidth.length && rectArea.length == rectHeight.length
-				&& rectArea.length == rectCenterX.length && rectArea.length == rectCenterY.length));
 
-		if (rectArea.length > 0) { // searches array for largest target
+			is_coherent = (rectArea.length == rectWidth.length && rectArea.length == rectHeight.length
+					&& rectArea.length == rectCenterX.length && rectArea.length == rectCenterY.length);
+			retry_count++;
+		} while (!is_coherent && retry_count < MAX_NT_RETRY);
+
+		if (is_coherent && rectArea.length > 0) { // searches array for largest target
 			largestRectArea = rectArea[0];
 			largestRectNum = 0;
 			for (int i = 1; i < rectArea.length; i++) { // saves an iteration by
