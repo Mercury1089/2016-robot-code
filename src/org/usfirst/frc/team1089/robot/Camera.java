@@ -50,7 +50,7 @@ public class Camera {
 	 * rectangle and camera's horizontal FOV.
 	 */
 	public void getNTInfo() {
-		double[] def = { -1 };
+		double[] def = { }; // Return an empty array by default.
 		boolean is_coherent = false; // Did we get coherent arrays form the NT?
 		int retry_count = 0;
 
