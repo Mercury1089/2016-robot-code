@@ -32,6 +32,7 @@ public class Robot extends IterativeRobot {
 	private double TURN_RADIUS_INCHES = 15.126; // TODO FIX THIS
 	int counter = 0;
 
+	@Override
 	public void robotInit() {
 
 		camera = new Camera("GRIP/myContoursReport");
@@ -64,10 +65,12 @@ public class Robot extends IterativeRobot {
 
 	}
 
+	@Override
 	public void autonomousInit() {
 		int position = 1;
 	}
 
+	@Override
 	public void autonomousPeriodic() {
 
 		switch (counter) {
@@ -92,6 +95,7 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+	@Override
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
@@ -122,6 +126,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Aim:", autonAim);*/
 	}
 
+	@Override
 	public void teleopPeriodic() {
 		// Get initial info
 		camera.getNTInfo();
@@ -163,14 +168,16 @@ public class Robot extends IterativeRobot {
 		debug();
 	}
 
-	public boolean button(int i) {
-		return btn[i] && !btnPrev[i];
-	}
-
+	
+	@Override
 	public void testPeriodic() {
 
 	}
 
+	public boolean button(int i) {
+		return btn[i] && !btnPrev[i];
+	}
+	
 	public double encoderDistToGoalFeet() {
 		return -Math.toRadians(10) * TURN_RADIUS_INCHES / 12;
 	
