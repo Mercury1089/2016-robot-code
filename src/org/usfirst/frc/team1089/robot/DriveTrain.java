@@ -10,13 +10,14 @@ public class DriveTrain {
 
 	private CANTalon lft, rft, lbt, rbt;
 	private AnalogGyro gyro;
-	private static boolean isMoving = false;
+	private static boolean isMoving = false; // indicates we are in (position) control mode
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.2;
 	private static final double MOVE_THRESH_TICKS = 50;
+	public static final double AXLE_TRACK_INCHES = 15.126*2; // TODO FIX THIS
 	private double endPosL, endPosR;
 	private double startPosL, startPosR;
 	private double changePosTicks;
@@ -36,26 +37,26 @@ public class DriveTrain {
 	}
 
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
-		if (!isMoving) {
-			if (isOutOfDeadzone(leftStick, 1)) {
-				lft.set(-leftStick.getRawAxis(1));
-			} else {
-				lft.set(0);
+		if (isMoving) {
+			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
+				return; // we keep moving as no joystick has been grabbed
 			}
-
-			if (isOutOfDeadzone(rightStick, 1)) {
-				rft.set(rightStick.getRawAxis(1));
-			} else {
-				rft.set(0);
+			else
+			{
+				setToManual();
 			}
+		}
+	
+		if (isOutOfDeadzone(leftStick, 1)) {
+			lft.set(-leftStick.getRawAxis(1));
 		} else {
-			if (isOutOfDeadzone(leftStick, 1)) {
-				setToManual();
-			}
+			lft.set(0);
+		}
 
-			if (isOutOfDeadzone(rightStick, 1)) {
-				setToManual();
-			}
+		if (isOutOfDeadzone(rightStick, 1)) {
+			rft.set(rightStick.getRawAxis(1));
+		} else {
+			rft.set(0);
 		}
 	}
 
@@ -121,6 +122,9 @@ public class DriveTrain {
 	 *            - speed value to rotate; + value is CW, - value is CCW
 	 */
 	public void speedRotate(double s) {
+		if (isMoving) {
+			setToManual();
+		}		
 		lft.set(s);
 		rft.set(s);
 	}
@@ -129,6 +133,9 @@ public class DriveTrain {
 	 * Stops moving
 	 */
 	public void stop() {
+		if (isMoving) {
+			setToManual();
+		}
 		lft.set(0);
 		rft.set(0);
 	}
@@ -180,6 +187,10 @@ public class DriveTrain {
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
+	}
+	
+	public static double arcLength(double angle) {
+		return -Math.toRadians(angle) * (AXLE_TRACK_INCHES/2) / 12;
 	}
 
 	private void setToManual() {

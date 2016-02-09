@@ -25,7 +25,7 @@ public class Camera {
 	private double diagTargetDistance, horizTargetDistance;
 	private double diff;
 
-	public static final double HORIZONTAL_CAMERA_RES = 320;
+	public static final double HORIZONTAL_CAMERA_RES_PIXELS = 320;
 	private static final double TARGET_WIDTH_INCHES = 20;
 	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
@@ -35,6 +35,7 @@ public class Camera {
 	private static final double TURN_ANGLE_MIN_DEGREES = -1.0;
 	private static final double TURN_ANGLE_MAX_DEGREES = 1.0;
 	private static final double IN_LINE_MIN = .4; // TODO FIX
+	private static final int MAX_NT_RETRY = 5;
 
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
@@ -49,16 +50,26 @@ public class Camera {
 	 * rectangle and camera's horizontal FOV.
 	 */
 	public void getNTInfo() {
-		double[] def = { -1 };
+		double[] def = { }; // Return an empty array by default.
+		boolean is_coherent = false; // Did we get coherent arrays form the NT?
+		int retry_count = 0;
 
-		// Get data from NetworkTable
-		rectArea = nt.getNumberArray("area", def);
-		rectWidth = nt.getNumberArray("width", def);
-		rectHeight = nt.getNumberArray("height", def);
-		rectCenterX = nt.getNumberArray("centerX", def);
-		rectCenterY = nt.getNumberArray("centerY", def);
+		// we cannot get arrays atomically but at least we can make sure they have the same size
+		do
+		{
+			// Get data from NetworkTable
+			rectArea = nt.getNumberArray("area", def);
+			rectWidth = nt.getNumberArray("width", def);
+			rectHeight = nt.getNumberArray("height", def);
+			rectCenterX = nt.getNumberArray("centerX", def);
+			rectCenterY = nt.getNumberArray("centerY", def);
 
-		if (rectArea.length > 0) { // searches array for largest target
+			is_coherent = (rectArea.length == rectWidth.length && rectArea.length == rectHeight.length
+					&& rectArea.length == rectCenterX.length && rectArea.length == rectCenterY.length);
+			retry_count++;
+		} while (!is_coherent && retry_count < MAX_NT_RETRY);
+
+		if (is_coherent && rectArea.length > 0) { // searches array for largest target
 			largestRectArea = rectArea[0];
 			largestRectNum = 0;
 			for (int i = 1; i < rectArea.length; i++) { // saves an iteration by
@@ -67,18 +78,20 @@ public class Camera {
 					largestRectNum = i;
 				}
 			}
-			// Find width of target in inches
+			// Find perceived width of opening in inches
 			perceivedOpeningWidth = rectWidth[largestRectNum] * .8
 					* (TARGET_HEIGHT_INCHES / rectHeight[largestRectNum]);
 
-			// Calculate distance based off of rectangle width and horizontal
-			// FOV of camera in feet.
+			// Calculate distance in feet based off of rectangle width and horizontal
+			// FOV of camera
 			// NOTE: Between .25 and .5 ft. off of actual distance
 			diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
-					* (HORIZONTAL_CAMERA_RES / rectWidth[largestRectNum]) / 2.0
+					* (HORIZONTAL_CAMERA_RES_PIXELS / rectWidth[largestRectNum]) / 2.0
 					/ Math.tan(Math.toRadians(Camera.HFOV_DEGREES / 2));
 		} else {
-			largestRectNum = 0;
+			largestRectArea = 0;
+			
+			largestRectNum = -1; // no such thing
 
 			perceivedOpeningWidth = 0;
 
@@ -91,8 +104,8 @@ public class Camera {
 
 	public double getTurnAngle() {
 		if (rectArea.length > 0) {
-			diff = ((Camera.HORIZONTAL_CAMERA_RES / 2) - getCenterX()[getLargestRectNum()])
-					/ Camera.HORIZONTAL_CAMERA_RES;
+			diff = ((Camera.HORIZONTAL_CAMERA_RES_PIXELS / 2) - getCenterX()[getLargestRectNum()])
+					/ Camera.HORIZONTAL_CAMERA_RES_PIXELS;
 			return diff * Camera.HFOV_DEGREES;
 		}
 
