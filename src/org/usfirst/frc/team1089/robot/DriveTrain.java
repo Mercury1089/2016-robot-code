@@ -60,6 +60,14 @@ public class DriveTrain {
 		}
 	}
 
+	/**
+	 * Moves by the specified distance in feet.
+	 * <p>
+	 * This is an asynchronous operation.  Use waitMove() to wait for completion.
+	 * </p>
+	 * 
+	 * @param changePos the distance in feet
+	 */
 	public void moveDistance(double changePos) {
 		changePosTicks = MercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = lft.getEncPosition();
@@ -79,6 +87,14 @@ public class DriveTrain {
 		rft.set(endPosR);
 	}
 
+	/**
+	 * Turns by the specified distance in feet alongside the arc created by the axle track.
+	 * <p>
+	 * This is an asynchronous operation.  Use waitMove() to wait for completion.
+	 * </p
+	 * 
+	 * @param changePos the distance in feet
+	 */
 	public void turnDistance(double changePos) {
 		changePosTicks = MercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = lft.getEncPosition();
@@ -119,7 +135,7 @@ public class DriveTrain {
 
 	/**
 	 * @param s
-	 *            - speed value to rotate; + value is CW, - value is CCW
+	 *            speed value to rotate; + value is CW, - value is CCW
 	 */
 	public void speedRotate(double s) {
 		if (isMoving) {
@@ -143,9 +159,9 @@ public class DriveTrain {
 	/**
 	 * 
 	 * @param deg
-	 *            - degree value to rotate
+	 *            degree value to rotate
 	 * @param s
-	 *            - speed value to rotate
+	 *            speed value to rotate
 	 * 
 	 *            Rotates robot a number of degrees at a certain speed
 	 */
@@ -176,13 +192,13 @@ public class DriveTrain {
 	 * public boolean isOutOfDeadzone(Joystick j)
 	 * </pre>
 	 * 
-	 * Returns true or false
+	 * Returns if joystick is out of dead zone
 	 * 
 	 * @param j
 	 *            the joystick to get the axis value from
 	 * @param axis
 	 *            the axis value to be checked
-	 * @return true if at least one axis is greater than deadzone, false
+	 * @return true if the axis is greater than deadzone, false
 	 *         otherwise
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {

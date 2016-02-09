@@ -27,6 +27,7 @@ public class StrongholdAuton{
 		}
 		drive.degreeRotate(camera.getTurnAngle(), 0.5);
 		drive.moveDistance(CENTERED_MOVE_DISTANCE);
+		drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
 		//shooter.shoot();
 	}
 }
