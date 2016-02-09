@@ -1,20 +1,33 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Aim:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="634" y="330"/>
+	</widget>
+	<widget field="Defense: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="635" y="134"/>
+	</widget>
+	<widget field="Position: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="640" y="10"/>
+	</widget>
 	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
-		<location x="920" y="8"/>
-		<width>417</width>
-		<height>220</height>
+		<location x="7" y="0"/>
+		<width>615</width>
+		<height>444</height>
 	</static-widget>
 	<widget field="Is in range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="430" y="52"/>
+		<location x="825" y="108"/>
+		<width>90</width>
+		<height>45</height>
 	</widget>
 	<widget field="Is in turn angle" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="433" y="247"/>
-		<width>82</width>
-		<height>16</height>
+		<location x="827" y="291"/>
+		<width>111</width>
+		<height>46</height>
 	</widget>
 	<widget field="Is in line with goal" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="432" y="149"/>
+		<location x="825" y="200"/>
+		<width>126</width>
+		<height>46</height>
 	</widget>
 	<widget field="Defense:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="0" y="49"/>
@@ -33,7 +46,7 @@
 		<height>20</height>
 	</widget>
 	<widget field="Perceived Opening Width" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1062" y="238"/>
+		<location x="1052" y="236"/>
 		<width>272</width>
 		<height>20</height>
 	</widget>
@@ -44,7 +57,7 @@
 		<location x="1149" y="424"/>
 	</widget>
 	<widget field="Diagonal Distance" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="21" y="309"/>
+		<location x="761" y="31"/>
 		<height>20</height>
 	</widget>
 	<widget field="Left Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -57,19 +70,13 @@
 		<location x="992" y="337"/>
 	</widget>
 	<widget field="Gyro" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="81" y="342"/>
+		<location x="961" y="30"/>
 	</widget>
 	<widget field="Horizontal Distance: " type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="223" y="309"/>
+		<location x="1124" y="30"/>
 		<width>191</width>
 		<height>20</height>
 	</widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.VideoStreamViewerExtension">
-		<location x="17" y="13"/>
-		<width>382</width>
-		<height>274</height>
-		<property name="Camera IP Address or mDNS name" value="10.10.89.11"/>
-	</static-widget>
 	<widget field="Center Y:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1010" y="294"/>
 	</widget>

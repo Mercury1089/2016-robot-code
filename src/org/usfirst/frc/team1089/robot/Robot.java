@@ -113,12 +113,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Position: ", posChooser);
 		
 		shootChooser = new SendableChooser();
-		shootChooser.addDefault("Don't Shoot", "Don't Shoot");
-		shootChooser.addObject("High Goal", "High Goal");
-		shootChooser.addObject("Low Goal", "Low Goal");
+		shootChooser.addDefault("Don't Shoot", 1);
+		shootChooser.addObject("High Goal", 2);
+		shootChooser.addObject("Low Goal", 3);
 			
-		autonAim = (String) shootChooser.getSelected();
-		SmartDashboard.putString("Aim:", autonAim);
+		SmartDashboard.putData("Aim:", shootChooser);
 	}
 
 	@Override
