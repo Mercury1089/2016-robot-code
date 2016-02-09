@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1089.auton;
 
-import org.usfirst.frc.team1089.robot.Camera;
 import org.usfirst.frc.team1089.robot.DriveTrain;
 
 public class Defense{
@@ -8,8 +7,9 @@ public class Defense{
 	private DriveTrain drive;
 	private final int MOVE_DISTANCE = 7;
 	
-	public Defense(DriveTrain d) {
+	public Defense(DriveTrain d, DefenseEnum dE) {
 		drive = d;
+		defenseEnum = dE;
 	}
 	
 	public void breach() {

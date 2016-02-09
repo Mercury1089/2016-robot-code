@@ -28,8 +28,9 @@ public class Robot extends IterativeRobot {
 
 	private DefenseEnum defenseEnum;
 	private SendableChooser defenseChooser, shootChooser, posChooser;
+	private StrongholdAuton auton;
 	private String autonAim;
-	int counter = 0;
+	private int position = 0;
 
 	@Override
 	public void robotInit() {
@@ -61,43 +62,7 @@ public class Robot extends IterativeRobot {
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
-
-	}
-
-	@Override
-	public void autonomousInit() {
-		int position = 1;
-	}
-
-	@Override
-	public void autonomousPeriodic() {
-
-		switch (counter) {
-		case 0:
-			drive.moveDistance(1);
-			drive.waitMove();
-			counter++;
-			break;
-			
-		case 1:
-			drive.moveDistance(1);
-			drive.waitMove();
-			counter++;
-			break;
-			
-		case 2:
-			drive.moveDistance(1);
-			drive.waitMove();
-			counter++;
-			break;
-			
-		}
-	}
-
-	@Override
-	public void disabledPeriodic() {
-		camera.getNTInfo();
-		debug();
+		
 		defenseChooser = new SendableChooser();
 		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
 		defenseChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
@@ -116,8 +81,27 @@ public class Robot extends IterativeRobot {
 		shootChooser.addDefault("Don't Shoot", 1);
 		shootChooser.addObject("High Goal", 2);
 		shootChooser.addObject("Low Goal", 3);
-			
 		SmartDashboard.putData("Aim:", shootChooser);
+
+		auton = new StrongholdAuton(drive, camera,(int)posChooser.getSelected(),
+									(int)shootChooser.getSelected(),
+									(DefenseEnum)defenseChooser.getSelected());
+	}
+
+	@Override
+	public void autonomousInit() {
+		
+	}
+
+	@Override
+	public void autonomousPeriodic() {
+		auton.move();
+	}
+
+	@Override
+	public void disabledPeriodic() {
+		camera.getNTInfo();
+		debug();
 	}
 
 	@Override
