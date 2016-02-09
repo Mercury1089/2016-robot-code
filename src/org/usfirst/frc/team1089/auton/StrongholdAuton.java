@@ -32,9 +32,40 @@ public class StrongholdAuton{
 			drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
 			//shooter.shoot();
 		}
-		/*else if(aim == 3){	
-			drive.turnDistance(changePos); turn to face low goal
-			drive.moveDistance(changePos); drive into low goal area
+		/*else if(aim == 3){
+		 	switch(pos){
+		 		case 1:{
+		 			drive.turnDistance(POSITION1_TURN_DISTANCE);
+		 			drive.waitMove();
+		 			break;
+		 		}
+		 		case 2:{
+		 			drive.turnDistance(POSITION2_TURN_DISTANCE);
+		 			drive.waitMove();
+		 			break;
+		 		}
+		 		case 3:{
+		 			drive.turnDistance(POSITION3_TURN_DISTANCE);
+		 			drive.waitMove();
+		 			break;
+		 		}
+		 		case 4:{
+		 			drive.turnDistance(POSITION4_TURN_DISTANCE);
+		 			drive.waitMove();
+		 			break;
+		 		}
+		 		case 5:{
+		 			drive.turnDistance(POSITION5_TURN_DISTANCE);
+		 			drive.waitMove();
+		 			break;
+		 		}	
+		 	}
+		 	drive.MoveDistance(DISTANCE_TO_ROTATE_SPOT); //move to spot that we need to go to before we turn to face low goal
+		 	drive.waitMove();
+			drive.turnDistance(changePos); //turn to face low goal
+			drive.waitMove();
+			drive.moveDistance(changePos); //drive into low goal area
+			drive.waitMove();
 			shooter.shootLow();
 		}*/
 	}

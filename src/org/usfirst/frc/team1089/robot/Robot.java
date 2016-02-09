@@ -73,8 +73,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Defense: ", defenseChooser);
 
 		posChooser = new SendableChooser();
-		posChooser.addDefault("1 - 3", 1);
-		posChooser.addObject("4 - 5", 4);
+		posChooser.addDefault("1", 1);
+		posChooser.addObject("2", 2);
+		posChooser.addObject("3", 3);
+		posChooser.addObject("4", 4);
+		posChooser.addObject("5", 5);
 		SmartDashboard.putData("Position: ", posChooser);
 		
 		shootChooser = new SendableChooser();
@@ -171,9 +174,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(leftEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
+				"" + Utilities.round(MercEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(rightEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
+				"" + Utilities.round(MercEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
 		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()) + " px.");
