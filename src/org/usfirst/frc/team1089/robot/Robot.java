@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
 	private double endPosL, endPosR;
 
 	private DefenseEnum defenseEnum;
-	private SendableChooser autonChooser, autonShootChooser, autonPosChooser;
+	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private String autonAim;
 	int counter = 0;
 
@@ -98,31 +98,27 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
-		autonChooser = new SendableChooser();
-		autonChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
-		autonChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
-		autonChooser.addObject("Moat", DefenseEnum.MOAT);
-		autonChooser.addObject("Ramparts", DefenseEnum.RAMPARTS);
-		autonChooser.addObject("RockWall", DefenseEnum.ROCK_WALL);
-		autonChooser.addObject("RoughTerrain", DefenseEnum.ROUGH_TERRAIN);
-		SmartDashboard.putData("Defense: ", autonChooser);
+		defenseChooser = new SendableChooser();
+		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
+		defenseChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
+		defenseChooser.addObject("Moat", DefenseEnum.MOAT);
+		defenseChooser.addObject("Ramparts", DefenseEnum.RAMPARTS);
+		defenseChooser.addObject("Rock Wall", DefenseEnum.ROCK_WALL);
+		defenseChooser.addObject("Rough Terrain", DefenseEnum.ROUGH_TERRAIN);
+		SmartDashboard.putData("Defense: ", defenseChooser);
 
-		autonPosChooser = new SendableChooser();
-		autonPosChooser.addDefault("1 through 3", 1);
-		autonPosChooser.addObject("4 through 5", 4);
-		SmartDashboard.putData("Position: ", autonPosChooser);
+		posChooser = new SendableChooser();
+		posChooser.addDefault("1 - 3", 1);
+		posChooser.addObject("4 - 5", 4);
+		SmartDashboard.putData("Position: ", posChooser);
 		
-		autonShootChooser = new SendableChooser();
-		autonShootChooser.addDefault("Don't Shoot", "Don't Shoot");
-		autonShootChooser.addObject("High Goal", "High Goal");
-		autonShootChooser.addObject("Low Goal", "Low Goal");
-		/*if (autonShootChooser.getSelected() != null) {
-			autonAim = (String) autonShootChooser.getSelected();
-		}
-		else{
-			autonAim = "";
-		}
-		SmartDashboard.putString("Aim:", autonAim);*/
+		shootChooser = new SendableChooser();
+		shootChooser.addDefault("Don't Shoot", "Don't Shoot");
+		shootChooser.addObject("High Goal", "High Goal");
+		shootChooser.addObject("Low Goal", "Low Goal");
+			
+		autonAim = (String) shootChooser.getSelected();
+		SmartDashboard.putString("Aim:", autonAim);
 	}
 
 	@Override

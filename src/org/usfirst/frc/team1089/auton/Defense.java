@@ -3,12 +3,13 @@ package org.usfirst.frc.team1089.auton;
 import org.usfirst.frc.team1089.robot.Camera;
 import org.usfirst.frc.team1089.robot.DriveTrain;
 
-public class Defense extends StrongholdAuton{
+public class Defense{
 	private DefenseEnum defenseEnum;
+	private DriveTrain drive;
 	private final int MOVE_DISTANCE = 7;
 	
-	public Defense(DriveTrain d, DefenseEnum dE, Camera c, int p) {
-		super(d, dE, c, p);
+	public Defense(DriveTrain d) {
+		drive = d;
 	}
 	
 	public void breach() {
