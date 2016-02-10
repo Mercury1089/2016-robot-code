@@ -54,13 +54,13 @@ public class DriveTrain {
 		}
 	
 		if (isOutOfDeadzone(leftStick, 1)) {
-			lft.set(leftStick.getRawAxis(1) * LEFT_DRIVE_SIGN);
+			lft.set((leftStick.getRawAxis(1)-DEADZONE_LIMIT)/(1.0-DEADZONE_LIMIT) * LEFT_DRIVE_SIGN);
 		} else {
 			lft.set(0);
 		}
 
 		if (isOutOfDeadzone(rightStick, 1)) {
-			rft.set(rightStick.getRawAxis(1) * RIGHT_DRIVE_SIGN);
+			rft.set((rightStick.getRawAxis(1)-DEADZONE_LIMIT)/(1.0-DEADZONE_LIMIT) * RIGHT_DRIVE_SIGN);
 		} else {
 			rft.set(0);
 		}
