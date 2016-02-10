@@ -51,20 +51,21 @@ public class DriveTrain {
 			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
 				return; // we keep moving as no joystick has been grabbed
 			}
-			else
-			{
+			else {
 				setToManual();
 			}
 		}
 	
 		if (isOutOfDeadzone(leftStick, 1)) {
-			lft.set((leftStick.getRawAxis(1)-DEADZONE_LIMIT)/(1.0-DEADZONE_LIMIT) * LEFT_DRIVE_SIGN);
+			double rawValue = leftStick.getRawAxis(1);
+			lft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * LEFT_DRIVE_SIGN);
 		} else {
 			lft.set(0);
 		}
 
 		if (isOutOfDeadzone(rightStick, 1)) {
-			rft.set((rightStick.getRawAxis(1)-DEADZONE_LIMIT)/(1.0-DEADZONE_LIMIT) * RIGHT_DRIVE_SIGN);
+			double rawValue = rightStick.getRawAxis(1);
+			rft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * RIGHT_DRIVE_SIGN);
 		} else {
 			rft.set(0);
 		}
@@ -137,10 +138,10 @@ public class DriveTrain {
 		return isMoving;
 	}
 	
-	public void waitMove(){
-		while (checkMove()){
+	public void waitMove() {
+		while (checkMove()) {
+			// do nothing
 		}
-		return;
 	}
 
 	/**
