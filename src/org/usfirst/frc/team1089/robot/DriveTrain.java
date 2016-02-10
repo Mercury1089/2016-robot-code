@@ -33,6 +33,10 @@ public class DriveTrain {
 		rft = rightFront;
 		lbt = leftBack;
 		rbt = rightBack;
+		lft.enableBrakeMode(true);
+		rft.enableBrakeMode(true);
+		lbt.enableBrakeMode(true);
+		rbt.enableBrakeMode(true);
 		lft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		rft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		lbt.changeControlMode(CANTalon.TalonControlMode.Follower);

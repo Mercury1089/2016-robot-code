@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	private boolean[] btn, btnPrev;
 	private Camera camera;
-	private MercEncoder leftEncoder, rightEncoder;
+	//private MercEncoder leftEncoder, rightEncoder;
 	// private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick;
@@ -26,18 +26,18 @@ public class Robot extends IterativeRobot {
 	private DriveTrain drive;
 	private double endPosL, endPosR;
 
-	private DefenseEnum defenseEnum;
+	//private DefenseEnum defenseEnum;
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
-	private String autonAim;
-	private int position = 0;
+	//private String autonAim;
+	//private int position = 0;
 
 	@Override
 	public void robotInit() {
 
 		camera = new Camera("GRIP/myContoursReport");
-		leftEncoder = new MercEncoder();
-		rightEncoder = new MercEncoder();
+		//leftEncoder = new MercEncoder();
+		//rightEncoder = new MercEncoder();
 
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
@@ -48,10 +48,6 @@ public class Robot extends IterativeRobot {
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
-		leftFront.enableBrakeMode(true);
-		rightFront.enableBrakeMode(true);
-		leftBack.enableBrakeMode(true);
-		rightBack.enableBrakeMode(true);
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 
