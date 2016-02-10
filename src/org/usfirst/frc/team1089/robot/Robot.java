@@ -24,7 +24,7 @@ public class Robot extends IterativeRobot {
 	private AnalogGyro gyro;
 	//private ControllerBase cBase;
 	private DriveTrain drive;
-	private double endPosL, endPosR;
+	//private double endPosL, endPosR;
 
 	//private DefenseEnum defenseEnum;
 	private SendableChooser defenseChooser, shootChooser, posChooser;
@@ -182,8 +182,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
-		SmartDashboard.putNumber("end pos L", endPosL);
-		SmartDashboard.putNumber("end pos R", endPosR);
+		//SmartDashboard.putNumber("end pos L", endPosL);
+		//SmartDashboard.putNumber("end pos R", endPosR);
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());

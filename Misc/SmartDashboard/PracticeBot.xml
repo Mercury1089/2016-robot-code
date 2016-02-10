@@ -32,12 +32,6 @@
 	<widget field="Defense:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="0" y="49"/>
 	</widget>
-	<widget field="end pos R" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1217" y="378"/>
-	</widget>
-	<widget field="end pos L" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1009" y="382"/>
-	</widget>
 	<widget field="rightFront error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1190" y="401"/>
 	</widget>
@@ -92,7 +86,14 @@
 	<widget field="Center X:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1010" y="272"/>
 	</widget>
+	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
+		<location x="7" y="0"/>
+		<width>615</width>
+		<height>444</height>
+	</static-widget>
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="end pos L"/>
+	<hidden field="end pos R"/>
 </xml>
