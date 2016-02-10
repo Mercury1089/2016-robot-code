@@ -15,9 +15,13 @@ public class DriveTrain {
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
-	private static final double DEADZONE_LIMIT = 0.2;
+	private static final double DEADZONE_LIMIT = 0.4;
 	private static final double MOVE_THRESH_TICKS = 50;
 	public static final double AXLE_TRACK_INCHES = 15.126*2; // TODO FIX THIS
+	public static final double LEFT_ENC_SIGN = 1.0;
+	public static final double RIGHT_ENC_SIGN = -1.0;
+	public static final double LEFT_DRIVE_SIGN = -1.0;
+	public static final double RIGHT_DRIVE_SIGN = 1.0;
 	private double endPosL, endPosR;
 	private double startPosL, startPosR;
 	private double changePosTicks;
@@ -48,13 +52,13 @@ public class DriveTrain {
 		}
 	
 		if (isOutOfDeadzone(leftStick, 1)) {
-			lft.set(-leftStick.getRawAxis(1));
+			lft.set(leftStick.getRawAxis(1) * LEFT_DRIVE_SIGN);
 		} else {
 			lft.set(0);
 		}
 
 		if (isOutOfDeadzone(rightStick, 1)) {
-			rft.set(rightStick.getRawAxis(1));
+			rft.set(rightStick.getRawAxis(1) * RIGHT_DRIVE_SIGN);
 		} else {
 			rft.set(0);
 		}
@@ -73,7 +77,7 @@ public class DriveTrain {
 		startPosL = lft.getEncPosition();
 		startPosR = rft.getEncPosition();
 		endPosL = startPosL + changePosTicks;
-		endPosR = startPosR - changePosTicks;
+		endPosR = startPosR + changePosTicks * RIGHT_ENC_SIGN;
 		lft.setPID(0.6, 0.0000, 0.0);
 		rft.setPID(0.6, 0.0000, 0.0);
 		lft.configPeakOutputVoltage(12.0, -12.0);
@@ -100,7 +104,7 @@ public class DriveTrain {
 		startPosL = lft.getEncPosition();
 		startPosR = rft.getEncPosition();
 		endPosL = startPosL + changePosTicks;
-		endPosR = startPosR + changePosTicks;
+		endPosR = startPosR - changePosTicks * RIGHT_ENC_SIGN;
 		lft.setPID(0.3, 0.0001, 0.0);
 		rft.setPID(0.3, 0.0001, 0.0);
 		lft.configPeakOutputVoltage(6.0, -6.0);
