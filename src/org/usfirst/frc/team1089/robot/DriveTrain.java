@@ -27,6 +27,8 @@ public class DriveTrain {
 	private double changePosTicks;
 
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
+		Config config = Config.getCurrent();
+		
 		lft = leftFront;
 		rft = rightFront;
 		lbt = leftBack;
