@@ -16,14 +16,17 @@ public class Config {
 	public final double WHEEL_SIZE_INCHES;
 	public final double GEAR_RATIO;
 
-	public enum configType {
+	public enum ConfigType {
 		PROTO, COMPETITION;
 	}
-
+	public final ConfigType configType;
+	
 	private static Config current = null; // Do not initialize - getCurrent() does it if necessary.
 
-	private Config(configType confType) {
-		switch (confType) {
+	private Config(ConfigType configType) {
+		
+		this.configType = configType;
+		switch (configType) {
 		case PROTO:
 			HFOV_DEGREES = 41; // calibrated value for Axis M1011 (M1013 should
 								// be greater)
@@ -60,21 +63,20 @@ public class Config {
 			WHEEL_SIZE_INCHES = 10.0;
 			GEAR_RATIO = 4.0 / 3.0;
 			break;
-
 		}
 	}
 
-	public static void setCurrent(configType confType) {
+	public synchronized static void setCurrent(ConfigType configType) {
 		if (current == null) {
-		current = new Config(confType);
-		} else {
-			throw new IllegalStateException("Current configuration type can only be set once.");
+			current = new Config(configType);
+		} else if (current.configType != configType) {
+			throw new IllegalStateException("Cannot change configuration type once it has been set.");
 		}
 	}
 
 	public static Config getCurrent() {
 		if (current == null) {
-			new Config(configType.PROTO); // Default to PROTO if no one has called setCurrent.
+			setCurrent(ConfigType.PROTO);  // Default to PROTO if no one has called setCurrent.
 		}
 		return current;
 	}
