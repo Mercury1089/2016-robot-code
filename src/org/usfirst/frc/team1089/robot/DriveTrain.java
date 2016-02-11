@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveTrain {
 
-	private CANTalon lft, rft, lbt, rbt;
+	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
 	private AnalogGyro gyro;
 	private static boolean isMoving = false; // indicates we are in (position)
 												// control mode
@@ -28,20 +28,20 @@ public class DriveTrain {
 		config = Config.getCurrent();
 
 		mercEncoder = new MercEncoder();
-		lft = leftFront;
-		rft = rightFront;
-		lbt = leftBack;
-		rbt = rightBack;
-		lft.enableBrakeMode(true);
-		rft.enableBrakeMode(true);
-		lbt.enableBrakeMode(true);
-		rbt.enableBrakeMode(true);
-		lft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		rft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		lbt.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rbt.changeControlMode(CANTalon.TalonControlMode.Follower);
-		lbt.set(lft.getDeviceID());
-		rbt.set(rft.getDeviceID());
+		leftFrontTalon = leftFront;
+		rightFrontTalon = rightFront;
+		leftBackTalon = leftBack;
+		rightBackTalon = rightBack;
+		leftFrontTalon.enableBrakeMode(true);
+		rightFrontTalon.enableBrakeMode(true);
+		leftBackTalon.enableBrakeMode(true);
+		rightBackTalon.enableBrakeMode(true);
+		leftFrontTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		rightFrontTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		leftBackTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
+		rightBackTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
+		leftBackTalon.set(leftFrontTalon.getDeviceID());
+		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
 	}
 
@@ -56,18 +56,18 @@ public class DriveTrain {
 
 		if (isOutOfDeadzone(leftStick, 1)) {
 			double rawValue = leftStick.getRawAxis(1);
-			lft.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+			leftFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
 					* config.LEFT_DRIVE_SIGN);
 		} else {
-			lft.set(0);
+			leftFrontTalon.set(0);
 		}
 
 		if (isOutOfDeadzone(rightStick, 1)) {
 			double rawValue = rightStick.getRawAxis(1);
-			rft.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+			rightFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
 					* config.RIGHT_DRIVE_SIGN);
 		} else {
-			rft.set(0);
+			rightFrontTalon.set(0);
 		}
 	}
 
@@ -82,21 +82,21 @@ public class DriveTrain {
 	 */
 	public void moveDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
-		startPosL = lft.getEncPosition();
-		startPosR = rft.getEncPosition();
+		startPosL = leftFrontTalon.getEncPosition();
+		startPosR = rightFrontTalon.getEncPosition();
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
-		lft.setPID(0.6, 0.0000, 0.0);
-		rft.setPID(0.6, 0.0000, 0.0);
-		lft.configPeakOutputVoltage(12.0, -12.0);
-		lft.configNominalOutputVoltage(0, 0);
-		rft.configPeakOutputVoltage(12.0, -12.0);
-		rft.configNominalOutputVoltage(0.0, 0.0);
+		leftFrontTalon.setPID(0.6, 0.0000, 0.0);
+		rightFrontTalon.setPID(0.6, 0.0000, 0.0);
+		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		leftFrontTalon.configNominalOutputVoltage(0, 0);
+		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
 		setToAuto();
-		lft.enableControl();
-		rft.enableControl();
-		lft.set(endPosL);
-		rft.set(endPosR);
+		leftFrontTalon.enableControl();
+		rightFrontTalon.enableControl();
+		leftFrontTalon.set(endPosL);
+		rightFrontTalon.set(endPosR);
 	}
 
 	/**
@@ -111,32 +111,32 @@ public class DriveTrain {
 	 */
 	public void turnDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
-		startPosL = lft.getEncPosition();
-		startPosR = rft.getEncPosition();
+		startPosL = leftFrontTalon.getEncPosition();
+		startPosR = rightFrontTalon.getEncPosition();
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
-		lft.setPID(0.3, 0.0001, 0.0);
-		rft.setPID(0.3, 0.0001, 0.0);
-		lft.configPeakOutputVoltage(6.0, -6.0);
-		lft.configNominalOutputVoltage(0, 0);
-		rft.configPeakOutputVoltage(6.0, -6.0);
-		rft.configNominalOutputVoltage(0.0, 0.0);
+		leftFrontTalon.setPID(0.3, 0.0001, 0.0);
+		rightFrontTalon.setPID(0.3, 0.0001, 0.0);
+		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		leftFrontTalon.configNominalOutputVoltage(0, 0);
+		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
 		setToAuto();
-		lft.enableControl();
-		rft.enableControl();
-		lft.set(endPosL);
-		rft.set(endPosR);
+		leftFrontTalon.enableControl();
+		rightFrontTalon.enableControl();
+		leftFrontTalon.set(endPosL);
+		rightFrontTalon.set(endPosR);
 	}
 
 	public boolean checkMove() {
-		double leftVel = lft.getEncVelocity();
-		double rightVel = rft.getEncVelocity();
+		double leftVel = leftFrontTalon.getEncVelocity();
+		double rightVel = rightFrontTalon.getEncVelocity();
 
 		if (isMoving
-				&& (lft.getEncPosition() > endPosL - MOVE_THRESH_TICKS
-						&& lft.getEncPosition() < endPosL + MOVE_THRESH_TICKS)
-				&& (rft.getEncPosition() > endPosR - MOVE_THRESH_TICKS
-						&& rft.getEncPosition() < endPosR + MOVE_THRESH_TICKS)
+				&& (leftFrontTalon.getEncPosition() > endPosL - MOVE_THRESH_TICKS
+						&& leftFrontTalon.getEncPosition() < endPosL + MOVE_THRESH_TICKS)
+				&& (rightFrontTalon.getEncPosition() > endPosR - MOVE_THRESH_TICKS
+						&& rightFrontTalon.getEncPosition() < endPosR + MOVE_THRESH_TICKS)
 				&& leftVel == 0 && rightVel == 0) {
 
 			setToManual();
@@ -158,8 +158,8 @@ public class DriveTrain {
 		if (isMoving) {
 			setToManual();
 		}
-		lft.set(s);
-		rft.set(s);
+		leftFrontTalon.set(s);
+		rightFrontTalon.set(s);
 	}
 
 	/**
@@ -169,8 +169,8 @@ public class DriveTrain {
 		if (isMoving) {
 			setToManual();
 		}
-		lft.set(0);
-		rft.set(0);
+		leftFrontTalon.set(0);
+		rightFrontTalon.set(0);
 	}
 
 	/**
@@ -227,14 +227,14 @@ public class DriveTrain {
 
 	private void setToManual() {
 		isMoving = false;
-		lft.changeControlMode(TalonControlMode.PercentVbus);
-		rft.changeControlMode(TalonControlMode.PercentVbus);
+		leftFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
+		rightFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
 	}
 
 	private void setToAuto() {
 		isMoving = true;
-		lft.changeControlMode(CANTalon.TalonControlMode.Position);
-		rft.changeControlMode(CANTalon.TalonControlMode.Position);
+		leftFrontTalon.changeControlMode(CANTalon.TalonControlMode.Position);
+		rightFrontTalon.changeControlMode(CANTalon.TalonControlMode.Position);
 	}
 
 }

@@ -1,7 +1,8 @@
 <xml version="1.0">
 <dashboard>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="623" y="31"/>
+		<location x="1003" y="123"/>
+		<height>23</height>
 	</static-widget>
 	<widget field="Aim:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="634" y="330"/>

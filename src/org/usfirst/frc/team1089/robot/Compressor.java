@@ -33,6 +33,9 @@ public class Compressor {
 			if(_checkPressure.get()){
 				_relay.setDirection(Relay.Direction.kForward);
 			}
+			else{
+				_relay.setDirection(Relay.Direction.kReverse);
+			}
 		}
 		
 	}

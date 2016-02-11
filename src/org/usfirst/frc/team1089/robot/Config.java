@@ -46,8 +46,7 @@ public class Config {
 			GEAR_RATIO = 1.0;
 			break;
 		default: // COMPETITION
-			HFOV_DEGREES = 41; // calibrated value for Axis M1011 (M1013 should
-								// be greater)
+			HFOV_DEGREES = 67; // calibrated value for Axis M1013 
 			CAM_ELEVATION_FEET = 9.5 / 12;
 			HORIZONTAL_CAMERA_RES_PIXELS = 320; // NOT native resolution of Axis
 												// M1011 or M1013 - need to
