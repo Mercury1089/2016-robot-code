@@ -7,12 +7,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class Shooter {
-	Solenoid shooter;
-	DoubleSolenoid elevator;
+	private Solenoid shooter;
+	private DoubleSolenoid elevator;
+	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
 
 	public Shooter() {
-		shooter = new Solenoid(6, 1);
-		elevator = new DoubleSolenoid(7, 2, 3);
+		shooter = new Solenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER);
+		elevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.ELEVATOR_FORWARD, Ports.PCM.ELEVATOR_REVERSE);
 	}
 
 	public void raise(int level) {
@@ -31,7 +32,7 @@ public class Shooter {
 		}
 		shooter.set(true);
 		Timer timer = new Timer();
-		timer.schedule(new ShooterReleaseTask(shooter), 500);
+		timer.schedule(new ShooterReleaseTask(shooter), SHOOTER_RELEASE_DELAY_MS);
 	}
 
 	class ShooterReleaseTask extends TimerTask

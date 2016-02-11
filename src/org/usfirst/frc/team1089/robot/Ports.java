@@ -17,6 +17,7 @@ public class Ports {
 		public static final int LEFT_BACK_TALON_ID = 3;
 		public static final int RIGHT_BACK_TALON_ID = 1;
 
+		public static final int PCM_ID = 6;
 	}
 
 	public static class PWM {
@@ -30,6 +31,8 @@ public class Ports {
 	}
 
 	public static class PCM {
-
+		public static final int SHOOTER = 1;
+		public static final int ELEVATOR_FORWARD = 2;
+		public static final int ELEVATOR_REVERSE = 3;
 	}
 }
