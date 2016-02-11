@@ -80,7 +80,7 @@ public class DriveTrain {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = lft.getEncPosition();
 		startPosR = rft.getEncPosition();
-		endPosL = startPosL + changePosTicks;
+		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
 		lft.setPID(0.6, 0.0000, 0.0);
 		rft.setPID(0.6, 0.0000, 0.0);
@@ -107,7 +107,7 @@ public class DriveTrain {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = lft.getEncPosition();
 		startPosR = rft.getEncPosition();
-		endPosL = startPosL + changePosTicks;
+		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
 		lft.setPID(0.3, 0.0001, 0.0);
 		rft.setPID(0.3, 0.0001, 0.0);

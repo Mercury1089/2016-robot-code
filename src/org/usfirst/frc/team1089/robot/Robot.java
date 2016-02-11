@@ -35,7 +35,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotInit() {
-
 		camera = new Camera("GRIP/myContoursReport");
 		//leftEncoder = new MercEncoder();
 		//rightEncoder = new MercEncoder();
