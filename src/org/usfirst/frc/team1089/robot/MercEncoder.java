@@ -9,7 +9,7 @@ public class MercEncoder {
 	public final double DISTANCE_PER_TICK_FEET = DISTANCE_PER_TICK_INCHES / 12;
 
 	public MercEncoder() {
-		config = config.getCurrent();
+		config = Config.getCurrent();
 	}
 
 	public double distanceTravelled(double count, double sign) {
