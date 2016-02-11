@@ -12,19 +12,25 @@ public class Intake {
 		elevator = ds;
 	}
 
-	public void pull() {
-		intake.set(1);
+	/**
+	 * pushes, pulls, or stops ball
+	 * @param speed - value to set intake
+	 */
+	public void moveBall(int speed) {	
+		intake.set(speed);	
 	}
 	
-	public void push() {
-		intake.set(-1);	
+	/**
+	 * @return true if wheels are on, false otherwise
+	 */
+	public boolean isOn() {						
+		return intake.isEnabled();
 	}
 	
-	public void stop() {
-		intake.set(0);
-	}
-	
-	public void raise(boolean readyToShoot) {	//have to check values, account for deadzone, make sure there is a limit
+	/**
+	 * raises or lowers elevator
+	 */
+	public void raise(boolean readyToShoot) {	//have to check values
 		if (readyToShoot)
 			elevator.set(DoubleSolenoid.Value.kForward);
 		else
