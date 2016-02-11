@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
 	// private ControllerBase cBase;
 	private DriveTrain drive;
 	// private double endPosL, endPosR;
+	private final int UP = 1, DOWN = -1;
 
 	// private DefenseEnum defenseEnum;
 	private SendableChooser defenseChooser, shootChooser, posChooser;
@@ -150,12 +151,13 @@ public class Robot extends IterativeRobot {
 			shooter.shoot();
 		}
 
-		if (gamepad.getPOV(1) == 1) {
-			shooter.raise(gamepad.getPOV(1));
+		if (rightStick.getRawButton(1)) {//change later by looking at the driver station
+			shooter.raise(DOWN);
+			//intake on
 		}
-
-		if (gamepad.getPOV(1) == -1) {
-			shooter.raise(gamepad.getPOV(1));
+		else{
+			shooter.raise(UP);
+			//intake off
 		}
 
 		camera.getNTInfo();
