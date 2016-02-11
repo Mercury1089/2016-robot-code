@@ -12,8 +12,8 @@ public class Compressor {
 	private static final long CHECK_TIME_MS = 20;
 	
 	public Compressor(){
-		checkPressure = new DigitalInput(0);
-		relay = new Relay(1);
+		checkPressure = new DigitalInput(Ports.Digital.CHECK_PRESSURE);
+		relay = new Relay(Ports.Digital.COMPRESSOR);
 	}
 	
 	public void checkCompressor(){
