@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Camera {
 
 	// Have to change - Horizontal Field of View for the Camera. In degrees
-	public static final double HFOV_DEGREES = 41; // calibrated value for Axis M1011 (M1013 should be greater)
-	public static final double CAM_ELEVATION_FEET = 9.5 / 12;
+	
 
 	// Deploy NetworkTable to roboRIO
 	private NetworkTable nt;
@@ -25,20 +24,19 @@ public class Camera {
 	private double diagTargetDistance, horizTargetDistance;
 	private double diff;
 
-	public static final double HORIZONTAL_CAMERA_RES_PIXELS = 320; // NOT native resolution of Axis M1011 or M1013 - need to match size used in GRIP 
+	
 	private static final double TARGET_WIDTH_INCHES = 20;
 	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
 	private static final double HORIZ_DIST_MIN_FEET = 5.0;
 	private static final double HORIZ_DIST_MAX_FEET = 7.0;
-	private static final double TURN_ANGLE_MIN_DEGREES = -1.0;
-	private static final double TURN_ANGLE_MAX_DEGREES = 1.0;
-	private static final double IN_LINE_MIN = .4; // TODO FIX
 	private static final int MAX_NT_RETRY = 5;
+	private Config config;
 
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
+		config = Config.getCurrent();
 	}
 
 	/**
@@ -86,8 +84,8 @@ public class Camera {
 			// FOV of camera
 			// NOTE: Between .25 and .5 ft. off of actual distance
 			diagTargetDistance = (TARGET_WIDTH_INCHES / INCHES_IN_FEET)
-					* (HORIZONTAL_CAMERA_RES_PIXELS / rectWidth[largestRectNum]) / 2.0
-					/ Math.tan(Math.toRadians(Camera.HFOV_DEGREES / 2));
+					* (config.HORIZONTAL_CAMERA_RES_PIXELS / rectWidth[largestRectNum]) / 2.0
+					/ Math.tan(Math.toRadians(config.HFOV_DEGREES / 2));
 		} else {
 			largestRectArea = 0;
 			
@@ -99,14 +97,14 @@ public class Camera {
 		}
 
 		horizTargetDistance = Math.sqrt(diagTargetDistance * diagTargetDistance
-				- (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - CAM_ELEVATION_FEET));
+				- (TARGET_ELEVATION_FEET - config.CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - config.CAM_ELEVATION_FEET));
 	}
 
 	public double getTurnAngle() {
 		if (rectArea.length > 0) {
-			diff = ((Camera.HORIZONTAL_CAMERA_RES_PIXELS / 2) - getCenterX()[getLargestRectNum()])
-					/ Camera.HORIZONTAL_CAMERA_RES_PIXELS;
-			return diff * Camera.HFOV_DEGREES;
+			diff = ((config.HORIZONTAL_CAMERA_RES_PIXELS / 2) - getCenterX()[getLargestRectNum()])
+					/ config.HORIZONTAL_CAMERA_RES_PIXELS;
+			return diff * config.HFOV_DEGREES;
 		}
 
 		return 0;
@@ -154,7 +152,7 @@ public class Camera {
 
 	public boolean isInTurnAngle() {
 		if (rectArea.length > 0) {
-			return getTurnAngle() > TURN_ANGLE_MIN_DEGREES && getTurnAngle() < TURN_ANGLE_MAX_DEGREES;
+			return getTurnAngle() > config.TURN_ANGLE_MIN_DEGREES && getTurnAngle() < config.TURN_ANGLE_MAX_DEGREES;
 		}
 		else {
 			return false; // if we cannot see the target we are not in turn angle regardless of the angle value
@@ -163,7 +161,7 @@ public class Camera {
 
 	public boolean isInLineWithGoal() {
 		if (rectArea.length > 0) {
-			return Math.abs(rectWidth[largestRectNum] / rectHeight[largestRectNum]) > IN_LINE_MIN;
+			return Math.abs(rectWidth[largestRectNum] / rectHeight[largestRectNum]) > config.IN_LINE_MIN;
 		} else {
 			return false;
 		}

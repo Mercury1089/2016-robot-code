@@ -17,18 +17,15 @@ public class DriveTrain {
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.4;
 	private static final double MOVE_THRESH_TICKS = 50;
-	public static final double AXLE_TRACK_INCHES = 15.126*2; // TODO FIX THIS
-	public static final double LEFT_ENC_SIGN = 1.0;
-	public static final double RIGHT_ENC_SIGN = -1.0;
-	public static final double LEFT_DRIVE_SIGN = -1.0;
-	public static final double RIGHT_DRIVE_SIGN = 1.0;
 	private double endPosL, endPosR;
 	private double startPosL, startPosR;
 	private double changePosTicks;
-
+	private Config config;
+	private MercEncoder mercEncoder;
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
-		Config config = Config.getCurrent();
+		config = Config.getCurrent();
 		
+		mercEncoder = new MercEncoder();
 		lft = leftFront;
 		rft = rightFront;
 		lbt = leftBack;
@@ -58,14 +55,14 @@ public class DriveTrain {
 	
 		if (isOutOfDeadzone(leftStick, 1)) {
 			double rawValue = leftStick.getRawAxis(1);
-			lft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * LEFT_DRIVE_SIGN);
+			lft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * config.LEFT_DRIVE_SIGN);
 		} else {
 			lft.set(0);
 		}
 
 		if (isOutOfDeadzone(rightStick, 1)) {
 			double rawValue = rightStick.getRawAxis(1);
-			rft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * RIGHT_DRIVE_SIGN);
+			rft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * config.RIGHT_DRIVE_SIGN);
 		} else {
 			rft.set(0);
 		}
@@ -80,11 +77,11 @@ public class DriveTrain {
 	 * @param changePos the distance in feet
 	 */
 	public void moveDistance(double changePos) {
-		changePosTicks = MercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = lft.getEncPosition();
 		startPosR = rft.getEncPosition();
 		endPosL = startPosL + changePosTicks;
-		endPosR = startPosR + changePosTicks * RIGHT_ENC_SIGN;
+		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
 		lft.setPID(0.6, 0.0000, 0.0);
 		rft.setPID(0.6, 0.0000, 0.0);
 		lft.configPeakOutputVoltage(12.0, -12.0);
@@ -107,11 +104,11 @@ public class DriveTrain {
 	 * @param changePos the distance in feet
 	 */
 	public void turnDistance(double changePos) {
-		changePosTicks = MercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = lft.getEncPosition();
 		startPosR = rft.getEncPosition();
 		endPosL = startPosL + changePosTicks;
-		endPosR = startPosR - changePosTicks * RIGHT_ENC_SIGN;
+		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
 		lft.setPID(0.3, 0.0001, 0.0);
 		rft.setPID(0.3, 0.0001, 0.0);
 		lft.configPeakOutputVoltage(6.0, -6.0);
@@ -216,8 +213,8 @@ public class DriveTrain {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
 	}
 	
-	public static double arcLength(double angle) {
-		return -Math.toRadians(angle) * (AXLE_TRACK_INCHES/2) / 12;
+	public double arcLength(double angle) {
+		return -Math.toRadians(angle) * (config.AXLE_TRACK_INCHES / 2) / 12;
 	}
 
 	private void setToManual() {

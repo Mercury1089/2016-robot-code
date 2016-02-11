@@ -29,6 +29,7 @@ public class Robot extends IterativeRobot {
 	//private DefenseEnum defenseEnum;
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
+	private MercEncoder mercEncoder;
 	//private String autonAim;
 	//private int position = 0;
 
@@ -38,7 +39,7 @@ public class Robot extends IterativeRobot {
 		camera = new Camera("GRIP/myContoursReport");
 		//leftEncoder = new MercEncoder();
 		//rightEncoder = new MercEncoder();
-
+		mercEncoder = new MercEncoder();
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
@@ -133,7 +134,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			drive.turnDistance(DriveTrain.arcLength(10));
+			drive.turnDistance(drive.arcLength(10));
 		}
 
 		drive.checkMove();
@@ -170,9 +171,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(MercEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(MercEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
 		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()) + " px.");
