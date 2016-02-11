@@ -1,20 +1,20 @@
 package org.usfirst.frc.team1089.robot;
 
 public class Config {
-	public static double HFOV_DEGREES; // calibrated value for Axis M1011 (M1013
-										// should be greater)
-	public static double CAM_ELEVATION_FEET;
-	public static double HORIZONTAL_CAMERA_RES_PIXELS;
-	public static double TURN_ANGLE_MIN_DEGREES;
-	public static double TURN_ANGLE_MAX_DEGREES;
-	public static double IN_LINE_MIN; // TODO FIX
-	public static double AXLE_TRACK_INCHES; // TODO FIX THIS
-	public static double LEFT_ENC_SIGN;
-	public static double RIGHT_ENC_SIGN;
-	public static double LEFT_DRIVE_SIGN;
-	public static double RIGHT_DRIVE_SIGN;
-	public static double WHEEL_SIZE_INCHES;
-	public static double GEAR_RATIO;
+	public final double HFOV_DEGREES; // calibrated value for Axis M1011 (M1013
+								// should be greater)
+	public final double CAM_ELEVATION_FEET;
+	public final double HORIZONTAL_CAMERA_RES_PIXELS;
+	public final double TURN_ANGLE_MIN_DEGREES;
+	public final double TURN_ANGLE_MAX_DEGREES;
+	public final double IN_LINE_MIN; // TODO FIX
+	public final double AXLE_TRACK_INCHES; // TODO FIX THIS
+	public final double LEFT_ENC_SIGN;
+	public final double RIGHT_ENC_SIGN;
+	public final double LEFT_DRIVE_SIGN;
+	public final double RIGHT_DRIVE_SIGN;
+	public final double WHEEL_SIZE_INCHES;
+	public final double GEAR_RATIO;
 
 	public enum configType {
 		PROTO, COMPETITION;
