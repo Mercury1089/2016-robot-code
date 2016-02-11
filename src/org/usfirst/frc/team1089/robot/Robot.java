@@ -105,6 +105,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
+		
 		// Get initial info
 		camera.getNTInfo();
 

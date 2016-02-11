@@ -16,7 +16,8 @@ public class Config {
 	public static double GEAR_RATIO;
 	
 	public enum configType {
-		PROTO, COMPETITION;
+		PROTO, 
+		COMPETITION;
 	}
 
 	private static Config current = new Config(configType.PROTO);
