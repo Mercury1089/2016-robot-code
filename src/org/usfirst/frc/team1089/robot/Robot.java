@@ -3,6 +3,7 @@
 package org.usfirst.frc.team1089.robot;
 
 import org.usfirst.frc.team1089.auton.*;
+
 import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -19,6 +20,7 @@ public class Robot extends IterativeRobot {
 	private static boolean[] btnPrev;
 	private Camera camera;
 	private Shooter shooter;
+	private Intake intake;
 	// private MercEncoder leftEncoder, rightEncoder;
 	// private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
@@ -27,7 +29,6 @@ public class Robot extends IterativeRobot {
 	// private ControllerBase cBase;
 	private DriveTrain drive;
 	// private double endPosL, endPosR;
-	private final int UP = 1, DOWN = -1;
 
 	// private DefenseEnum defenseEnum;
 	private SendableChooser defenseChooser, shootChooser, posChooser;
@@ -40,6 +41,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		camera = new Camera("GRIP/myContoursReport");
 		shooter = new Shooter();
+		intake = new Intake();
 		// leftEncoder = new MercEncoder();
 		// rightEncoder = new MercEncoder();
 		mercEncoder = new MercEncoder();
@@ -152,12 +154,21 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (rightStick.getRawButton(1)) {//change later by looking at the driver station
-			shooter.raise(DOWN);
-			//intake on
+			shooter.raise(false);
+			intake.moveBall(1);
 		}
 		else{
-			shooter.raise(UP);
-			//intake off
+			shooter.raise(true);
+			intake.moveBall(0);
+		}
+		
+		if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)){
+			shooter.raise(false);
+			intake.moveBall(-1);
+		}
+		else{
+			shooter.raise(true);
+			intake.moveBall(0);
 		}
 
 		camera.getNTInfo();

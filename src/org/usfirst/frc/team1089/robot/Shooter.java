@@ -13,15 +13,14 @@ public class Shooter {
 
 	public Shooter() {
 		shooter = new Solenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER);
-		elevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.ELEVATOR_FORWARD, Ports.PCM.ELEVATOR_REVERSE);
+		elevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_FORWARD, Ports.PCM.SHOOTER_ELEVATOR_REVERSE);
 	}
 
-	public void raise(int level) {
-		if (level == 1) {
+	public void raise(boolean level) {
+		if (level) {
 			elevator.set(DoubleSolenoid.Value.kForward);
 		}
-
-		if (level == -1) {
+		else{
 			elevator.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
@@ -34,7 +33,11 @@ public class Shooter {
 		Timer timer = new Timer();
 		timer.schedule(new ShooterReleaseTask(shooter), SHOOTER_RELEASE_DELAY_MS);
 	}
-
+	
+	public boolean isElevatorUp(){
+		return elevator.get() == DoubleSolenoid.Value.kForward;
+	}
+	
 	class ShooterReleaseTask extends TimerTask
 	{
 		Solenoid _shooter;
