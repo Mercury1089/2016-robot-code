@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
-	private boolean[] btn, btnPrev;
+	private static boolean[] btn;
+	private static boolean[] btnPrev;
 	private Camera camera;
+	private Shooter shooter;
 	//private MercEncoder leftEncoder, rightEncoder;
 	// private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
@@ -36,6 +38,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		camera = new Camera("GRIP/myContoursReport");
+		shooter = new Shooter();
 		//leftEncoder = new MercEncoder();
 		//rightEncoder = new MercEncoder();
 		mercEncoder = new MercEncoder();
@@ -143,6 +146,16 @@ public class Robot extends IterativeRobot {
 			drive.degreeRotate(10, 0.4);
 		}
 
+		if(button(ControllerBase.GamepadButtons.L2)){
+			shooter.shoot();
+		}
+		if (gamepad.getPOV(1) == 1){
+			shooter.raise(gamepad.getPOV(1));
+		}
+		
+		if (gamepad.getPOV(1) == -1){
+			shooter.raise(gamepad.getPOV(1));
+		}
 		camera.getNTInfo();
 		debug();
 	}
@@ -153,7 +166,7 @@ public class Robot extends IterativeRobot {
 
 	}
 
-	public boolean button(int i) {
+	public static boolean button(int i) {
 		return btn[i] && !btnPrev[i];
 	}
 
