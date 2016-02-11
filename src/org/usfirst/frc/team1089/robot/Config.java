@@ -65,7 +65,11 @@ public class Config {
 	}
 
 	public static void setCurrent(configType confType) {
+		if (current == null) {
 		current = new Config(confType);
+		} else {
+			throw new IllegalStateException("Current configuration type can only be set once.");
+		}
 	}
 
 	public static Config getCurrent() {
