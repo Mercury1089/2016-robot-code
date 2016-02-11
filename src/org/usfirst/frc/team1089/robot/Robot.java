@@ -19,28 +19,28 @@ public class Robot extends IterativeRobot {
 	private static boolean[] btnPrev;
 	private Camera camera;
 	private Shooter shooter;
-	//private MercEncoder leftEncoder, rightEncoder;
+	// private MercEncoder leftEncoder, rightEncoder;
 	// private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick;
 	private AnalogGyro gyro;
-	//private ControllerBase cBase;
+	// private ControllerBase cBase;
 	private DriveTrain drive;
-	//private double endPosL, endPosR;
+	// private double endPosL, endPosR;
 
-	//private DefenseEnum defenseEnum;
+	// private DefenseEnum defenseEnum;
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
 	private MercEncoder mercEncoder;
-	//private String autonAim;
-	//private int position = 0;
+	// private String autonAim;
+	// private int position = 0;
 
 	@Override
 	public void robotInit() {
 		camera = new Camera("GRIP/myContoursReport");
 		shooter = new Shooter();
-		//leftEncoder = new MercEncoder();
-		//rightEncoder = new MercEncoder();
+		// leftEncoder = new MercEncoder();
+		// rightEncoder = new MercEncoder();
 		mercEncoder = new MercEncoder();
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
@@ -54,14 +54,15 @@ public class Robot extends IterativeRobot {
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 
-		//cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK, Ports.USB.RIGHT_STICK);
+		// cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK,
+		// Ports.USB.RIGHT_STICK);
 
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
-		
+
 		defenseChooser = new SendableChooser();
 		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
 		defenseChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
@@ -78,21 +79,20 @@ public class Robot extends IterativeRobot {
 		posChooser.addObject("4", 4);
 		posChooser.addObject("5", 5);
 		SmartDashboard.putData("Position: ", posChooser);
-		
+
 		shootChooser = new SendableChooser();
 		shootChooser.addDefault("Don't Shoot", 1);
 		shootChooser.addObject("High Goal", 2);
 		shootChooser.addObject("Low Goal", 3);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		auton = new StrongholdAuton(drive, camera,(int)posChooser.getSelected(),
-									(int)shootChooser.getSelected(),
-									(DefenseEnum)defenseChooser.getSelected());
+		auton = new StrongholdAuton(drive, camera, (int) posChooser.getSelected(), (int) shootChooser.getSelected(),
+				(DefenseEnum) defenseChooser.getSelected());
 	}
 
 	@Override
 	public void autonomousInit() {
-		
+
 	}
 
 	@Override
@@ -108,7 +108,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		
 		// Get initial info
 		camera.getNTInfo();
 
@@ -130,7 +129,7 @@ public class Robot extends IterativeRobot {
 		if (button(ControllerBase.GamepadButtons.B)) {
 			drive.degreeRotate(camera.getTurnAngle(), 0.5);
 		}
-		
+
 		if (button(ControllerBase.GamepadButtons.Y)) {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
@@ -141,26 +140,28 @@ public class Robot extends IterativeRobot {
 		}
 
 		drive.checkMove();
-		
-		if (button(ControllerBase.GamepadButtons.R2)){
-			drive.degreeRotate(10, 0.4);
-		}
 
-		if(button(ControllerBase.GamepadButtons.L2)){
+		/*
+		 * if (button(ControllerBase.GamepadButtons.RB)) {
+		 * drive.degreeRotate(10, 0.4); }
+		 */
+
+		if (button(ControllerBase.GamepadButtons.LB)) {
 			shooter.shoot();
 		}
-		if (gamepad.getPOV(1) == 1){
+
+		if (gamepad.getPOV(1) == 1) {
 			shooter.raise(gamepad.getPOV(1));
 		}
-		
-		if (gamepad.getPOV(1) == -1){
+
+		if (gamepad.getPOV(1) == -1) {
 			shooter.raise(gamepad.getPOV(1));
 		}
+
 		camera.getNTInfo();
 		debug();
 	}
 
-	
 	@Override
 	public void testPeriodic() {
 
@@ -196,8 +197,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
-		//SmartDashboard.putNumber("end pos L", endPosL);
-		//SmartDashboard.putNumber("end pos R", endPosR);
+		// SmartDashboard.putNumber("end pos L", endPosL);
+		// SmartDashboard.putNumber("end pos R", endPosR);
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());

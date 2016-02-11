@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="623" y="31"/>
+	</static-widget>
 	<widget field="Aim:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="634" y="330"/>
 	</widget>
@@ -94,6 +97,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="end pos L"/>
-	<hidden field="end pos R"/>
 </xml>

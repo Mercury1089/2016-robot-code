@@ -10,7 +10,8 @@ public class DriveTrain {
 
 	private CANTalon lft, rft, lbt, rbt;
 	private AnalogGyro gyro;
-	private static boolean isMoving = false; // indicates we are in (position) control mode
+	private static boolean isMoving = false; // indicates we are in (position)
+												// control mode
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
@@ -22,9 +23,10 @@ public class DriveTrain {
 	private double changePosTicks;
 	private Config config;
 	private MercEncoder mercEncoder;
+
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		config = Config.getCurrent();
-		
+
 		mercEncoder = new MercEncoder();
 		lft = leftFront;
 		rft = rightFront;
@@ -47,22 +49,23 @@ public class DriveTrain {
 		if (isMoving) {
 			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
 				return; // we keep moving as no joystick has been grabbed
-			}
-			else {
+			} else {
 				setToManual();
 			}
 		}
-	
+
 		if (isOutOfDeadzone(leftStick, 1)) {
 			double rawValue = leftStick.getRawAxis(1);
-			lft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * config.LEFT_DRIVE_SIGN);
+			lft.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+					* config.LEFT_DRIVE_SIGN);
 		} else {
 			lft.set(0);
 		}
 
 		if (isOutOfDeadzone(rightStick, 1)) {
 			double rawValue = rightStick.getRawAxis(1);
-			rft.set((rawValue - Math.signum(rawValue)*DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT) * config.RIGHT_DRIVE_SIGN);
+			rft.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+					* config.RIGHT_DRIVE_SIGN);
 		} else {
 			rft.set(0);
 		}
@@ -71,10 +74,11 @@ public class DriveTrain {
 	/**
 	 * Moves by the specified distance in feet.
 	 * <p>
-	 * This is an asynchronous operation.  Use waitMove() to wait for completion.
+	 * This is an asynchronous operation. Use waitMove() to wait for completion.
 	 * </p>
 	 * 
-	 * @param changePos the distance in feet
+	 * @param changePos
+	 *            the distance in feet
 	 */
 	public void moveDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
@@ -96,12 +100,14 @@ public class DriveTrain {
 	}
 
 	/**
-	 * Turns by the specified distance in feet alongside the arc created by the axle track.
+	 * Turns by the specified distance in feet alongside the arc created by the
+	 * axle track.
 	 * <p>
-	 * This is an asynchronous operation.  Use waitMove() to wait for completion.
+	 * This is an asynchronous operation. Use waitMove() to wait for completion.
 	 * </p
 	 * 
-	 * @param changePos the distance in feet
+	 * @param changePos
+	 *            the distance in feet
 	 */
 	public void turnDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
@@ -126,15 +132,18 @@ public class DriveTrain {
 		double leftVel = lft.getEncVelocity();
 		double rightVel = rft.getEncVelocity();
 
-		if (isMoving && (lft.getEncPosition() > endPosL - MOVE_THRESH_TICKS && lft.getEncPosition() < endPosL + MOVE_THRESH_TICKS)
-				&& (rft.getEncPosition() > endPosR - MOVE_THRESH_TICKS && rft.getEncPosition() < endPosR + MOVE_THRESH_TICKS)
+		if (isMoving
+				&& (lft.getEncPosition() > endPosL - MOVE_THRESH_TICKS
+						&& lft.getEncPosition() < endPosL + MOVE_THRESH_TICKS)
+				&& (rft.getEncPosition() > endPosR - MOVE_THRESH_TICKS
+						&& rft.getEncPosition() < endPosR + MOVE_THRESH_TICKS)
 				&& leftVel == 0 && rightVel == 0) {
 
 			setToManual();
 		}
 		return isMoving;
 	}
-	
+
 	public void waitMove() {
 		while (checkMove()) {
 			// do nothing
@@ -148,7 +157,7 @@ public class DriveTrain {
 	public void speedRotate(double s) {
 		if (isMoving) {
 			setToManual();
-		}		
+		}
 		lft.set(s);
 		rft.set(s);
 	}
@@ -206,13 +215,12 @@ public class DriveTrain {
 	 *            the joystick to get the axis value from
 	 * @param axis
 	 *            the axis value to be checked
-	 * @return true if the axis is greater than deadzone, false
-	 *         otherwise
+	 * @return true if the axis is greater than deadzone, false otherwise
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
 	}
-	
+
 	public double arcLength(double angle) {
 		return -Math.toRadians(angle) * (config.AXLE_TRACK_INCHES / 2) / 12;
 	}
