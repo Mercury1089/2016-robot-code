@@ -20,7 +20,7 @@ public class Config {
 		PROTO, COMPETITION;
 	}
 
-	private static Config current = new Config(configType.PROTO);
+	private static Config current = null; // Do not initialize - getCurrent() does it if necessary.
 
 	private Config(configType confType) {
 		switch (confType) {
@@ -69,6 +69,9 @@ public class Config {
 	}
 
 	public static Config getCurrent() {
+		if (current == null) {
+			new Config(configType.PROTO); // Default to PROTO if no one has called setCurrent.
+		}
 		return current;
 	}
 }
