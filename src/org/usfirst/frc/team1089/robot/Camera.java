@@ -8,11 +8,6 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
  *
  */
 public class Camera {
-
-	// TODO Change HFOV for the Camera. In degrees
-	
-
-	// Deploy NetworkTable to roboRIO
 	private NetworkTable nt;
 	private double largestRectArea;
 	private int largestRectNum;
@@ -20,7 +15,6 @@ public class Camera {
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	private double diagTargetDistance, horizTargetDistance;
 	private double diff;
-
 	
 	private static final double TARGET_WIDTH_INCHES = 20;
 	private static final double TARGET_HEIGHT_INCHES = 12;
@@ -29,6 +23,7 @@ public class Camera {
 	private static final double HORIZ_DIST_MIN_FEET = 5.0;
 	private static final double HORIZ_DIST_MAX_FEET = 7.0;
 	private static final int MAX_NT_RETRY = 5;
+	
 	private Config config;
 
 	/**
@@ -112,13 +107,13 @@ public class Camera {
 	 * @return the turn angle in degrees between the robot and the target
 	 */
 	public double getTurnAngle() {
-		if (rectArea.length > 0) {
+		if (isTargetFound()) {
 			diff = ((config.HORIZONTAL_CAMERA_RES_PIXELS / 2) - getCenterX()[getLargestRectNum()])
 					/ config.HORIZONTAL_CAMERA_RES_PIXELS;
 			return diff * config.HFOV_DEGREES;
+		} else {
+			return 0; // we don't know where to turn if target is not found, so we don't turn
 		}
-
-		return 0;
 	}
 
 	public double[] getRectArea() {
@@ -156,13 +151,31 @@ public class Camera {
 	public double getOpeningWidth() {
 		return perceivedOpeningWidth;
 	}
+	
+	/**
+	 * <pre>
+	 * public boolean isTargetFound()
+	 * </pre>
+	 * Indicates if we have at least one target on screen
+	 * <p>
+	 * This method assumes that the network tables have already been fetched
+	 * </p>
+	 * @return true if at least one target was found, false otherwise
+	 */
+	public boolean isTargetFound() {
+		if (rectArea.length > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * <pre>
 	 * public boolean isInDistance()
 	 * </pre>
 	 * Gets if the robot is within a certain distance of the goal.
-	 * @return true if the robbot is in range, false if the robot is too close or too far
+	 * @return true if the robot is in range, false if the robot is too close or too far
 	 */
 	public boolean isInDistance() {
 		return getHorizontalDist() > HORIZ_DIST_MIN_FEET && getDiagonalDist() < HORIZ_DIST_MAX_FEET;
@@ -176,10 +189,9 @@ public class Camera {
 	 * @return true if the robot can see the target and can turn to it, false if the target is out of the robot's turning range
 	 */
 	public boolean isInTurnAngle() {
-		if (rectArea.length > 0) {
+		if (isTargetFound()) {
 			return getTurnAngle() > config.TURN_ANGLE_MIN_DEGREES && getTurnAngle() < config.TURN_ANGLE_MAX_DEGREES;
-		}
-		else {
+		} else {
 			return false; // if we cannot see the target we are not in turn angle regardless of the angle value
 		}
 	}
@@ -192,10 +204,10 @@ public class Camera {
 	 * @return true if the robot is in line with the goal, false if the goal is off to a side
 	 */
 	public boolean isInLineWithGoal() {
-		if (rectArea.length > 0) {
+		if (isTargetFound()) {
 			return Math.abs(rectWidth[largestRectNum] / rectHeight[largestRectNum]) > config.IN_LINE_MIN;
 		} else {
-			return false;
+			return false; // if we cannot see the target then we are not in line for sure
 		}
 	}
 }

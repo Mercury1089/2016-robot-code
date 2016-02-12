@@ -5,7 +5,8 @@ import org.usfirst.frc.team1089.robot.DriveTrain;
 public class Defense{
 	private DefenseEnum defenseEnum;
 	private DriveTrain drive;
-	private final int MOVE_DISTANCE = 7;
+	
+	private final int MOVE_DISTANCE_FEET = 7;
 	
 	public Defense(DriveTrain d, DefenseEnum dE) {
 		drive = d;
@@ -20,7 +21,8 @@ public class Defense{
 			case RAMPARTS:
 			case ROCK_WALL:
 			{
-				drive.moveDistance(MOVE_DISTANCE);
+				drive.moveDistance(MOVE_DISTANCE_FEET);
+				drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
 				break;
 			}
 			default:

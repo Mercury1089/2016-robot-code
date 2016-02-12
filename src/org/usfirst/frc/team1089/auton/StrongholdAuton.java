@@ -5,7 +5,7 @@ import org.usfirst.frc.team1089.robot.DriveTrain;
 import org.usfirst.frc.team1089.robot.Shooter;
 
 public class StrongholdAuton {
-	private static final int CENTERED_MOVE_DISTANCE = 3;
+	private static final int CENTERED_MOVE_DISTANCE_FEET = 3;
 	private static final double TURN_SPEED = 0.5;
 	private Defense defense;
 	private Camera camera;
@@ -24,20 +24,34 @@ public class StrongholdAuton {
 	}
 
 	public void move() {
-		defense.breach();
-		if (aim == AimEnum.HIGH) {
-			if (camera.getRectArea().length < 0) {
-				if (pos <= 3)
-					drive.degreeRotate(45, TURN_SPEED);
-				else
+		defense.breach(); // first we breach the defense - TODO what if the defense before us is one the of defenses we do not know how to breach?
+		
+		if (aim == AimEnum.HIGH) { // if we are going for the high goal
+			camera.getNTInfo(); // we take a look
+			
+			if (camera.getRectArea().length < 0) { // if we don't see a target we need to find it
+				if (pos <= 3) {
+					drive.degreeRotate(45, TURN_SPEED); // TODO could there be a better approach?
+				} else {
 					drive.degreeRotate(-45, TURN_SPEED);
+				}
 			}
+			
+			camera.getNTInfo(); // we take another look
+			// TODO what if we still don't see a target?
+			
 			drive.degreeRotate(camera.getTurnAngle(), TURN_SPEED);
-			drive.moveDistance(CENTERED_MOVE_DISTANCE);
+			
+			drive.moveDistance(CENTERED_MOVE_DISTANCE_FEET);
 			drive.waitMove(); // moveDistance is an asynchronous operation - we
 								// need to wait until it is done
-			if(camera.isInDistance() && camera.isInLineWithGoal() && camera.isInTurnAngle()){
+			
+			camera.getNTInfo(); // we take a final look
+			
+			if (camera.isInDistance() && camera.isInLineWithGoal() && camera.isInTurnAngle()) { // only if we are clear
 				shooter.shoot();
+			} else {
+				// we do nothing - the pilot will take over from here
 			}
 		}
 		/*

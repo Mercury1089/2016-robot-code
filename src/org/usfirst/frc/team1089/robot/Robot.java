@@ -93,12 +93,12 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-
+		auton.move(); // if we don't use a state machine then we only want to call auton.move() once
 	}
 
 	@Override
 	public void autonomousPeriodic() {
-		auton.move();
+		//auton.move();
 	}
 
 	@Override
