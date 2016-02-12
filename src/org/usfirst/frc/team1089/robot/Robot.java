@@ -18,17 +18,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	private static boolean[] btn;
 	private static boolean[] btnPrev;
+	
 	private Camera camera;
+	
 	private Shooter shooter;
 	//private Intake intake;
 	private Compressor compressor;
 
-	private MercEncoder leftEncoder, rightEncoder;
-	private CANTalon leftFront, rightFront, leftBack, rightBack;
-	private Joystick gamepad, leftStick, rightStick; 
+	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	// private ControllerBase cBase;
+	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private DriveTrain drive;
+	
+	// private ControllerBase cBase;
+	private Joystick gamepad, leftStick, rightStick;
 
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
@@ -37,11 +40,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		camera = new Camera("GRIP/myContoursReport");
+		
 		shooter = new Shooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
-		leftEncoder = new MercEncoder();
-		rightEncoder = new MercEncoder();
+		
+		mercEncoder = new MercEncoder();
 
 		// Set up gyro
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
@@ -191,24 +195,30 @@ public class Robot extends IterativeRobot {
 	 * Puts info onto the SmartDashboard.
 	 */
 	public void debug() {
+		// DriveTrain
 		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2) + " deg.");
-		SmartDashboard.putString("Angle to turn", "" + camera.getTurnAngle() + " deg.");
-		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
+		
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(leftEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(rightEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
+		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
+		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
+		
+		// Camera
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
 		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()) + " px.");
 		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX()) + " px.");
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
-		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
+
 		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
-		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
-		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
+		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
+		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
+		SmartDashboard.putString("Angle to turn", "" + camera.getTurnAngle() + " deg.");
+		
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
