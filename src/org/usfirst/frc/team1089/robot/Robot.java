@@ -19,11 +19,10 @@ public class Robot extends IterativeRobot {
 	private static boolean[] btnPrev;
 	private Camera camera;
 	private Shooter shooter;
-	private Intake intake;
+	//private Intake intake;
 	private Compressor compressor;
 
 	private MercEncoder leftEncoder, rightEncoder;
-	// private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick; 
 	private AnalogGyro gyro;
@@ -39,7 +38,7 @@ public class Robot extends IterativeRobot {
 		camera = new Camera("GRIP/myContoursReport");
 		shooter = new Shooter();
 		compressor = new Compressor();
-		
+		compressor.checkCompressor();
 		leftEncoder = new MercEncoder();
 		rightEncoder = new MercEncoder();
 
@@ -111,8 +110,6 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// Get initial info
 		camera.getNTInfo();
-
-		compressor.checkCompressor();
 		
 		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
 
@@ -155,20 +152,20 @@ public class Robot extends IterativeRobot {
 
 		if (rightStick.getRawButton(1)) {//change later by looking at the driver station
 			shooter.raise(false);
-			intake.moveBall(1);
+			//intake.moveBall(1);
 		}
 		else{
 			shooter.raise(true);
-			intake.moveBall(0);
+			//intake.moveBall(0);
 		}
 		
 		if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)){
 			shooter.raise(false);
-			intake.moveBall(-1);
+			//intake.moveBall(-1);
 		}
 		else{
 			shooter.raise(true);
-			intake.moveBall(0);
+			//intake.moveBall(0);
 		}
 
 		camera.getNTInfo();

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter {
 	private Solenoid shooter;
 	private DoubleSolenoid elevator;
-	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
+	private static final long SHOOTER_RELEASE_DELAY_MS = 250;
 
 	public Shooter() {
 		shooter = new Solenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER);
