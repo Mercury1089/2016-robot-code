@@ -10,6 +10,7 @@ public class Compressor {
 	private DigitalInput checkPressure;
 	private Relay relay;
 	private static final long CHECK_TIME_MS = 20;
+	private Timer timer = new Timer();
 	
 	public Compressor(){
 		checkPressure = new DigitalInput(Ports.Digital.CHECK_PRESSURE);
@@ -17,8 +18,7 @@ public class Compressor {
 	}
 	
 	public void checkCompressor(){
-		Timer timer = new Timer();
-		timer.schedule(new CheckCompressorTask(checkPressure, relay), CHECK_TIME_MS);
+		timer.schedule(new CheckCompressorTask(checkPressure, relay), CHECK_TIME_MS, CHECK_TIME_MS);
 	}
 	public class CheckCompressorTask extends TimerTask {
 		private DigitalInput _checkPressure;
