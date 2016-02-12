@@ -7,9 +7,9 @@ public class Intake {
 	private CANTalon intake;		//controls wheels
 	private DoubleSolenoid elevator;		//wheel elevator - to hold ball in place?
 	
-	public Intake(CANTalon i, DoubleSolenoid ds) {
-		intake = i;
-		elevator = ds;
+	public Intake() {
+		intake = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
+		elevator = new DoubleSolenoid(Ports.PCM.INTAKE_ELEVATOR_FORWARD, Ports.PCM.INTAKE_ELEVATOR_REVERSE);
 	}
 
 	/**
