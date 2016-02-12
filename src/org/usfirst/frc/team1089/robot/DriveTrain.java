@@ -137,7 +137,7 @@ public class DriveTrain {
 	 * by the specified distance in feet alongside the arc created by the axle track.
 	 * <p>
 	 * This is an asynchronous operation. Use waitMove() to wait for completion.
-	 * </p
+	 * </p>
 	 * 
 	 * @param changePos the distance to turn in feet
 	 */

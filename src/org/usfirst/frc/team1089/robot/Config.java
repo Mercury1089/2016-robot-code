@@ -86,7 +86,7 @@ public class Config {
 	 * </pre>
 	 * Sets the current state of the {@code Config} to the specified type.
 	 * @param configType the type to set the {@code Config} to.
-	 * @throws IllegalStateException
+	 * @throws IllegalStateException if a different state has already been set
 	 */
 	public synchronized static void setCurrent(ConfigType configType) {
 		if (current == null) {
