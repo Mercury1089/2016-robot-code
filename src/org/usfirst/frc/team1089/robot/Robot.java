@@ -22,7 +22,7 @@ public class Robot extends IterativeRobot {
 	private Intake intake;
 	private Compressor compressor;
 
-	// private MercEncoder leftEncoder, rightEncoder;
+	private MercEncoder leftEncoder, rightEncoder;
 	// private RobotDrive drive;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private Joystick gamepad, leftStick, rightStick; 
@@ -86,12 +86,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Position: ", posChooser);
 
 		shootChooser = new SendableChooser();
-		shootChooser.addDefault("Don't Shoot", 1);
-		shootChooser.addObject("High Goal", 2);
-		shootChooser.addObject("Low Goal", 3);
+		shootChooser.addDefault("Don't Shoot", AimEnum.NONE);
+		shootChooser.addObject("High Goal", AimEnum.HIGH);
+		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		auton = new StrongholdAuton(drive, camera, (int) posChooser.getSelected(), (int) shootChooser.getSelected(),
+		auton = new StrongholdAuton(drive, camera, shooter, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected());
 	}
 
@@ -123,7 +123,7 @@ public class Robot extends IterativeRobot {
 		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
 			btn[i] = gamepad.getRawButton(i);
 		}
-/*
+
 		// Teleop Tank with DriveTrain
 		drive.tankDrive(leftStick, rightStick);
 
@@ -145,19 +145,19 @@ public class Robot extends IterativeRobot {
 		if (button(ControllerBase.GamepadButtons.X)) {
 			drive.turnDistance(drive.arcLength(10));
 		}
-*/
-/*		drive.checkMove();
-*/
-		/*
-		 * if (button(ControllerBase.GamepadButtons.RB)) {
-		 * drive.degreeRotate(10, 0.4); }
-		 */
 
+		drive.checkMove();
+
+		
+		if (button(ControllerBase.GamepadButtons.RB)) {
+			drive.degreeRotate(10, 0.4); 
+		}
+		 
 		if (button(ControllerBase.GamepadButtons.LB)) {
 			shooter.shoot();
 		}
 
-		/*if (rightStick.getRawButton(1)) {//change later by looking at the driver station
+		if (rightStick.getRawButton(1)) {//change later by looking at the driver station
 			shooter.raise(false);
 			intake.moveBall(1);
 		}
@@ -173,7 +173,7 @@ public class Robot extends IterativeRobot {
 		else{
 			shooter.raise(true);
 			intake.moveBall(0);
-		}*/
+		}
 
 		camera.getNTInfo();
 		debug();
@@ -196,15 +196,15 @@ public class Robot extends IterativeRobot {
 	 * Puts info onto the SmartDashboard.
 	 */
 	public void debug() {
-/*		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2) + " deg.");
+		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2) + " deg.");
 		SmartDashboard.putString("Angle to turn", "" + camera.getTurnAngle() + " deg.");
 		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
+				"" + Utilities.round(leftEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
+				"" + Utilities.round(rightEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
 		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()) + " px.");
@@ -218,6 +218,6 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putNumber("end pos R", endPosR);
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
-		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());*/
+		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
 	}
 }
