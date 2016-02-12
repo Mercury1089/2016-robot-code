@@ -1,9 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
-import java.util.Arrays;
-
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The {@code Camera} class handles targeting and vision using the input from
@@ -12,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Camera {
 
-	// Have to change - Horizontal Field of View for the Camera. In degrees
+	// TODO Change HFOV for the Camera. In degrees
 	
 
 	// Deploy NetworkTable to roboRIO
@@ -34,6 +31,13 @@ public class Camera {
 	private static final int MAX_NT_RETRY = 5;
 	private Config config;
 
+	/**
+	 * <pre>
+	 * public Camera(String tableLoc)
+	 * </pre>
+	 * Constructs a new {@code Camera} with the specified NetworkTable location.
+	 * @param tableLoc the directory of the NetworkTable containing the input from GRIP
+	 */
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
 		config = Config.getCurrent();
@@ -52,7 +56,7 @@ public class Camera {
 		boolean is_coherent = false; // Did we get coherent arrays form the NT?
 		int retry_count = 0;
 
-		// we cannot get arrays atomically but at least we can make sure they have the same size
+		// We cannot get arrays atomically but at least we can make sure they have the same size
 		do
 		{
 			// Get data from NetworkTable
@@ -100,6 +104,13 @@ public class Camera {
 				- (TARGET_ELEVATION_FEET - config.CAM_ELEVATION_FEET) * (TARGET_ELEVATION_FEET - config.CAM_ELEVATION_FEET));
 	}
 
+	/**
+	 * <pre>
+	 * public double getTurnAngle()
+	 * </pre>
+	 * Gets the turn angle between the robot and the target.
+	 * @return the turn angle in degrees between the robot and the target
+	 */
 	public double getTurnAngle() {
 		if (rectArea.length > 0) {
 			diff = ((config.HORIZONTAL_CAMERA_RES_PIXELS / 2) - getCenterX()[getLargestRectNum()])
@@ -146,10 +157,24 @@ public class Camera {
 		return perceivedOpeningWidth;
 	}
 
+	/**
+	 * <pre>
+	 * public boolean isInDistance()
+	 * </pre>
+	 * Gets if the robot is within a certain distance of the goal.
+	 * @return true if the robbot is in range, false if the robot is too close or too far
+	 */
 	public boolean isInDistance() {
 		return getHorizontalDist() > HORIZ_DIST_MIN_FEET && getDiagonalDist() < HORIZ_DIST_MAX_FEET;
 	}
 
+	/**
+	 * <pre>
+	 * public boolean isInTurnAngle()
+	 * </pre>
+	 * Gets whether or not the robot is within turning distance of the goal.
+	 * @return true if the robot can see the target and can turn to it, false if the target is out of the robot's turning range
+	 */
 	public boolean isInTurnAngle() {
 		if (rectArea.length > 0) {
 			return getTurnAngle() > config.TURN_ANGLE_MIN_DEGREES && getTurnAngle() < config.TURN_ANGLE_MAX_DEGREES;
@@ -159,6 +184,13 @@ public class Camera {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * public boolean isInLineWithGoal()
+	 * </pre>
+	 * Gets whether or not the robot is in line with the goal.
+	 * @return true if the robot is in line with the goal, false if the goal is off to a side
+	 */
 	public boolean isInLineWithGoal() {
 		if (rectArea.length > 0) {
 			return Math.abs(rectWidth[largestRectNum] / rectHeight[largestRectNum]) > config.IN_LINE_MIN;

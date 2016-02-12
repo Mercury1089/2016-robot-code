@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1089.robot;
 
+/**
+ * The {@code Config} class is a static class containing constants used throughout the robot.
+ */
 public class Config {
 	public final double HFOV_DEGREES; // calibrated value for Axis M1011 (M1013
 								// should be greater)
@@ -16,9 +19,15 @@ public class Config {
 	public final double WHEEL_SIZE_INCHES;
 	public final double GEAR_RATIO;
 
+	/**
+	 * The {@code ConfigType} is an enum for two possible uses of the code:
+	 * in the prototype base, and the competition base.
+	 */
 	public enum ConfigType {
-		PROTO, COMPETITION;
+		PROTO, 
+		COMPETITION;
 	}
+	
 	public final ConfigType configType;
 	
 	private static Config current = null; // Do not initialize - getCurrent() does it if necessary.
@@ -28,12 +37,15 @@ public class Config {
 		this.configType = configType;
 		switch (configType) {
 		case PROTO:
-			HFOV_DEGREES = 41; // calibrated value for Axis M1011 (M1013 should
-								// be greater)
+			// calibrated value for Axis M1011 (M1013 should be greater)
+			HFOV_DEGREES = 41; 
+			
 			CAM_ELEVATION_FEET = 9.5 / 12;
-			HORIZONTAL_CAMERA_RES_PIXELS = 320; // NOT native resolution of Axis
-												// M1011 or M1013 - need to
-												// match size used in GRIP
+			
+			// NOT native resolution of Axis M1011 or M1013
+            // need to match size used in GRIP
+			HORIZONTAL_CAMERA_RES_PIXELS = 320;
+			
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
 			IN_LINE_MIN = .4;
@@ -46,11 +58,14 @@ public class Config {
 			GEAR_RATIO = 1.0;
 			break;
 		default: // COMPETITION
-			HFOV_DEGREES = 67; // calibrated value for Axis M1013 
+			// calibrated value for Axis M1013 
+			HFOV_DEGREES = 67; 
 			CAM_ELEVATION_FEET = 9.5 / 12;
-			HORIZONTAL_CAMERA_RES_PIXELS = 320; // NOT native resolution of Axis
-												// M1011 or M1013 - need to
-												// match size used in GRIP
+			
+			// NOT native resolution of Axis M1011 or M1013
+            // need to match size used in GRIP
+			HORIZONTAL_CAMERA_RES_PIXELS = 320;
+			
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
 			IN_LINE_MIN = .4;
@@ -65,6 +80,14 @@ public class Config {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * public synchronized static void setCurrent(ConfigType configType)
+	 * </pre>
+	 * Sets the current state of the {@code Config} to the specified type.
+	 * @param configType the type to set the {@code Config} to.
+	 * @throws IllegalStateException
+	 */
 	public synchronized static void setCurrent(ConfigType configType) {
 		if (current == null) {
 			current = new Config(configType);
@@ -73,6 +96,13 @@ public class Config {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * public static Config getCurrent()
+	 * </pre>
+	 * Gets the current {@code Config} being used by the robot.
+	 * @return the current {@code Config} being used by the robot.
+	 */
 	public static Config getCurrent() {
 		if (current == null) {
 			setCurrent(ConfigType.PROTO);  // Default to PROTO if no one has called setCurrent.

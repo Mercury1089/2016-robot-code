@@ -1,6 +1,10 @@
 package org.usfirst.frc.team1089.robot;
 
+/**
+ * The {@code Utilities} class is a static class containing various utility methods to use throughout the code.
+ */
 public class Utilities {
+	
 	/**
 	 * <pre>
 	 * public static double round(double num,

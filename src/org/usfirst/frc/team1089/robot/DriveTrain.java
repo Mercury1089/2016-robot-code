@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * The {@code DriveTrain} class handles movement with the drive base of the robot.
+ */
 public class DriveTrain {
 
 	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
@@ -24,6 +27,21 @@ public class DriveTrain {
 	private Config config;
 	private MercEncoder mercEncoder;
 
+	/**
+	 * <pre>
+	 * public DriveTrain(CANTalon leftFront,
+	 *                   CANTalon rightFront, 
+	 *                   CANTalon leftBack, 
+	 *                   CANTalon rightBack, 
+	 *                   AnalogGyro g) 
+	 * </pre>
+	 * Constructs a new {@code DriveTrain} with the specified {@code CANTalons} for the wheels, and an {@code AnalogGyro} to check rotation.
+	 * @param leftFront  the {@code CANTalon} controlling the left front wheel
+	 * @param rightFront the {@code CANTalon} controlling the right front wheel
+	 * @param leftBack   the {@code CANTalon} controlling the left back wheel
+	 * @param rightBack  the {@code CANTalon} controlling the right back wheel
+	 * @param g          the {@code AnalogGyro} used to track rotation
+	 */
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		config = Config.getCurrent();
 
@@ -44,7 +62,17 @@ public class DriveTrain {
 		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
 	}
-
+	
+	/**
+	 * <pre>
+	 * public void tankDrive(Joystick leftStick, 
+	 *                       Joystick rightStick)
+	 * </pre>
+	 * Drives the base using a {@code Joystick} for the left set of wheels, 
+	 * and another {@code Joystick} for the right set of wheels.
+	 * @param leftStick  the {@code Joystick} to control the left set of wheels
+	 * @param rightStick the {@code Joystick} to control the right set of wheels
+	 */
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
 		if (isMoving) {
 			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
@@ -72,13 +100,15 @@ public class DriveTrain {
 	}
 
 	/**
-	 * Moves by the specified distance in feet.
+	 * <pre>
+	 * public void moveDistance(double changePos)
+	 * </pre>
+	 * Moves the base based on encoder measurements by the specified distance in feet.
 	 * <p>
 	 * This is an asynchronous operation. Use waitMove() to wait for completion.
 	 * </p>
 	 * 
-	 * @param changePos
-	 *            the distance in feet
+	 * @param changePos the distance to move in feet
 	 */
 	public void moveDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
@@ -100,14 +130,16 @@ public class DriveTrain {
 	}
 
 	/**
-	 * Turns by the specified distance in feet alongside the arc created by the
-	 * axle track.
+	 * <pre>
+	 * public void turnDistance(double changePos)
+	 * </pre>
+	 * Turns the base based on encoders
+	 * by the specified distance in feet alongside the arc created by the axle track.
 	 * <p>
 	 * This is an asynchronous operation. Use waitMove() to wait for completion.
 	 * </p
 	 * 
-	 * @param changePos
-	 *            the distance in feet
+	 * @param changePos the distance to turn in feet
 	 */
 	public void turnDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
@@ -128,6 +160,13 @@ public class DriveTrain {
 		rightFrontTalon.set(endPosR);
 	}
 
+	/**
+	 * <pre>
+	 * public boolean checkMove()
+	 * </pre>
+	 * Checks to see if the robot is moving.
+	 * @return true if the encoder speeds are 0, the {@code CANTalon} positions read within a certain threshold, and the robot is moving, false if otherwise.
+	 */
 	public boolean checkMove() {
 		double leftVel = leftFrontTalon.getEncVelocity();
 		double rightVel = rightFrontTalon.getEncVelocity();
@@ -143,7 +182,13 @@ public class DriveTrain {
 		}
 		return isMoving;
 	}
-
+	
+	/**
+	 * <pre>
+	 * public void waitMove()
+	 * </pre>
+	 * Hangs the process until the robot is not moving.
+	 */
 	public void waitMove() {
 		while (checkMove()) {
 			// do nothing
@@ -151,8 +196,12 @@ public class DriveTrain {
 	}
 
 	/**
-	 * @param s
-	 *            speed value to rotate; + value is CW, - value is CCW
+	 * <pre>
+	 * public void speedRotate(double s)
+	 * </pre>
+	 * Rotates the robot at a specified speed.
+	 * @param s speed value to rotate; 
+	 *        positive values are clockwise, negative values are counterclockwise
 	 */
 	public void speedRotate(double s) {
 		if (isMoving) {
@@ -163,7 +212,10 @@ public class DriveTrain {
 	}
 
 	/**
-	 * Stops moving
+	 * <pre>
+	 * public void stop()
+	 * </pre>
+	 * Sets both {@code CANTalon} speeds to 0.
 	 */
 	public void stop() {
 		if (isMoving) {
@@ -174,13 +226,13 @@ public class DriveTrain {
 	}
 
 	/**
-	 * 
-	 * @param deg
-	 *            degree value to rotate
-	 * @param s
-	 *            speed value to rotate
-	 * 
-	 *            Rotates robot a number of degrees at a certain speed
+	 * <pre>
+	 * public void degreeRotate(double deg, 
+	 *                          double s)
+	 * </pre>
+	 * Rotates the robot to a specified amount of degrees at a certain speed.
+	 * @param deg amount of degrees to rotate
+	 * @param s speed to rotate at
 	 */
 	public void degreeRotate(double deg, double s) {
 		double startAngle = gyro.getAngle();
@@ -206,31 +258,48 @@ public class DriveTrain {
 
 	/**
 	 * <pre>
-	 * public boolean isOutOfDeadzone(Joystick j)
+	 * public boolean isOutOfDeadzone(Joystick j, 
+	 *                                int axis)
 	 * </pre>
-	 * 
-	 * Returns if joystick is out of dead zone
-	 * 
-	 * @param j
-	 *            the joystick to get the axis value from
-	 * @param axis
-	 *            the axis value to be checked
-	 * @return true if the axis is greater than deadzone, false otherwise
+	 * Gets whether or not the specified {@code Joystick} is out of the deadzone.
+	 * @param j the {@code Joystick} to get the axis value from
+	 * @param axis the axis to get a value from
+	 * @return true if the axis value is out of the deadzone threshold, false otherwise
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
 	}
 
+	/**
+	 * <pre>
+	 * public double arcLength(double angle)
+	 * </pre>
+	 * Gets the arc length of an angle based on the axle track.
+	 * @param  angle the angle in degrees to convert to an arc length
+	 * @return the arc length, in feet, of an angle based on the robot's axle track, in inches  
+	 */
 	public double arcLength(double angle) {
 		return -Math.toRadians(angle) * (config.AXLE_TRACK_INCHES / 2) / 12;
 	}
 
+	/**
+	 * <pre>
+	 * private void setToManual()
+	 * </pre>
+	 * Sets the control modes of the front {@code CANTalons} to PercentVbus.
+	 */
 	private void setToManual() {
 		isMoving = false;
 		leftFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
 		rightFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
 	}
 
+	/**
+	 * <pre>
+	 * private void setToAuto()
+	 * </pre>
+	 * Sets the control modes of the front {@code CANTalons} to Position.
+	 */
 	private void setToAuto() {
 		isMoving = true;
 		leftFrontTalon.changeControlMode(CANTalon.TalonControlMode.Position);

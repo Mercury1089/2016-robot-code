@@ -2,13 +2,14 @@
 
 package org.usfirst.frc.team1089.robot;
 
-import org.usfirst.frc.team1089.auton.*;
-
 import java.util.Arrays;
+
+import org.usfirst.frc.team1089.auton.AimEnum;
+import org.usfirst.frc.team1089.auton.DefenseEnum;
+import org.usfirst.frc.team1089.auton.StrongholdAuton;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -107,6 +108,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
+	// Handle global manipulation of robot here
 	public void teleopPeriodic() {
 		// Get initial info
 		camera.getNTInfo();
