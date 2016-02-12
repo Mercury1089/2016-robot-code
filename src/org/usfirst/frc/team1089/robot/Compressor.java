@@ -13,7 +13,7 @@ public class Compressor {
 	
 	public Compressor(){
 		checkPressure = new DigitalInput(Ports.Digital.CHECK_PRESSURE);
-		relay = new Relay(Ports.Digital.COMPRESSOR);
+		relay = new Relay(Ports.Digital.COMPRESSOR_RELAY);
 	}
 	
 	public void checkCompressor(){

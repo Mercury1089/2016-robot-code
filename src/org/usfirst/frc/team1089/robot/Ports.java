@@ -8,7 +8,7 @@ public class Ports {
 
 	public static class Digital {
 		public static final int CHECK_PRESSURE = 0;
-		public static final int COMPRESSOR = 0;
+		public static final int COMPRESSOR_RELAY = 0;
 	}
 
 	public static class CAN {
