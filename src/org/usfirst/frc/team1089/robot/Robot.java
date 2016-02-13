@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -134,7 +135,7 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)) {
-			drive.degreeRotate(camera.getTurnAngle(), 0.5);
+			drive.degreeRotate(camera.getTurnAngle(), 1.0);
 		}
 
 		if (button(ControllerBase.GamepadButtons.Y)) {
@@ -143,7 +144,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			drive.turnDistance(drive.arcLength(10));
+			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
 		}
 
 		drive.checkMove();
@@ -157,7 +158,7 @@ public class Robot extends IterativeRobot {
 			shooter.shoot();
 		}
 
-		if (button(ControllerBase.GamepadButtons.RB)) {
+		if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
 			//intake.moveBall(1);
 		} else{
@@ -173,7 +174,7 @@ public class Robot extends IterativeRobot {
 			//intake.moveBall(0);
 		}*/
 
-		camera.getNTInfo();
+		camera.getNTInfo(); 
 		debug();
 	}
 
@@ -214,9 +215,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 
 		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
-		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
+		SmartDashboard.putString("Diagonal Distance", "" + Utilities.round(camera.getDiagonalDist(), 2) + " ft.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
-		SmartDashboard.putString("Angle to turn", "" + camera.getTurnAngle() + " deg.");
+		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 2) + " deg.");
 		
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());

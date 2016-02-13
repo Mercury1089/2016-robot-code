@@ -116,8 +116,8 @@ public class DriveTrain {
 		startPosR = rightFrontTalon.getEncPosition();
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(0.6, 0.0000, 0.0);
-		rightFrontTalon.setPID(0.6, 0.0000, 0.0);
+		leftFrontTalon.setPID(0.4, 0.0005, -0.001);
+		rightFrontTalon.setPID(0.4, 0.0005, -0.001);
 		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
 		leftFrontTalon.configNominalOutputVoltage(0, 0);
 		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
@@ -147,8 +147,8 @@ public class DriveTrain {
 		startPosR = rightFrontTalon.getEncPosition();
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(0.3, 0.0001, 0.0);
-		rightFrontTalon.setPID(0.3, 0.0001, 0.0);
+		leftFrontTalon.setPID(0.4, 0.0005, 0.0);
+		rightFrontTalon.setPID(0.4, 0.0005, 0.0);
 		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
 		leftFrontTalon.configNominalOutputVoltage(0, 0);
 		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
@@ -254,6 +254,10 @@ public class DriveTrain {
 
 		}
 		stop();
+	}
+	
+	public void encoderAngleRotate(double rotDegrees){
+		turnDistance(arcLength(rotDegrees));
 	}
 
 	/**

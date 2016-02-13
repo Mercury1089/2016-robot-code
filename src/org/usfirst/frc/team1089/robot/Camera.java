@@ -20,8 +20,8 @@ public class Camera {
 	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
-	private static final double HORIZ_DIST_MIN_FEET = 5.0;
-	private static final double HORIZ_DIST_MAX_FEET = 7.0;
+	private static final double HORIZ_DIST_MIN_FEET = 8.0;
+	private static final double HORIZ_DIST_MAX_FEET = 12.0;
 	private static final int MAX_NT_RETRY = 5;
 	
 	private Config config;
@@ -50,6 +50,12 @@ public class Camera {
 		double[] def = { }; // Return an empty array by default.
 		boolean is_coherent = false; // Did we get coherent arrays form the NT?
 		int retry_count = 0;
+		
+		rectArea = null;
+		rectWidth = null;
+		rectHeight = null;
+		rectCenterX = null;
+		rectCenterY = null;
 
 		// We cannot get arrays atomically but at least we can make sure they have the same size
 		do
@@ -61,7 +67,8 @@ public class Camera {
 			rectCenterX = nt.getNumberArray("centerX", def);
 			rectCenterY = nt.getNumberArray("centerY", def);
 
-			is_coherent = (rectArea.length == rectWidth.length && rectArea.length == rectHeight.length
+			is_coherent = (rectArea != null && rectWidth != null && rectHeight != null && rectCenterX != null && rectCenterY != null &&
+					rectArea.length == rectWidth.length && rectArea.length == rectHeight.length
 					&& rectArea.length == rectCenterX.length && rectArea.length == rectCenterY.length);
 			retry_count++;
 		} while (!is_coherent && retry_count < MAX_NT_RETRY);
@@ -163,7 +170,7 @@ public class Camera {
 	 * @return true if at least one target was found, false otherwise
 	 */
 	public boolean isTargetFound() {
-		if (rectArea.length > 0) {
+		if (rectArea != null && rectArea.length > 0) {
 			return true;
 		} else {
 			return false;

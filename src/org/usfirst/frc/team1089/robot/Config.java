@@ -65,7 +65,7 @@ public class Config {
 		default: // COMPETITION
 			// calibrated value for Axis M1013 
 			HFOV_DEGREES = 67; 
-			CAM_ELEVATION_FEET = 9.5 / 12;
+			CAM_ELEVATION_FEET = 32.0 / 12.0;
 			
 			// NOT native resolution of Axis M1011 or M1013
             // need to match size used in GRIP
@@ -74,12 +74,12 @@ public class Config {
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
 			IN_LINE_MIN = .4;
-			AXLE_TRACK_INCHES = 15.126 * 2;
+			AXLE_TRACK_INCHES = 23.5;
 			LEFT_ENC_SIGN = 1.0;
 			RIGHT_ENC_SIGN = -1.0;
 			LEFT_DRIVE_SIGN = -1.0;
 			RIGHT_DRIVE_SIGN = 1.0;
-			WHEEL_SIZE_INCHES = 10.0;
+			WHEEL_SIZE_INCHES = 9.9;
 			GEAR_RATIO = 4.0 / 3.0; //speed in / speed out
 			break;
 		}

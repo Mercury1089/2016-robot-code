@@ -41,8 +41,8 @@ public class Shooter {
 	public void raise(boolean level) {
 		if (level) {
 			elevator.set(DoubleSolenoid.Value.kForward);
-		} else {
-			elevator.set(DoubleSolenoid.Value.kOff);
+		} else { 
+			elevator.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
 	
