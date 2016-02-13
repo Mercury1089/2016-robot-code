@@ -28,13 +28,12 @@ public class Config {
 		COMPETITION;
 	}
 	
-	public final ConfigType configType;
+	public final ConfigType configType = ConfigType.COMPETITION;
 	
 	private static Config current = null; // Do not initialize - getCurrent() does it if necessary.
 
 	private Config(ConfigType configType) {
 		
-		this.configType = configType;
 		switch (configType) {
 		case PROTO:
 			// calibrated value for Axis M1011 (M1013 should be greater)

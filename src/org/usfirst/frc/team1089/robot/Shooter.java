@@ -42,7 +42,7 @@ public class Shooter {
 		if (level) {
 			elevator.set(DoubleSolenoid.Value.kForward);
 		} else {
-			elevator.set(DoubleSolenoid.Value.kReverse);
+			elevator.set(DoubleSolenoid.Value.kOff);
 		}
 	}
 	

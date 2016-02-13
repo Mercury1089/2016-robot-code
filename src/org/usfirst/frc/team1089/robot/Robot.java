@@ -3,7 +3,7 @@
 package org.usfirst.frc.team1089.robot;
 
 import java.util.Arrays;
-
+ 
 import org.usfirst.frc.team1089.auton.AimEnum;
 import org.usfirst.frc.team1089.auton.DefenseEnum;
 import org.usfirst.frc.team1089.auton.StrongholdAuton;
@@ -148,7 +148,7 @@ public class Robot extends IterativeRobot {
 		drive.checkMove();
 
 		
-		if (button(ControllerBase.GamepadButtons.RB)) {
+		if (button(ControllerBase.GamepadButtons.BACK)) {
 			drive.degreeRotate(10, 0.4); 
 		}
 		 
@@ -156,7 +156,7 @@ public class Robot extends IterativeRobot {
 			shooter.shoot();
 		}
 
-		if (rightStick.getRawButton(1)) {//change later by looking at the driver station
+		if (button(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
 			//intake.moveBall(1);
 		}
@@ -165,14 +165,14 @@ public class Robot extends IterativeRobot {
 			//intake.moveBall(0);
 		}
 		
-		if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)){
+		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)){
 			shooter.raise(false);
 			//intake.moveBall(-1);
 		}
 		else{
 			shooter.raise(true);
 			//intake.moveBall(0);
-		}
+		}*/
 
 		camera.getNTInfo();
 		debug();
@@ -198,12 +198,12 @@ public class Robot extends IterativeRobot {
 		// DriveTrain
 		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2) + " deg.");
 		
-		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
+		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition()); 
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition(), 1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled((leftFront.getEncPosition() * 30 * Math.PI / 5760), 1.0), 4) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), -1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() * 30 * Math.PI / 5760, -1.0), 4) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
 		
