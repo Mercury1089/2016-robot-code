@@ -127,8 +127,9 @@ public class Robot extends IterativeRobot {
 		drive.tankDrive(leftStick, rightStick);
 
 		// Reset gyro with the A button on the gamepad
-		if (button(ControllerBase.GamepadButtons.A))
+		if (button(ControllerBase.GamepadButtons.A)) {
 			gyro.reset();
+		}
 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
@@ -159,17 +160,15 @@ public class Robot extends IterativeRobot {
 		if (button(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
 			//intake.moveBall(1);
-		}
-		else{
+		} else{
 			shooter.raise(true);
 			//intake.moveBall(0);
 		}
 		
-		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)){
+		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
 			//intake.moveBall(-1);
-		}
-		else{
+		} else {
 			shooter.raise(true);
 			//intake.moveBall(0);
 		}*/
@@ -200,6 +199,7 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition()); 
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
+		// TODO cleanup the next two lines (calling distanceTravelled shall suffice)
 		SmartDashboard.putString("Distance Travelled Left",
 				"" + Utilities.round(mercEncoder.distanceTravelled((leftFront.getEncPosition() * 30 * Math.PI / 5760), 1.0), 4) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
