@@ -10,8 +10,8 @@ public class Config {
 	public final double HORIZONTAL_CAMERA_RES_PIXELS;
 	public final double TURN_ANGLE_MIN_DEGREES;
 	public final double TURN_ANGLE_MAX_DEGREES;
-	public final double IN_LINE_MIN; // TODO FIX
-	public final double AXLE_TRACK_INCHES; // TODO FIX THIS
+	public final double IN_LINE_MIN;
+	public final double AXLE_TRACK_INCHES;
 	public final double LEFT_ENC_SIGN;
 	public final double RIGHT_ENC_SIGN;
 	public final double LEFT_DRIVE_SIGN;
@@ -28,11 +28,17 @@ public class Config {
 		COMPETITION;
 	}
 	
-	public final ConfigType configType = ConfigType.COMPETITION;
+	// change the value below to specify the config type to use if not
+	// otherwise specified by calling setCurrent()
+	public final static ConfigType DEFAULT_CONFIG_TYPE = ConfigType.COMPETITION;
+	
+	public final ConfigType configType; // Do not initialize - constructor will do it
 	
 	private static Config current = null; // Do not initialize - getCurrent() does it if necessary.
 
 	private Config(ConfigType configType) {
+		
+		this.configType = configType;
 		
 		switch (configType) {
 		case PROTO:
@@ -104,7 +110,7 @@ public class Config {
 	 */
 	public static Config getCurrent() {
 		if (current == null) {
-			setCurrent(ConfigType.PROTO);  // Default to PROTO if no one has called setCurrent.
+			setCurrent(DEFAULT_CONFIG_TYPE);
 		}
 		return current;
 	}
