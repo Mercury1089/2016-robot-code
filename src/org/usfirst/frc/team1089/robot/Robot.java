@@ -140,7 +140,7 @@ public class Robot extends IterativeRobot {
 			//drive.degreeRotate(camera.getTurnAngle(), 1.0);
 		}
 		if (isDegreeRotating){
-			drive.degreeRotateVoltage(camera.getTurnAngle());
+			drive.degreeRotateVoltage(camera.getTurnAngle()); // TODO: we need to cache the desired heading
 		}
 
 		if (button(ControllerBase.GamepadButtons.Y)) {
