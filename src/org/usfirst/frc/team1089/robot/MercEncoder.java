@@ -9,7 +9,8 @@ public class MercEncoder {
 
 	public final static double TICKS_PER_ROTATION = 1440;
 	public final double DISTANCE_PER_TICK_INCHES = 
-			((config.WHEEL_SIZE_INCHES * Math.PI) / (TICKS_PER_ROTATION * config.GEAR_RATIO));
+		//	((config.WHEEL_SIZE_INCHES * Math.PI) / (TICKS_PER_ROTATION * config.GEAR_RATIO));
+	1.0/(TICKS_PER_ROTATION * config.GEAR_RATIO / (Math.PI * config.WHEEL_SIZE_INCHES));
 	
 	public final double DISTANCE_PER_TICK_FEET = DISTANCE_PER_TICK_INCHES / 12;
 

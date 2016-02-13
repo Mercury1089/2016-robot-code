@@ -183,7 +183,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public static boolean button(int i) {
-		return btn[i] && !btnPrev[i];
+		return btn[i] && !btnPrev[i]; 
 	}
 
 	/**
@@ -199,11 +199,10 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition()); 
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
-		// TODO cleanup the next two lines (calling distanceTravelled shall suffice)
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(mercEncoder.distanceTravelled((leftFront.getEncPosition() * 30 * Math.PI / 5760), 1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition() , 1.0), 4) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() * 30 * Math.PI / 5760, -1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() , 1.0), 4) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
 		

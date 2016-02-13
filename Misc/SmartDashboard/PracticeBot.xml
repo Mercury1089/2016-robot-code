@@ -1,5 +1,12 @@
 <xml version="1.0">
 <dashboard>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="632" y="443"/>
+		<property name="Text" value="connection indicator"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="639" y="409"/>
+	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="1003" y="123"/>
 		<height>23</height>
@@ -8,7 +15,7 @@
 		<location x="634" y="330"/>
 	</widget>
 	<widget field="Defense: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="635" y="134"/>
+		<location x="634" y="152"/>
 	</widget>
 	<widget field="Position: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="640" y="10"/>
@@ -98,4 +105,5 @@
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="DB"/>
 </xml>

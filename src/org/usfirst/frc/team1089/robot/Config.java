@@ -32,13 +32,13 @@ public class Config {
 	// otherwise specified by calling setCurrent()
 	public final static ConfigType DEFAULT_CONFIG_TYPE = ConfigType.COMPETITION;
 	
-	public final ConfigType configType; // Do not initialize - constructor will do it
+	public final ConfigType _configType; // Do not initialize - constructor will do it
 	
-	private static Config current = null; // Do not initialize - getCurrent() does it if necessary.
+	private static Config _current = null; // Do not initialize - getCurrent() does it if necessary.
 
 	private Config(ConfigType configType) {
 		
-		this.configType = configType;
+		this._configType = configType;
 		
 		switch (configType) {
 		case PROTO:
@@ -80,7 +80,7 @@ public class Config {
 			LEFT_DRIVE_SIGN = -1.0;
 			RIGHT_DRIVE_SIGN = 1.0;
 			WHEEL_SIZE_INCHES = 10.0;
-			GEAR_RATIO = 4.0 / 3.0;
+			GEAR_RATIO = 4.0 / 3.0; //speed in / speed out
 			break;
 		}
 	}
@@ -94,9 +94,9 @@ public class Config {
 	 * @throws IllegalStateException if a different state has already been set
 	 */
 	public synchronized static void setCurrent(ConfigType configType) {
-		if (current == null) {
-			current = new Config(configType);
-		} else if (current.configType != configType) {
+		if (_current == null) {
+			_current = new Config(configType);
+		} else if (_current._configType != configType) {
 			throw new IllegalStateException("Cannot change configuration type once it has been set.");
 		}
 	}
@@ -109,9 +109,9 @@ public class Config {
 	 * @return the current {@code Config} being used by the robot.
 	 */
 	public static Config getCurrent() {
-		if (current == null) {
+		if (_current == null) {
 			setCurrent(DEFAULT_CONFIG_TYPE);
 		}
-		return current;
+		return _current;
 	}
 }
