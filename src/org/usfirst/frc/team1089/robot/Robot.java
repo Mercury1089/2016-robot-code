@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -92,18 +91,18 @@ public class Robot extends IterativeRobot {
 		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		auton = new StrongholdAuton(drive, camera, shooter, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
+		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected());
 	}
 
 	@Override
 	public void autonomousInit() {
-		auton.move(); // if we don't use a state machine then we only want to call auton.move() once
+		
 	}
 
 	@Override
 	public void autonomousPeriodic() {
-		//auton.move();
+		auton.move();
 	}
 
 	@Override
@@ -135,7 +134,7 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)) {
-			drive.degreeRotate(camera.getTurnAngle(), 1.0);
+			drive.degreeRotate(camera.getTurnAngle(), 0.5);
 		}
 
 		if (button(ControllerBase.GamepadButtons.Y)) {
@@ -144,7 +143,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
+			drive.turnDistance(drive.arcLength(10));
 		}
 
 		drive.checkMove();
@@ -158,7 +157,7 @@ public class Robot extends IterativeRobot {
 			shooter.shoot();
 		}
 
-		if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
+		if (button(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
 			//intake.moveBall(1);
 		} else{
@@ -174,7 +173,7 @@ public class Robot extends IterativeRobot {
 			//intake.moveBall(0);
 		}*/
 
-		camera.getNTInfo(); 
+		camera.getNTInfo();
 		debug();
 	}
 
@@ -215,9 +214,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 
 		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
-		SmartDashboard.putString("Diagonal Distance", "" + Utilities.round(camera.getDiagonalDist(), 2) + " ft.");
+		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
-		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 2) + " deg.");
+		SmartDashboard.putString("Angle to turn", "" + camera.getTurnAngle() + " deg.");
 		
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());

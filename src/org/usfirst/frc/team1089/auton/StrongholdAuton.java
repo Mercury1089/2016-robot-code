@@ -4,71 +4,84 @@ import org.usfirst.frc.team1089.robot.Camera;
 import org.usfirst.frc.team1089.robot.DriveTrain;
 import org.usfirst.frc.team1089.robot.Shooter;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
+
 public class StrongholdAuton {
-	private static final int CENTERED_MOVE_DISTANCE_FEET = 3;
-	private static final double TURN_SPEED = 0.5;
+	private static final int BREACH = 0, CENTER = 1, MOVE = 2, SHOOT = 3;
+	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL = 10.0;
 	private Defense defense;
 	private Camera camera;
-	private int pos;
+	private int pos, state = 0;
+	private double centeredMoveDistance, angleToTurn, supportAngle;
 	private AimEnum aim;
+	private DefenseEnum defenseEnum;
 	private Shooter shooter;
+	private AnalogGyro gyro;
 	protected DriveTrain drive;
 
-	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, int p, AimEnum a, DefenseEnum dE) {
+	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, AnalogGyro g, int p, AimEnum a, DefenseEnum dE) {
 		drive = d;
 		camera = c;
 		pos = p;
+		defenseEnum = dE;
 		defense = new Defense(drive, dE);
 		aim = a ;
 		shooter = s;
+		gyro = g;
 	}
 
 	public void move() {
-		defense.breach(); // first we breach the defense - TODO what if the defense before us is one the of defenses we do not know how to breach?
-		
-		if (aim == AimEnum.HIGH) { // if we are going for the high goal
-			camera.getNTInfo(); // we take a look
+		switch(state){
 			
-			if (camera.getRectArea().length < 0) { // if we don't see a target we need to find it
-				if (pos <= 3) {
-					drive.degreeRotate(45, TURN_SPEED); // TODO could there be a better approach?
-				} else {
-					drive.degreeRotate(-45, TURN_SPEED);
+			case BREACH:{//Breaching Phase
+				if (defenseEnum == DefenseEnum.LOW_BAR){
+					shooter.raise(false);
 				}
+				defense.breach();
+				/*if(gyro z axis is zero)
+				 * shooter.raise(true);
+				 * state++;
+				 */
+				break;
 			}
-			
-			camera.getNTInfo(); // we take another look
-			// TODO what if we still don't see a target?
-			
-			drive.degreeRotate(camera.getTurnAngle(), TURN_SPEED);
-			
-			drive.moveDistance(CENTERED_MOVE_DISTANCE_FEET);
-			drive.waitMove(); // moveDistance is an asynchronous operation - we
-								// need to wait until it is done
-			
-			camera.getNTInfo(); // we take a final look
-			
-			if (camera.isInDistance() && camera.isInLineWithGoal() && camera.isInTurnAngle()) { // only if we are clear
-				shooter.shoot();
-			} else {
-				// we do nothing - the pilot will take over from here
+			case CENTER:{
+				if (aim == AimEnum.NONE){
+					return;
+				}
+				else{
+					drive.degreeRotate(-gyro.getAngle(), TURN_SPEED);
+					camera.getNTInfo();
+					angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / 10.0));
+					supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
+					centeredMoveDistance = (10.0 * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
+					if(centeredMoveDistance > 0){
+						state++;
+					}
+				}
+				break;
+			}
+			case MOVE:{
+				drive.moveDistance(centeredMoveDistance);
+				drive.waitMove();
+				drive.encoderAngleRotate(angleToTurn);
+				drive.waitMove();
+				if(camera.isInDistance() && camera.isInLineWithGoal() && camera.isInTurnAngle()){
+					state++;
+				}
+				break;
+			}
+			case SHOOT:{
+				if(aim == AimEnum.HIGH){
+					shooter.shoot();
+				}
+				else if(aim == AimEnum.LOW){
+					drive.moveDistance(DISTANCE_TO_LOW_GOAL);
+					drive.waitMove();
+					shooter.raise(false);
+					//intake.moveBall(-1);
+				}
+				break;
 			}
 		}
-		/*
-		 * else if(aim == AimEnum.LOW){ switch(pos){ case 1:{
-		 * drive.turnDistance(POSITION1_TURN_DISTANCE); drive.waitMove(); break;
-		 * } case 2:{ drive.turnDistance(POSITION2_TURN_DISTANCE);
-		 * drive.waitMove(); break; } case 3:{
-		 * drive.turnDistance(POSITION3_TURN_DISTANCE); drive.waitMove(); break;
-		 * } case 4:{ drive.turnDistance(POSITION4_TURN_DISTANCE);
-		 * drive.waitMove(); break; } case 5:{
-		 * drive.turnDistance(POSITION5_TURN_DISTANCE); drive.waitMove(); break;
-		 * } } drive.MoveDistance(DISTANCE_TO_ROTATE_SPOT); //move to spot that
-		 * we need to go to before we turn to face low goal drive.waitMove();
-		 * drive.turnDistance(changePos); //turn to face low goal
-		 * drive.waitMove(); drive.moveDistance(changePos); //drive into low
-		 * goal area drive.waitMove(); shooter.raise(true);
-			intake.moveBall(-1); }
-		 */
 	}
 }
