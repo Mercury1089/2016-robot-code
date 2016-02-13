@@ -134,7 +134,7 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)) {
-			drive.degreeRotate(camera.getTurnAngle(), 0.5);
+			drive.degreeRotate(camera.getTurnAngle(), 1.0);
 		}
 
 		if (button(ControllerBase.GamepadButtons.Y)) {
@@ -143,7 +143,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (button(ControllerBase.GamepadButtons.X)) {
-			drive.turnDistance(drive.arcLength(10));
+			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
 		}
 
 		drive.checkMove();
@@ -213,10 +213,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX()) + " px.");
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 
-		SmartDashboard.putString("Perceived Opening Width", camera.getOpeningWidth() + " in.");
-		SmartDashboard.putString("Diagonal Distance", "" + camera.getDiagonalDist() + " ft.");
+		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 2) + " in.");
+		SmartDashboard.putString("Diagonal Distance", "" + Utilities.round(camera.getDiagonalDist(), 2) + " ft.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
-		SmartDashboard.putString("Angle to turn", "" + camera.getTurnAngle() + " deg.");
+		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 2) + " deg.");		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 2) + " in.");
+
 		
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());

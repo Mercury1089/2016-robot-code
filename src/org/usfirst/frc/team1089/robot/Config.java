@@ -53,7 +53,7 @@ public class Config {
 			
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
-			IN_LINE_MIN = .4;
+			IN_LINE_MIN = 1.0;
 			AXLE_TRACK_INCHES = 15.126 * 2;
 			LEFT_ENC_SIGN = 1.0;
 			RIGHT_ENC_SIGN = -1.0;
@@ -73,7 +73,7 @@ public class Config {
 			
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
-			IN_LINE_MIN = .4;
+			IN_LINE_MIN = 1.0;
 			AXLE_TRACK_INCHES = 23.5;
 			LEFT_ENC_SIGN = 1.0;
 			RIGHT_ENC_SIGN = -1.0;
