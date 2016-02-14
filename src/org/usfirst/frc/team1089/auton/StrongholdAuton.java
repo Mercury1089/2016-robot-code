@@ -7,7 +7,7 @@ import org.usfirst.frc.team1089.robot.Shooter;
 import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class StrongholdAuton {
-	private static final int BREACH = 0, CENTER = 1, MOVE = 2, SHOOT = 3;
+	private static final int BREACH = 0, CENTER = 1, MOVE = 2, SHOOT = 3, DONE = 4;
 	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL = 10.0;
 	private Defense defense;
 	private Camera camera;
@@ -31,56 +31,67 @@ public class StrongholdAuton {
 	}
 
 	public void move() {
-		switch(state){
+		switch (state) {
 			
-			case BREACH:{//Breaching Phase
-				if (defenseEnum == DefenseEnum.LOW_BAR){
+			case BREACH: {//Breaching Phase
+				if (defenseEnum == DefenseEnum.LOW_BAR) {
 					shooter.raise(false);
 				}
 				defense.breach();
 				/*if(gyro z axis is zero)
-				 * shooter.raise(true);
-				 * state++;
-				 */
+				 * shooter.raise(true);*/
+				  state++;
+				 
 				break;
 			}
-			case CENTER:{
-				if (aim == AimEnum.NONE){
-					return;
+			case CENTER: {
+				if (aim == AimEnum.NONE) {
+					state = DONE;
 				}
-				else{
+				else {
 					drive.degreeRotate(-gyro.getAngle(), TURN_SPEED);
 					camera.getNTInfo();
 					angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / 10.0));
 					supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
 					centeredMoveDistance = (10.0 * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
-					if(centeredMoveDistance > 0){
+					if (centeredMoveDistance > 0) {
 						state++;
+					}
+					else {
+						state = DONE;
 					}
 				}
 				break;
 			}
-			case MOVE:{
+			case MOVE: {
 				drive.moveDistance(centeredMoveDistance);
 				drive.waitMove();
 				drive.encoderAngleRotate(angleToTurn);
 				drive.waitMove();
-				if(camera.isInDistance() && camera.isInLineWithGoal() && camera.isInTurnAngle()){
+				if (camera.isInDistance() && camera.isInLineWithGoal() && camera.isInTurnAngle()) {
 					state++;
+				}
+				else {
+					state = DONE;
 				}
 				break;
 			}
-			case SHOOT:{
-				if(aim == AimEnum.HIGH){
+			case SHOOT: {
+				if (aim == AimEnum.HIGH) {
 					shooter.shoot();
 				}
-				else if(aim == AimEnum.LOW){
+				else if (aim == AimEnum.LOW) {
 					drive.moveDistance(DISTANCE_TO_LOW_GOAL);
 					drive.waitMove();
 					shooter.raise(false);
 					//intake.moveBall(-1);
 				}
+				state++;
 				break;
+			}
+			case DONE: {
+				return;
+					
 			}
 		}
 	}
