@@ -14,14 +14,19 @@ public class DriveTrain {
 
 	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
 	private AnalogGyro gyro;
-	private static boolean isMoving = false; // indicates we are in (position)
-												// control mode
+	
+	private static boolean isMoving = false; // indicates we are moving (in position
+												// control mode or rotating)
+	public static boolean isDegreeRotating = false; // indicates we are rotating
+	double _heading = 0.0; // heading when rotating
+	
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.4;
 	private static final double MOVE_THRESH_TICKS = 50;
+	
 	private double endPosL, endPosR;
 	private double startPosL, startPosR;
 	private double changePosTicks;
@@ -91,6 +96,7 @@ public class DriveTrain {
 			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
 				return; // we keep moving as no joystick has been grabbed
 			} else {
+				isDegreeRotating = false; // in case we were rotating
 				setToManual();
 			}
 		}
@@ -196,6 +202,7 @@ public class DriveTrain {
 		double rightVel = rightFrontTalon.getEncVelocity();
 
 		if (isMoving
+				&& !isDegreeRotating // if we are rotating we should move on 
 				&& (leftFrontTalon.getEncPosition() > endPosL - MOVE_THRESH_TICKS
 						&& leftFrontTalon.getEncPosition() < endPosL + MOVE_THRESH_TICKS)
 				&& (rightFrontTalon.getEncPosition() > endPosR - MOVE_THRESH_TICKS
@@ -289,20 +296,57 @@ public class DriveTrain {
 		stop();
 	}
 
+	/**
+	 * <pre>
+	 * public void degreeRotateVoltage(double heading)
+	 * </pre>
+	 * 
+	 * Turns the base based to the specified heading
+	 * <p>
+	 * This is an asynchronous operation. Use waitDegreeRotateVoltage() to wait for completion.
+	 * </p>
+	 * 
+	 * @param heading
+	 *            the heading in degree
+	 */
 	public void degreeRotateVoltage(double heading) {
-		isMoving = true;
-		double vmax = 0.8;
-		double vmin = 0.2;
-		double dmax = 20.0;
-		double dmin = 5.0;
-		double error = gyro.getAngle() - heading;
-		double kp = (vmax - vmin) / (dmax - dmin);
-		double vout = -Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
-		if (Math.abs(error) <= 1) {
-			stop();
-			Robot.isDegreeRotating = false;
-		} else {
-			speedRotate(vout);
+		isMoving = true; // we flag that we are moving so tank drive does not stop us
+		isDegreeRotating = true; // we flag that we are rotating asynchronously
+		gyro.reset(); // we start at zero since heading is relative to where we are
+					// (but we could also save the start angle and subtract in check method)
+		_heading = heading; // we save where we want to go
+	}
+		
+	public boolean checkDegreeRotateVoltage() {
+		if (isDegreeRotating) {	// only if we have been told to rotate	
+			double vmax = 0.8;
+			double vmin = 0.2;
+			double dmax = 20.0;
+			double dmin = 5.0;
+			double error = gyro.getAngle() - _heading;
+			double kp = (vmax - vmin) / (dmax - dmin);
+			double vout = -Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
+			
+			if (Math.abs(error) <= 1) {
+				isDegreeRotating = false; // we take the flag down
+				stop(); // we set to manual and stop the motors
+			} else {
+				speedRotate(vout); // we rotate until we are told otherwise
+			}
+		}
+		return isDegreeRotating;
+	}
+	
+	/**
+	 * <pre>
+	 * public void waitDegreeRotateVoltage()
+	 * </pre>
+	 * 
+	 * Hangs the process until the robot is not rotating.
+	 */
+	public void waitDegreeRotateVoltage() {
+		while (checkDegreeRotateVoltage()) {
+			// do nothing
 		}
 	}
 
