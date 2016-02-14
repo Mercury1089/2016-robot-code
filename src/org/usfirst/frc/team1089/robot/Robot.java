@@ -172,7 +172,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (button(ControllerBase.GamepadButtons.START)) {
-			drive.degreeRotate(360, .7);
+			drive.encoderAngleRotate(360);
 		}
 		
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
