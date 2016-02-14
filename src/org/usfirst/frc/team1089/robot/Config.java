@@ -53,7 +53,7 @@ public class Config {
 			
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
-			IN_LINE_MIN = 1.0;
+			IN_LINE_MIN = 1.2;
 			AXLE_TRACK_INCHES = 15.126 * 2;
 			LEFT_ENC_SIGN = 1.0;
 			RIGHT_ENC_SIGN = -1.0;
@@ -64,7 +64,7 @@ public class Config {
 			break;
 		default: // COMPETITION
 			// calibrated value for Axis M1013 
-			HFOV_DEGREES = 67; 
+			HFOV_DEGREES = 58.0; 
 			CAM_ELEVATION_FEET = 32.0 / 12.0;
 			
 			// NOT native resolution of Axis M1011 or M1013
@@ -73,7 +73,7 @@ public class Config {
 			
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
-			IN_LINE_MIN = 1.0;
+			IN_LINE_MIN = 1.2;
 			AXLE_TRACK_INCHES = 23.5;
 			LEFT_ENC_SIGN = 1.0;
 			RIGHT_ENC_SIGN = -1.0;

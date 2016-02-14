@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * The {@code DriveTrain} class handles movement with the drive base of the robot.
+ * The {@code DriveTrain} class handles movement with the drive base of the
+ * robot.
  */
 public class DriveTrain {
 
@@ -33,14 +34,22 @@ public class DriveTrain {
 	 *                   CANTalon rightFront, 
 	 *                   CANTalon leftBack, 
 	 *                   CANTalon rightBack, 
-	 *                   AnalogGyro g) 
+	 *                   AnalogGyro g)
 	 * </pre>
-	 * Constructs a new {@code DriveTrain} with the specified {@code CANTalons} for the wheels, and an {@code AnalogGyro} to check rotation.
-	 * @param leftFront  the {@code CANTalon} controlling the left front wheel
-	 * @param rightFront the {@code CANTalon} controlling the right front wheel
-	 * @param leftBack   the {@code CANTalon} controlling the left back wheel
-	 * @param rightBack  the {@code CANTalon} controlling the right back wheel
-	 * @param g          the {@code AnalogGyro} used to track rotation
+	 * 
+	 * Constructs a new {@code DriveTrain} with the specified {@code CANTalons}
+	 * for the wheels, and an {@code AnalogGyro} to check rotation.
+	 * 
+	 * @param leftFront
+	 *            the {@code CANTalon} controlling the left front wheel
+	 * @param rightFront
+	 *            the {@code CANTalon} controlling the right front wheel
+	 * @param leftBack
+	 *            the {@code CANTalon} controlling the left back wheel
+	 * @param rightBack
+	 *            the {@code CANTalon} controlling the right back wheel
+	 * @param g
+	 *            the {@code AnalogGyro} used to track rotation
 	 */
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		config = Config.getCurrent();
@@ -62,16 +71,20 @@ public class DriveTrain {
 		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
 	}
-	
+
 	/**
 	 * <pre>
 	 * public void tankDrive(Joystick leftStick, 
 	 *                       Joystick rightStick)
 	 * </pre>
-	 * Drives the base using a {@code Joystick} for the left set of wheels, 
-	 * and another {@code Joystick} for the right set of wheels.
-	 * @param leftStick  the {@code Joystick} to control the left set of wheels
-	 * @param rightStick the {@code Joystick} to control the right set of wheels
+	 * 
+	 * Drives the base using a {@code Joystick} for the left set of wheels, and
+	 * another {@code Joystick} for the right set of wheels.
+	 * 
+	 * @param leftStick
+	 *            the {@code Joystick} to control the left set of wheels
+	 * @param rightStick
+	 *            the {@code Joystick} to control the right set of wheels
 	 */
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
 		if (isMoving) {
@@ -103,12 +116,15 @@ public class DriveTrain {
 	 * <pre>
 	 * public void moveDistance(double changePos)
 	 * </pre>
-	 * Moves the base based on encoder measurements by the specified distance in feet.
+	 * 
+	 * Moves the base based on encoder measurements by the specified distance in
+	 * feet.
 	 * <p>
 	 * This is an asynchronous operation. Use waitMove() to wait for completion.
 	 * </p>
 	 * 
-	 * @param changePos the distance to move in feet
+	 * @param changePos
+	 *            the distance to move in feet
 	 */
 	public void moveDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
@@ -133,13 +149,15 @@ public class DriveTrain {
 	 * <pre>
 	 * public void turnDistance(double changePos)
 	 * </pre>
-	 * Turns the base based on encoders
-	 * by the specified distance in feet alongside the arc created by the axle track.
+	 * 
+	 * Turns the base based on encoders by the specified distance in feet
+	 * alongside the arc created by the axle track.
 	 * <p>
 	 * This is an asynchronous operation. Use waitMove() to wait for completion.
 	 * </p>
 	 * 
-	 * @param changePos the distance to turn in feet
+	 * @param changePos
+	 *            the distance to turn in feet
 	 */
 	public void turnDistance(double changePos) {
 		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
@@ -164,8 +182,12 @@ public class DriveTrain {
 	 * <pre>
 	 * public boolean checkMove()
 	 * </pre>
+	 * 
 	 * Checks to see if the robot is moving.
-	 * @return true if the encoder speeds are 0, the {@code CANTalon} positions read within a certain threshold, and the robot is moving, false if otherwise.
+	 * 
+	 * @return true if the encoder speeds are 0, the {@code CANTalon} positions
+	 *         read within a certain threshold, and the robot is moving, false
+	 *         if otherwise.
 	 */
 	public boolean checkMove() {
 		double leftVel = leftFrontTalon.getEncVelocity();
@@ -182,11 +204,12 @@ public class DriveTrain {
 		}
 		return isMoving;
 	}
-	
+
 	/**
 	 * <pre>
 	 * public void waitMove()
 	 * </pre>
+	 * 
 	 * Hangs the process until the robot is not moving.
 	 */
 	public void waitMove() {
@@ -199,9 +222,12 @@ public class DriveTrain {
 	 * <pre>
 	 * public void speedRotate(double s)
 	 * </pre>
+	 * 
 	 * Rotates the robot at a specified speed.
-	 * @param s speed value to rotate; 
-	 *        positive values are clockwise, negative values are counterclockwise
+	 * 
+	 * @param s
+	 *            speed value to rotate; positive values are clockwise, negative
+	 *            values are counterclockwise
 	 */
 	public void speedRotate(double s) {
 		if (isMoving) {
@@ -215,6 +241,7 @@ public class DriveTrain {
 	 * <pre>
 	 * public void stop()
 	 * </pre>
+	 * 
 	 * Sets both {@code CANTalon} speeds to 0.
 	 */
 	public void stop() {
@@ -230,9 +257,13 @@ public class DriveTrain {
 	 * public void degreeRotate(double deg, 
 	 *                          double s)
 	 * </pre>
+	 * 
 	 * Rotates the robot to a specified amount of degrees at a certain speed.
-	 * @param deg amount of degrees to rotate
-	 * @param s speed to rotate at
+	 * 
+	 * @param deg
+	 *            amount of degrees to rotate
+	 * @param s
+	 *            speed to rotate at
 	 */
 	public void degreeRotate(double deg, double s) {
 		double startAngle = gyro.getAngle();
@@ -255,8 +286,25 @@ public class DriveTrain {
 		}
 		stop();
 	}
-	
-	public void encoderAngleRotate(double rotDegrees){
+
+	public void degreeRotateVoltage(double heading) {
+		isMoving = true;
+		double vmax = 0.8;
+		double vmin = 0.2;
+		double dmax = 20.0;
+		double dmin = 5.0;
+		double error = gyro.getAngle() - heading;
+		double kp = (vmax - vmin) / (dmax - dmin);
+		double vout = -Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
+		if (Math.abs(error) <= 1) {
+			stop();
+			Robot.isDegreeRotating = false;
+		} else {
+			speedRotate(vout);
+		}
+	}
+
+	public void encoderAngleRotate(double rotDegrees) {
 		turnDistance(arcLength(rotDegrees));
 	}
 
@@ -265,10 +313,16 @@ public class DriveTrain {
 	 * public boolean isOutOfDeadzone(Joystick j, 
 	 *                                int axis)
 	 * </pre>
-	 * Gets whether or not the specified {@code Joystick} is out of the deadzone.
-	 * @param j the {@code Joystick} to get the axis value from
-	 * @param axis the axis to get a value from
-	 * @return true if the axis value is out of the deadzone threshold, false otherwise
+	 * 
+	 * Gets whether or not the specified {@code Joystick} is out of the
+	 * deadzone.
+	 * 
+	 * @param j
+	 *            the {@code Joystick} to get the axis value from
+	 * @param axis
+	 *            the axis to get a value from
+	 * @return true if the axis value is out of the deadzone threshold, false
+	 *         otherwise
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
@@ -278,9 +332,13 @@ public class DriveTrain {
 	 * <pre>
 	 * public double arcLength(double angle)
 	 * </pre>
+	 * 
 	 * Gets the arc length of an angle based on the axle track.
-	 * @param  angle the angle in degrees to convert to an arc length
-	 * @return the arc length, in feet, of an angle based on the robot's axle track, in inches  
+	 * 
+	 * @param angle
+	 *            the angle in degrees to convert to an arc length
+	 * @return the arc length, in feet, of an angle based on the robot's axle
+	 *         track, in inches
 	 */
 	public double arcLength(double angle) {
 		return -Math.toRadians(angle) * (config.AXLE_TRACK_INCHES / 2) / 12;
@@ -290,6 +348,7 @@ public class DriveTrain {
 	 * <pre>
 	 * private void setToManual()
 	 * </pre>
+	 * 
 	 * Sets the control modes of the front {@code CANTalons} to PercentVbus.
 	 */
 	private void setToManual() {
@@ -302,6 +361,7 @@ public class DriveTrain {
 	 * <pre>
 	 * private void setToAuto()
 	 * </pre>
+	 * 
 	 * Sets the control modes of the front {@code CANTalons} to Position.
 	 */
 	private void setToAuto() {

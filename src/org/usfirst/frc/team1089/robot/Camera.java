@@ -170,7 +170,10 @@ public class Camera {
 	 * @return true if at least one target was found, false otherwise
 	 */
 	public boolean isTargetFound() {
-		if (rectArea != null && rectArea.length > 0) {
+		if ((rectArea != null && rectWidth != null && rectHeight != null && rectCenterX != null && rectCenterY != null &&
+				rectArea.length == rectWidth.length && rectArea.length == rectHeight.length
+				&& rectArea.length == rectCenterX.length && rectArea.length == rectCenterY.length)
+				&& rectArea.length > 0) {
 			return true;
 		} else {
 			return false;

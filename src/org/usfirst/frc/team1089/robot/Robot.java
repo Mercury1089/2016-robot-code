@@ -35,6 +35,7 @@ public class Robot extends IterativeRobot {
 
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
+	public static boolean isDegreeRotating = false; 
 
 	
 	@Override
@@ -134,7 +135,12 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.GamepadButtons.B)) {
-			drive.degreeRotate(camera.getTurnAngle(), 1.0);
+			isDegreeRotating = true;
+			gyro.reset();
+			//drive.degreeRotate(camera.getTurnAngle(), 1.0);
+		}
+		if (isDegreeRotating){
+			drive.degreeRotateVoltage(camera.getTurnAngle());
 		}
 
 		if (button(ControllerBase.GamepadButtons.Y)) {
@@ -163,6 +169,10 @@ public class Robot extends IterativeRobot {
 		} else{
 			shooter.raise(true);
 			//intake.moveBall(0);
+		}
+		
+		if (button(ControllerBase.GamepadButtons.START)) {
+			drive.degreeRotate(360, .7);
 		}
 		
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {

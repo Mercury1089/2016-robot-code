@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter {
 	private Solenoid shooter;
 	private DoubleSolenoid elevator;
-	private static final long SHOOTER_RELEASE_DELAY_MS = 250;
+	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
 
 	/**
 	 * <pre>
