@@ -16,8 +16,11 @@ public class DriveTrain {
 	private AnalogGyro gyro;
 	
 	private static boolean isMoving = false; // indicates we are moving (in position
-												// control mode or rotating)
-	public static boolean isDegreeRotating = false; // indicates we are rotating
+												// control mode)
+	private double startPosL, startPosR; // starting positions in position control mode
+	private double endPosL, endPosR; // ending positions in position control mode
+	
+	public static boolean isDegreeRotating = false; // indicates we are rotating (in gyro control mode)
 	double _heading = 0.0; // heading when rotating
 	
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
@@ -27,9 +30,6 @@ public class DriveTrain {
 	private static final double DEADZONE_LIMIT = 0.4;
 	private static final double MOVE_THRESH_TICKS = 50;
 	
-	private double endPosL, endPosR;
-	private double startPosL, startPosR;
-	private double changePosTicks;
 	private Config config;
 	private MercEncoder mercEncoder;
 
@@ -92,12 +92,15 @@ public class DriveTrain {
 	 *            the {@code Joystick} to control the right set of wheels
 	 */
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
-		if (isMoving) {
+		if (isMoving || isDegreeRotating) {
 			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
 				return; // we keep moving as no joystick has been grabbed
 			} else {
-				isDegreeRotating = false; // in case we were rotating
-				setToManual();
+				if (isMoving) {					
+					setToManual();	
+				} else { // if (isDegreeRotating)
+					isDegreeRotating = false; // in case we were rotating
+				}
 			}
 		}
 
@@ -133,7 +136,7 @@ public class DriveTrain {
 	 *            the distance to move in feet
 	 */
 	public void moveDistance(double changePos) {
-		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = leftFrontTalon.getEncPosition();
 		startPosR = rightFrontTalon.getEncPosition();
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
@@ -166,7 +169,7 @@ public class DriveTrain {
 	 *            the distance to turn in feet
 	 */
 	public void turnDistance(double changePos) {
-		changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = leftFrontTalon.getEncPosition();
 		startPosR = rightFrontTalon.getEncPosition();
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
@@ -198,15 +201,16 @@ public class DriveTrain {
 	 *         if otherwise.
 	 */
 	public boolean checkMove() {
+		double leftPos = leftFrontTalon.getEncPosition();
+		double rightPos = rightFrontTalon.getEncPosition();
 		double leftVel = leftFrontTalon.getEncVelocity();
 		double rightVel = rightFrontTalon.getEncVelocity();
 
 		if (isMoving
-				&& !isDegreeRotating // if we are rotating we should move on 
-				&& (leftFrontTalon.getEncPosition() > endPosL - MOVE_THRESH_TICKS
-						&& leftFrontTalon.getEncPosition() < endPosL + MOVE_THRESH_TICKS)
-				&& (rightFrontTalon.getEncPosition() > endPosR - MOVE_THRESH_TICKS
-						&& rightFrontTalon.getEncPosition() < endPosR + MOVE_THRESH_TICKS)
+				&& (leftPos > endPosL - MOVE_THRESH_TICKS
+						&& leftPos < endPosL + MOVE_THRESH_TICKS)
+				&& (rightPos > endPosR - MOVE_THRESH_TICKS
+						&& rightPos < endPosR + MOVE_THRESH_TICKS)
 				&& leftVel == 0 && rightVel == 0) {
 
 			setToManual();
@@ -310,7 +314,6 @@ public class DriveTrain {
 	 *            the heading in degree
 	 */
 	public void degreeRotateVoltage(double heading) {
-		isMoving = true; // we flag that we are moving so tank drive does not stop us
 		isDegreeRotating = true; // we flag that we are rotating asynchronously
 		gyro.reset(); // we start at zero since heading is relative to where we are
 					// (but we could also save the start angle and subtract in check method)
@@ -329,7 +332,7 @@ public class DriveTrain {
 			
 			if (Math.abs(error) <= 1) {
 				isDegreeRotating = false; // we take the flag down
-				stop(); // we set to manual and stop the motors
+				stop(); // we stop the motors
 			} else {
 				speedRotate(vout); // we rotate until we are told otherwise
 			}
