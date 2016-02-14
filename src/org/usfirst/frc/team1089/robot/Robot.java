@@ -130,6 +130,8 @@ public class Robot extends IterativeRobot {
 		if (button(ControllerBase.GamepadButtons.A)) {
 			gyro.reset();
 		}
+		
+		// begin asynchronous rotations
 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
@@ -138,18 +140,27 @@ public class Robot extends IterativeRobot {
 		}
 		
 		drive.checkDegreeRotateVoltage();
+		
+		// end asynchronous rotations
 
 		if (button(ControllerBase.GamepadButtons.Y)) {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
+		
+		// begin asynchronous moves
 
 		if (button(ControllerBase.GamepadButtons.X)) {
 			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
 		}
+		
+		if (button(ControllerBase.GamepadButtons.START)) {
+			drive.encoderAngleRotate(360); // this is an asynchronous move
+		}
 
 		drive.checkMove();
-
+		
+		// end asynchronous moves
 		
 		if (button(ControllerBase.GamepadButtons.BACK)) {
 			drive.degreeRotate(10, 0.4); 
@@ -165,11 +176,8 @@ public class Robot extends IterativeRobot {
 		} else{
 			shooter.raise(true);
 			//intake.moveBall(0);
-		}
-		
-		if (button(ControllerBase.GamepadButtons.START)) {
-			drive.encoderAngleRotate(360);
-		}
+		}	
+
 		
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
