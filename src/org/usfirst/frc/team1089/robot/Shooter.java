@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter {
 	private Solenoid shooter;
 	private DoubleSolenoid highElevator, lowElevator;
+	private final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
 
 	/**
@@ -40,11 +41,24 @@ public class Shooter {
 	 * 
 	 * @param level whether or not the elevator is considered level.
 	 */
-	public void raise(boolean level) {
-		if (level) {
-			highElevator.set(DoubleSolenoid.Value.kForward);
-		} else { 
-			highElevator.set(DoubleSolenoid.Value.kReverse);
+	public void raise(int pos) {
+		switch(pos) {
+			case DOWN: {
+				lowElevator.set(DoubleSolenoid.Value.kReverse);
+				highElevator.set(DoubleSolenoid.Value.kReverse);
+			}
+			case LOW: {
+				lowElevator.set(DoubleSolenoid.Value.kForward);
+				highElevator.set(DoubleSolenoid.Value.kReverse);
+			}
+			case MEDIUM: {
+				lowElevator.set(DoubleSolenoid.Value.kReverse);
+				highElevator.set(DoubleSolenoid.Value.kForward);
+			}
+			case HIGH: {
+				lowElevator.set(DoubleSolenoid.Value.kForward);
+				highElevator.set(DoubleSolenoid.Value.kForward);
+			}
 		}
 	}
 	

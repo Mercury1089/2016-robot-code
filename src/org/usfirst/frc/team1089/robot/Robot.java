@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
-	private static boolean[] btn;
-	private static boolean[] btnPrev;
+	private static boolean[][] btn;
+	private static boolean[][] btnPrev;
 	
 	private Camera camera;
 	
@@ -66,7 +66,7 @@ public class Robot extends IterativeRobot {
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 
-		btn = new boolean[ControllerBase.MAX_NUMBER_BUTTONS];
+		btn = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
 
 		defenseChooser = new SendableChooser();
 		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
@@ -119,15 +119,18 @@ public class Robot extends IterativeRobot {
 		
 		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
 
-		for (int i = 1; i < ControllerBase.MAX_NUMBER_BUTTONS; i++) {
-			btn[i] = gamepad.getRawButton(i);
+		for(int i = 1; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
+			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
+				btn[i][j] = gamepad.getRawButton(j);
+			}
 		}
+		
 
 		// Teleop Tank with DriveTrain
 		drive.tankDrive(leftStick, rightStick);
 
 		// Reset gyro with the A button on the gamepad
-		if (button(ControllerBase.GamepadButtons.A)) {
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.A)) {
 			gyro.reset();
 		}
 		
@@ -135,46 +138,59 @@ public class Robot extends IterativeRobot {
 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
-		if (button(ControllerBase.GamepadButtons.B)) {
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.B)) {
 			drive.degreeRotateVoltage(camera.getTurnAngle());
+			
 		}
 		
 		drive.checkDegreeRotateVoltage();
 		
 		// end asynchronous rotations
 
-		if (button(ControllerBase.GamepadButtons.Y)) {
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
 		
 		// begin asynchronous moves
 
-		if (button(ControllerBase.GamepadButtons.X)) {
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.X)) {
 			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
 		}
 		
-		if (button(ControllerBase.GamepadButtons.START)) {
-			drive.encoderAngleRotate(360); // this is an asynchronous move
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.START)) {
+			//drive.encoderAngleRotate(360); // this is an asynchronous move
+			drive.turnDistance(1);
 		}
 
 		drive.checkMove();
 		
 		// end asynchronous moves
 		
-		if (button(ControllerBase.GamepadButtons.BACK)) {
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			drive.degreeRotate(10, 0.4); 
 		}
 		 
-		if (button(ControllerBase.GamepadButtons.LB)) {
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			shooter.shoot();
 		}
 
-		if (button(ControllerBase.GamepadButtons.RB)) {
-			shooter.raise(false);
+		
+		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			shooter.raise(1);
+			//intake.moveBall(0);
+		}
+		else if (button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			shooter.raise(2);
+			//intake.moveBall(0);
+		}
+		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1) 
+				&& button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			shooter.raise(0);
 			//intake.moveBall(1);
-		} else{
-			shooter.raise(true);
+		}
+		else{
+			shooter.raise(3);
 			//intake.moveBall(0);
 		}	
 
@@ -196,8 +212,8 @@ public class Robot extends IterativeRobot {
 
 	}
 
-	public static boolean button(int i) {
-		return btn[i] && !btnPrev[i]; 
+	public static boolean button(int i, int j) {
+		return btn[i][j] && !btnPrev[i][j]; 
 	}
 
 	/**
