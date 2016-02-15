@@ -38,7 +38,7 @@ public class Robot extends IterativeRobot {
 
 	
 	@Override
-	public void robotInit() {
+	public void robotInit() { 
 		camera = new Camera("GRIP/myContoursReport");
 		
 		shooter = new Shooter();
