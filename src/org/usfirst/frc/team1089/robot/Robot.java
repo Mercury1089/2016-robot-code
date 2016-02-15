@@ -10,6 +10,7 @@ import org.usfirst.frc.team1089.auton.StrongholdAuton;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	private static boolean[][] btn;
 	private static boolean[][] btnPrev;
+	private static Joystick[] joysticks;
 	
 	private Camera camera;
 	
@@ -67,6 +69,8 @@ public class Robot extends IterativeRobot {
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 
 		btn = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
+		btnPrev = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
+		joysticks = new Joystick[]{rightStick, leftStick, gamepad};
 
 		defenseChooser = new SendableChooser();
 		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
@@ -117,11 +121,16 @@ public class Robot extends IterativeRobot {
 		// Get initial info
 		camera.getNTInfo();
 		
-		btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
-
-		for(int i = 1; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
+		//btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
+		for(int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
 			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
-				btn[i][j] = gamepad.getRawButton(j);
+				btnPrev[i][j] = btn[i][j];
+			}
+		}
+
+		for(int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
+			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
+				btn[i][j] = joysticks[i].getRawButton(j);
 			}
 		}
 		
@@ -190,10 +199,9 @@ public class Robot extends IterativeRobot {
 			//intake.moveBall(1);
 		}
 		else{
-			shooter.raise(3);
+			shooter.raise(1);
 			//intake.moveBall(0);
 		}	
-
 		
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);

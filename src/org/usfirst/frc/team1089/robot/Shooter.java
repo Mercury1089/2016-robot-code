@@ -56,8 +56,8 @@ public class Shooter {
 				highElevator.set(DoubleSolenoid.Value.kForward);
 			}
 			case HIGH: {
-				lowElevator.set(DoubleSolenoid.Value.kForward);
 				highElevator.set(DoubleSolenoid.Value.kForward);
+				lowElevator.set(DoubleSolenoid.Value.kForward);
 			}
 		}
 	}
