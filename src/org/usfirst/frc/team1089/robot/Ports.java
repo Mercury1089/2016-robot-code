@@ -19,9 +19,13 @@ public class Ports {
 	 */
 	public static class Digital {
 		public static final int CHECK_PRESSURE = 0;
+	}
+	/**
+	 * The {@code Relay} subclass contains all the ports for anything in the relay section.
+	 */
+	public static class Relay {
 		public static final int COMPRESSOR_RELAY = 0;
 	}
-	
 	/**
 	 * The {@code CAN} subclass contains all the ports for anything using the CAN interface.
 	 */
@@ -59,8 +63,10 @@ public class Ports {
 	 */
 	public static class PCM {
 		public static final int SHOOTER = 1;
-		public static final int SHOOTER_ELEVATOR_FORWARD = 4;
-		public static final int SHOOTER_ELEVATOR_REVERSE = 5;
+		public static final int SHOOTER_ELEVATOR_PART1_FORWARD = 2;
+		public static final int SHOOTER_ELEVATOR_PART1_REVERSE = 3;
+		public static final int SHOOTER_ELEVATOR_PART2_FORWARD = 4;
+		public static final int SHOOTER_ELEVATOR_PART2_REVERSE = 5;
 		public static final int INTAKE_ELEVATOR_FORWARD = 6;
 		public static final int INTAKE_ELEVATOR_REVERSE = 7;
 	}

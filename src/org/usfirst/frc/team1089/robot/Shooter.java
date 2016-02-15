@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class Shooter {
 	private Solenoid shooter;
-	private DoubleSolenoid elevator;
+	private DoubleSolenoid highElevator, lowElevator;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
 
 	/**
@@ -24,8 +24,10 @@ public class Shooter {
 	 */
 	public Shooter() {
 		shooter = new Solenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER);
-		elevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_FORWARD,
-				Ports.PCM.SHOOTER_ELEVATOR_REVERSE);
+		highElevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_PART2_FORWARD,
+				Ports.PCM.SHOOTER_ELEVATOR_PART2_REVERSE);
+		lowElevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_PART1_FORWARD,
+				Ports.PCM.SHOOTER_ELEVATOR_PART1_REVERSE);
 	}
 
 	/**
@@ -40,9 +42,9 @@ public class Shooter {
 	 */
 	public void raise(boolean level) {
 		if (level) {
-			elevator.set(DoubleSolenoid.Value.kForward);
+			highElevator.set(DoubleSolenoid.Value.kForward);
 		} else { 
-			elevator.set(DoubleSolenoid.Value.kReverse);
+			highElevator.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
 	
@@ -69,7 +71,7 @@ public class Shooter {
 	 * @return true if the {@code DoubleSolenoid's} value is at kForward, false otherwise 
 	 */
 	public boolean isElevatorUp() {
-		return elevator.get() == DoubleSolenoid.Value.kForward;
+		return highElevator.get() == DoubleSolenoid.Value.kForward;
 	}
 
 	/**
