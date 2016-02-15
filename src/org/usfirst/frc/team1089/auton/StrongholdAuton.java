@@ -35,7 +35,7 @@ public class StrongholdAuton {
 			
 			case BREACH: {//Breaching Phase
 				if (defenseEnum == DefenseEnum.LOW_BAR) {
-					shooter.raise(false);
+					shooter.raise(1);
 				}
 				defense.breach();
 				/*if(gyro z axis is zero)
@@ -83,7 +83,7 @@ public class StrongholdAuton {
 				else if (aim == AimEnum.LOW) {
 					drive.moveDistance(DISTANCE_TO_LOW_GOAL);
 					drive.waitMove();
-					shooter.raise(false);
+					shooter.raise(0);
 					//intake.moveBall(-1);
 				}
 				state++;

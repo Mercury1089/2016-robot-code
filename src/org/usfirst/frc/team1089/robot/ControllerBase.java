@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class ControllerBase {
 	private final Joystick GAMEPAD, LEFT_STICK, RIGHT_STICK;
 	private boolean[] pressed;
+	public static final int MAX_NUMBER_CONTROLLERS = 3;
 	public static final int MAX_NUMBER_BUTTONS = 11; 
 	
 	/**
@@ -36,6 +37,34 @@ public class ControllerBase {
 		 * Unused constructor.
 		 */
 		private GamepadButtons() {
+			
+		}
+	}
+	/**
+	 * The {@code JoystickButtons} class contains all the button bindings for the
+	 * Joysticks.
+	 */
+	public static class JoystickButtons {
+		public static final int
+			BTN1 = 1,
+			BTN2 = 2,
+			BTN3 = 3,
+			BTN4 = 4,
+			BTN5 = 5,
+			BTN6 = 6,
+			BTN7 = 7,
+			BTN8 = 8,
+			BTN9 = 9,
+			BTN10 = 10,
+			BTN11 = 11;
+		/**
+		 * <pre>
+		 * private JoystickButtons()
+		 * </pre>
+		 * 
+		 * Unused constructor.
+		 */
+		private JoystickButtons() {
 			
 		}
 	}

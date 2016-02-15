@@ -62,12 +62,12 @@ public class Ports {
 	 *
 	 */
 	public static class PCM {
-		public static final int SHOOTER = 1;
-		public static final int SHOOTER_ELEVATOR_PART1_FORWARD = 2;
-		public static final int SHOOTER_ELEVATOR_PART1_REVERSE = 3;
-		public static final int SHOOTER_ELEVATOR_PART2_FORWARD = 4;
-		public static final int SHOOTER_ELEVATOR_PART2_REVERSE = 5;
-		public static final int INTAKE_ELEVATOR_FORWARD = 6;
-		public static final int INTAKE_ELEVATOR_REVERSE = 7;
+		public static final int SHOOTER = 0;
+		public static final int SHOOTER_ELEVATOR_PART1_FORWARD = 3;
+		public static final int SHOOTER_ELEVATOR_PART1_REVERSE = 4;
+		public static final int SHOOTER_ELEVATOR_PART2_FORWARD = 1;
+		public static final int SHOOTER_ELEVATOR_PART2_REVERSE = 2;
+		public static final int INTAKE_ELEVATOR_FORWARD = 5;
+		public static final int INTAKE_ELEVATOR_REVERSE = 6;
 	}
 }
