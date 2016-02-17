@@ -73,6 +73,8 @@ public class Robot extends IterativeRobot {
 		btnPrev = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
 		joysticks = new Joystick[]{rightStick, leftStick, gamepad};
 
+		//Set up our 3 Sendable Choosers for the SmartDashboard
+		
 		defenseChooser = new SendableChooser();
 		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
 		defenseChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
@@ -122,7 +124,7 @@ public class Robot extends IterativeRobot {
 		// Get initial info
 		camera.getNTInfo();
 		
-		//btnPrev = Arrays.copyOf(btn, ControllerBase.MAX_NUMBER_BUTTONS);
+		//Dealing with buttons on the different joysticks
 		for(int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
 			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
 				btnPrev[i][j] = btn[i][j];
@@ -157,17 +159,19 @@ public class Robot extends IterativeRobot {
 		
 		// end asynchronous rotations
 
+		//reset encoders
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
 		
 		// begin asynchronous moves
-
+		
+		//Camera Turn
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.X)) {
 			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
 		}
-		
+	
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.START)) {
 			//drive.encoderAngleRotate(360); // this is an asynchronous move
 			drive.turnDistance(1);
@@ -182,16 +186,16 @@ public class Robot extends IterativeRobot {
 		}*/
 		 
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
-			shooter.shoot();
+			shooter.shoot();			//shoot ball
 		}
 
-		
+		//raising and lowering shooter elevator
 		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(shooter.LOW);
+			shooter.raise(shooter.LOW);				//pancake
 			//intake.moveBall(0.0);
 		}
 		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
-			shooter.raise(shooter.MEDIUM);
+			shooter.raise(shooter.MEDIUM);			//shooting height
 			//intake.moveBall(0.0);
 		}
 		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN5)) {
@@ -204,7 +208,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			intake.raise(false);
+			intake.raise(false);		
 		}
 		
 		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
@@ -212,13 +216,13 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
-			intake.moveBall(-1.0);
+			intake.moveBall(-1.0);			//pull ball in
 		}
 		if(button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.R3)) {
-			intake.moveBall(0);
+			intake.moveBall(0);				//stop intake
 		}
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
-			intake.moveBall(1.0);
+			intake.moveBall(1.0);			//push ball out
 		}
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
@@ -257,7 +261,7 @@ public class Robot extends IterativeRobot {
 	 * Puts info onto the SmartDashboard.
 	 */
 	public void debug() {
-		// DriveTrain
+		// Display on SmartDash
 		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2) + " deg.");
 		
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition()); 
