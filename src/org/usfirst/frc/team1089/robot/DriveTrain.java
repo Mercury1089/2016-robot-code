@@ -332,7 +332,7 @@ public class DriveTrain {
 			
 			if (Math.abs(error) <= 1) {
 				isDegreeRotating = false; // we take the flag down
-				stop(); // we stop the motors
+				stop(); // we stop the motors 
 			} else {
 				speedRotate(vout); // we rotate until we are told otherwise
 			}

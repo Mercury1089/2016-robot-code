@@ -177,9 +177,9 @@ public class Robot extends IterativeRobot {
 		
 		// end asynchronous moves
 		
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
+		/*if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			drive.degreeRotate(10, 0.4); 
-		}
+		}*/
 		 
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			shooter.shoot();
@@ -190,7 +190,7 @@ public class Robot extends IterativeRobot {
 			shooter.raise(shooter.LOW);
 			//intake.moveBall(0.0);
 		}
-		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			shooter.raise(shooter.MEDIUM);
 			//intake.moveBall(0.0);
 		}
@@ -211,8 +211,14 @@ public class Robot extends IterativeRobot {
 			intake.raise(true);
 		}
 		
-		if (Math.abs(gamepad.getRawAxis(5)) > 0.5) {
-			intake.moveBall(gamepad.getRawAxis(5));
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
+			intake.moveBall(-1.0);
+		}
+		if(button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.R3)) {
+			intake.moveBall(0);
+		}
+		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
+			intake.moveBall(1.0);
 		}
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);

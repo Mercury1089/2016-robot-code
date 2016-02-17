@@ -44,17 +44,17 @@ public class Shooter {
 	public void raise(int pos) {
 		this.position = pos;
 		switch(pos) {
-			case DOWN: {
+			case DOWN: {			
 				lowElevator.set(DoubleSolenoid.Value.kReverse);
 				highElevator.set(DoubleSolenoid.Value.kReverse);
 				break;
 			}
-			case LOW: {
+			case LOW: {				//pancake
 				lowElevator.set(DoubleSolenoid.Value.kForward);
 				highElevator.set(DoubleSolenoid.Value.kReverse);
 				break;
 			}
-			case MEDIUM: {
+			case MEDIUM: {			//shooting
 				lowElevator.set(DoubleSolenoid.Value.kReverse);
 				highElevator.set(DoubleSolenoid.Value.kForward);
 				break;
