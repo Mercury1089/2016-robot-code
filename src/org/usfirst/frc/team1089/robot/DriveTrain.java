@@ -261,6 +261,7 @@ public class DriveTrain {
 		if (isMoving) {
 			setToManual();
 		}
+		isDegreeRotating = false;
 		leftFrontTalon.set(0);
 		rightFrontTalon.set(0);
 	}
