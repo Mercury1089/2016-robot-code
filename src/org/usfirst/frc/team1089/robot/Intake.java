@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1089.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
@@ -19,7 +20,9 @@ public class Intake {
 	 */
 	public Intake() {
 		intake = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
-		elevator = new DoubleSolenoid(Ports.PCM.INTAKE_ELEVATOR_FORWARD, Ports.PCM.INTAKE_ELEVATOR_REVERSE);
+		elevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.INTAKE_ELEVATOR_FORWARD, Ports.PCM.INTAKE_ELEVATOR_REVERSE);
+		intake.changeControlMode(TalonControlMode.PercentVbus);
+		intake.enableBrakeMode(true);
 	}
 
 	/**
@@ -29,7 +32,7 @@ public class Intake {
 	 * Sets the speed of the intake to move the ball.
 	 * @param speed speed to set the intake wheels
 	 */
-	public void moveBall(int speed) {	
+	public void moveBall(double speed) {	
 		intake.set(speed);	
 	}
 	

@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter {
 	private Solenoid shooter;
 	private DoubleSolenoid highElevator, lowElevator;
-	private final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
+	public final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
-
+	public int position = HIGH;
 	/**
 	 * <pre>
 	 * public Shooter()
@@ -25,10 +25,10 @@ public class Shooter {
 	 */
 	public Shooter() {
 		shooter = new Solenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER);
-		highElevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_PART2_FORWARD,
-				Ports.PCM.SHOOTER_ELEVATOR_PART2_REVERSE);
-		lowElevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_PART1_FORWARD,
-				Ports.PCM.SHOOTER_ELEVATOR_PART1_REVERSE);
+		highElevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_HIGH_FORWARD,
+				Ports.PCM.SHOOTER_ELEVATOR_HIGH_REVERSE);
+		lowElevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.SHOOTER_ELEVATOR_LOW_FORWARD,
+				Ports.PCM.SHOOTER_ELEVATOR_LOW_REVERSE);
 	}
 
 	/**
@@ -42,22 +42,27 @@ public class Shooter {
 	 * @param level whether or not the elevator is considered level.
 	 */
 	public void raise(int pos) {
+		this.position = pos;
 		switch(pos) {
 			case DOWN: {
 				lowElevator.set(DoubleSolenoid.Value.kReverse);
 				highElevator.set(DoubleSolenoid.Value.kReverse);
+				break;
 			}
 			case LOW: {
 				lowElevator.set(DoubleSolenoid.Value.kForward);
 				highElevator.set(DoubleSolenoid.Value.kReverse);
+				break;
 			}
 			case MEDIUM: {
 				lowElevator.set(DoubleSolenoid.Value.kReverse);
 				highElevator.set(DoubleSolenoid.Value.kForward);
+				break;
 			}
 			case HIGH: {
 				highElevator.set(DoubleSolenoid.Value.kForward);
 				lowElevator.set(DoubleSolenoid.Value.kForward);
+				break;
 			}
 		}
 	}

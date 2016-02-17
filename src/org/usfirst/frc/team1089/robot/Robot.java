@@ -24,7 +24,7 @@ public class Robot extends IterativeRobot {
 	private Camera camera;
 	
 	private Shooter shooter;
-	//private Intake intake;
+	private Intake intake;
 	private Compressor compressor;
 
 	private MercEncoder mercEncoder; // only used for debugging purpose
@@ -46,6 +46,7 @@ public class Robot extends IterativeRobot {
 		shooter = new Shooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
+		intake = new Intake();
 		
 		mercEncoder = new MercEncoder();
 
@@ -186,29 +187,39 @@ public class Robot extends IterativeRobot {
 
 		
 		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(1);
-			//intake.moveBall(0);
+			shooter.raise(shooter.LOW);
+			//intake.moveBall(0.0);
 		}
-		else if (button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(2);
-			//intake.moveBall(0);
+		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+			shooter.raise(shooter.MEDIUM);
+			//intake.moveBall(0.0);
 		}
-		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1) 
-				&& button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(0);
-			//intake.moveBall(1);
+		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN5)) {
+			shooter.raise(shooter.DOWN);
+			//intake.moveBall(1.0);
 		}
-		else{
-			shooter.raise(1);
-			//intake.moveBall(0);
-		}	
+		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN6)){
+			shooter.raise(shooter.HIGH);
+			//intake.moveBall(0.0);
+		}
 		
+		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
+			intake.raise(false);
+		}
+		
+		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+			intake.raise(true);
+		}
+		
+		if (Math.abs(gamepad.getRawAxis(5)) > 0.5) {
+			intake.moveBall(gamepad.getRawAxis(5));
+		}
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
-			//intake.moveBall(-1);
+			//intake.moveBall(-1.0);
 		} else {
 			shooter.raise(true);
-			//intake.moveBall(0);
+			//intake.moveBall(0.0);
 		}*/
 
 		camera.getNTInfo();
@@ -219,9 +230,17 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 
 	}
+	
+	public void shootProcedure(){
+		drive.encoderAngleRotate(camera.getTurnAngle());
+		drive.waitMove();
+		intake.raise(false);
+		shooter.shoot();
 
-	public static boolean button(int i, int j) {
-		return btn[i][j] && !btnPrev[i][j]; 
+	}
+
+	public static boolean button(int contNum, int buttonNum) {
+		return btn[contNum][buttonNum] && !btnPrev[contNum][buttonNum]; 
 	}
 
 	/**
