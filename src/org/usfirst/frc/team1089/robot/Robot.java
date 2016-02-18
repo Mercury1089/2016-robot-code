@@ -151,8 +151,8 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.B)) {
-			//drive.degreeRotateVoltage(camera.getTurnAngle());
-			drive.turnDistance(1);
+			drive.degreeRotate(camera.getTurnAngle(), 0.8);
+			//drive.turnDistance(1);
 		}
 		
 		drive.checkDegreeRotateVoltage();

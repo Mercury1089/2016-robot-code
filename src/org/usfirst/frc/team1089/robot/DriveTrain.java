@@ -25,13 +25,14 @@ public class DriveTrain {
 	double _heading = 0.0; // heading when rotating
 	
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
-	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
-	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
+	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
+	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
+	private static final double TIER_4_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 100;
 	private static final double TURN_THRESH_VELOCITY = 10;
-	
+	private int degRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
 
@@ -300,14 +301,23 @@ public class DriveTrain {
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_2_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 2);
+			speedRotate(s / 1.75);
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_3_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 4);
-
+			speedRotate(s / 1.90);
 		}
-		stop();
+		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_4_DEGREES_FROM_TARGET)
+				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
+			speedRotate(s / 2.0);
+		}
+		if (Math.abs(gyro.getAngle()) - Math.abs(deg) > 1.0 && degRotCounter < 5){
+			degreeRotate(deg, 0.8);
+			degRotCounter++;
+		} else {
+			degRotCounter = 0;
+			stop();
+		}
 	}
 
 	/**
