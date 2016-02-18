@@ -151,8 +151,8 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.B)) {
-			drive.degreeRotateVoltage(camera.getTurnAngle());
-			
+			//drive.degreeRotateVoltage(camera.getTurnAngle());
+			drive.turnDistance(1);
 		}
 		
 		drive.checkDegreeRotateVoltage();
@@ -174,7 +174,7 @@ public class Robot extends IterativeRobot {
 	
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.START)) {
 			//drive.encoderAngleRotate(360); // this is an asynchronous move
-			drive.turnDistance(1);
+			drive.encoderAngleRotate(/*camera.getTurnAngle()*/45);
 		}
 
 		drive.checkMove();
@@ -212,7 +212,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
-			intake.raise(true);
+			intake.raise(true); 
 		}
 		
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
@@ -224,6 +224,11 @@ public class Robot extends IterativeRobot {
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0);			//push ball out
 		}
+		
+		if (button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN6)) {
+			drive.turnDistance(1);
+		}
+		
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 			shooter.raise(false);
 			//intake.moveBall(-1.0);

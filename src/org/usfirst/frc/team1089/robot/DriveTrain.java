@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -27,8 +28,9 @@ public class DriveTrain {
 	private static final double TIER_2_DEGREES_FROM_TARGET = 5;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 1;
 	private static final double TURN_TIMEOUT_MILLIS = 10000;
-	private static final double DEADZONE_LIMIT = 0.4;
-	private static final double MOVE_THRESH_TICKS = 50;
+	private static final double DEADZONE_LIMIT = 0.3;
+	private static final double MOVE_THRESH_TICKS = 100;
+	private static final double TURN_THRESH_VELOCITY = 10;
 	
 	private Config config;
 	private MercEncoder mercEncoder;
@@ -174,14 +176,14 @@ public class DriveTrain {
 		startPosR = rightFrontTalon.getEncPosition();
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(0.001, 0.0, 0.0);
-		rightFrontTalon.setPID(0.001, 0.0, 0.0);
+		leftFrontTalon.setPID(0.3, 0.000, -0.000);
+		rightFrontTalon.setPID(0.3, 0.000, -0.000);
 		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
-		leftFrontTalon.configNominalOutputVoltage(0, 0);
+		leftFrontTalon.configNominalOutputVoltage(6, -6);
 		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
-		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
-/*		rightFrontTalon.setVoltageRampRate();
-		leftFrontTalon.setVoltageRampRate();*/
+		rightFrontTalon.configNominalOutputVoltage(6, -6);
+		leftFrontTalon.setCloseLoopRampRate(.01);
+		rightFrontTalon.setCloseLoopRampRate(.01);
 		setToAuto();
 		leftFrontTalon.enableControl();
 		rightFrontTalon.enableControl();
@@ -205,15 +207,22 @@ public class DriveTrain {
 		double rightPos = rightFrontTalon.getEncPosition();
 		double leftVel = leftFrontTalon.getEncVelocity();
 		double rightVel = rightFrontTalon.getEncVelocity();
-
-		if (isMoving
-				&& (leftPos > endPosL - MOVE_THRESH_TICKS
+		
+		if (isMoving)
+		{
+			SmartDashboard.putNumber("left velocity", leftVel);
+			SmartDashboard.putNumber("right velocity", rightVel);
+			SmartDashboard.putNumber("left pos", leftPos);
+			SmartDashboard.putNumber("right pos", rightPos);
+			
+			if ((leftPos > endPosL - MOVE_THRESH_TICKS
 						&& leftPos < endPosL + MOVE_THRESH_TICKS)
 				&& (rightPos > endPosR - MOVE_THRESH_TICKS
 						&& rightPos < endPosR + MOVE_THRESH_TICKS)
-				&& leftVel == 0 && rightVel == 0) {
+				&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
 
-			setToManual();
+				setToManual();
+			}
 		}
 		return isMoving;
 	}
