@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class StrongholdAuton {
 	private static final int BREACH = 0, CENTER = 1, MOVE = 2, SHOOT = 3, DONE = 4;
-	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL = 10.0;
+	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL = 7.0;
 	private Defense defense;
 	private Camera camera;
-	private int pos, state = 0;
+	private int pos, state = 0, breachAttempts = 0;
 	private double centeredMoveDistance, angleToTurn, supportAngle;
 	private AimEnum aim;
 	private DefenseEnum defenseEnum;
@@ -24,7 +24,7 @@ public class StrongholdAuton {
 		camera = c;
 		pos = p;
 		defenseEnum = dE;
-		defense = new Defense(drive, dE);
+		defense = new Defense(drive, shooter, dE);
 		aim = a ;
 		shooter = s;
 		gyro = g;
@@ -32,16 +32,18 @@ public class StrongholdAuton {
 
 	public void move() {
 		switch (state) {
-			
 			case BREACH: {//Breaching Phase
-				if (defenseEnum == DefenseEnum.LOW_BAR) {
-					shooter.raise(1);
+				if (breachAttempts == 0) {
+					defense.breach();
+					breachAttempts++;
 				}
-				defense.breach();
+				else if (breachAttempts == 1) {
+					state = DONE;
+				}
 				/*if(gyro z axis is zero)
-				 * shooter.raise(true);*/
-				  state++;
-				 
+				  shooter.raise(shooter.MEDIUM);
+				  */
+				state++;
 				break;
 			}
 			case CENTER: {
@@ -78,13 +80,13 @@ public class StrongholdAuton {
 			}
 			case SHOOT: {
 				if (aim == AimEnum.HIGH) {
-					shooter.shoot();
+					//shooter.shootProcedure();
 				}
 				else if (aim == AimEnum.LOW) {
 					drive.moveDistance(DISTANCE_TO_LOW_GOAL);
 					drive.waitMove();
-					shooter.raise(0);
-					//intake.moveBall(-1);
+					shooter.raise(shooter.DOWN);
+					shooter.shoot();
 				}
 				state++;
 				break;
