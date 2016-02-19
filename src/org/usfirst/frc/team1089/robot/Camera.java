@@ -20,8 +20,7 @@ public class Camera {
 	private static final double TARGET_HEIGHT_INCHES = 12;
 	private static final double INCHES_IN_FEET = 12.0;
 	private static final double TARGET_ELEVATION_FEET = 6.5;
-	private static final double HORIZ_DIST_MIN_FEET = 8.0;
-	private static final double HORIZ_DIST_MAX_FEET = 12.0;
+
 	private static final int MAX_NT_RETRY = 5;
 
 	private Config config;
@@ -204,7 +203,8 @@ public class Camera {
 	 *         too far
 	 */
 	public boolean isInDistance() {
-		return getHorizontalDist() > HORIZ_DIST_MIN_FEET && getDiagonalDist() < HORIZ_DIST_MAX_FEET;
+		// TODO take into account the position of the shooter (pass as variable and check against different requirements depending on position)
+		return getHorizontalDist() > config.HORIZ_DIST_MIN_FEET && getDiagonalDist() < config.HORIZ_DIST_MAX_FEET;
 	}
 
 	/**

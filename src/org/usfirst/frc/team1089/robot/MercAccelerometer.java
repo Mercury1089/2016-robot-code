@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 
 public class MercAccelerometer {
+	private final Config config = Config.getCurrent();
 	private BuiltInAccelerometer accel;
 	
 	public MercAccelerometer(){
@@ -17,6 +18,15 @@ public class MercAccelerometer {
 	
 	public double getTilt() {
 		return Math.toDegrees(Math.acos(getAccelZ()/1.0)); // assumes getAccelZ() returns 1.0 when straight
+	}
+	
+	/**
+	 * Indicates if the support onto which the accelerometer is attached is significantly tilted
+	 * 
+	 * @return true if the support onto which the accelerometer is attached is significantly tilted, false otherwise
+	 */
+	public boolean isTilted() {
+		return getTilt() > config.TILT_THRESH_DEGREES; // TODO tweak threshold if needed
 	}
 	
 }

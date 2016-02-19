@@ -11,6 +11,9 @@ public class Config {
 	public final double TURN_ANGLE_MIN_DEGREES;
 	public final double TURN_ANGLE_MAX_DEGREES;
 	public final double IN_LINE_MIN;
+	public final double HORIZ_DIST_MIN_FEET;
+	public final double HORIZ_DIST_MAX_FEET;
+
 	public final double AXLE_TRACK_INCHES;
 	public final double LEFT_ENC_SIGN;
 	public final double RIGHT_ENC_SIGN;
@@ -18,6 +21,8 @@ public class Config {
 	public final double RIGHT_DRIVE_SIGN;
 	public final double WHEEL_SIZE_INCHES;
 	public final double GEAR_RATIO;
+	
+	public final double TILT_THRESH_DEGREES;
 
 	/**
 	 * The {@code ConfigType} is an enum for two possible uses of the code:
@@ -54,6 +59,10 @@ public class Config {
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
 			IN_LINE_MIN = 1.2;
+			HORIZ_DIST_MIN_FEET = 7.0;
+			HORIZ_DIST_MAX_FEET = 11.0;
+
+			
 			AXLE_TRACK_INCHES = 15.126 * 2;
 			LEFT_ENC_SIGN = 1.0;
 			RIGHT_ENC_SIGN = -1.0;
@@ -61,7 +70,10 @@ public class Config {
 			RIGHT_DRIVE_SIGN = 1.0;
 			WHEEL_SIZE_INCHES = 4.0;
 			GEAR_RATIO = 1.0;
+			
+			TILT_THRESH_DEGREES = 15.0;			
 			break;
+			
 		default: // COMPETITION
 			// calibrated value for Axis M1013 
 			HFOV_DEGREES = 58.0; 
@@ -74,13 +86,18 @@ public class Config {
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
 			IN_LINE_MIN = 1.2;
+			HORIZ_DIST_MIN_FEET = 7.0;
+			HORIZ_DIST_MAX_FEET = 11.0;
+			
 			AXLE_TRACK_INCHES = 30.329;
 			LEFT_ENC_SIGN = 1.0;
 			RIGHT_ENC_SIGN = -1.0;
 			LEFT_DRIVE_SIGN = -1.0;
 			RIGHT_DRIVE_SIGN = 1.0;
 			WHEEL_SIZE_INCHES = 9.9;
-			GEAR_RATIO = 4.0 / 3.0; //speed in / speed out
+			GEAR_RATIO = 4.0 / 3.0; // defined as speed in / speed out
+			
+			TILT_THRESH_DEGREES = 15.0;
 			break;
 		}
 	}
