@@ -190,7 +190,7 @@ public class Robot extends IterativeRobot {
 			shooter.raise(shooter.LOW);				//pancake
 			//intake.moveBall(0.0);
 		}
-		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			shooter.raise(shooter.MEDIUM);			//shooting height
 			//intake.moveBall(0.0);
 		}

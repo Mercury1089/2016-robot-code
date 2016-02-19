@@ -55,8 +55,8 @@ public class Ports {
 	 */
 	public static class PCM {
 		public static final int SHOOTER = 0;
-		public static final int SHOOTER_ELEVATOR_LOW_FORWARD = 3;
-		public static final int SHOOTER_ELEVATOR_LOW_REVERSE = 4;
+		public static final int SHOOTER_ELEVATOR_LOW_FORWARD = 4;
+		public static final int SHOOTER_ELEVATOR_LOW_REVERSE = 3;
 		public static final int SHOOTER_ELEVATOR_HIGH_FORWARD = 1;
 		public static final int SHOOTER_ELEVATOR_HIGH_REVERSE = 2;
 		public static final int INTAKE_ELEVATOR_FORWARD = 5;

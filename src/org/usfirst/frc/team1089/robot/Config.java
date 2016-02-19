@@ -30,7 +30,7 @@ public class Config {
 	
 	// change the value below to specify the config type to use if not
 	// otherwise specified by calling setCurrent()
-	public final static ConfigType DEFAULT_CONFIG_TYPE = ConfigType.PROTO;
+	public final static ConfigType DEFAULT_CONFIG_TYPE = ConfigType.COMPETITION;
 	
 	public final ConfigType _configType; // Do not initialize - constructor will do it
 	
