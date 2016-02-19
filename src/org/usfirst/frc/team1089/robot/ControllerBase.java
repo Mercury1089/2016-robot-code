@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The {@code ControllerBase} class handles all input coming from the 
@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.Joystick;
  * to get input, buttons, etc.
  */
 public class ControllerBase {
-	private final Joystick GAMEPAD, LEFT_STICK, RIGHT_STICK;
-	private boolean[] pressed;
+	/*private final Joystick GAMEPAD, LEFT_STICK, RIGHT_STICK;
+	private boolean[] pressed;*/
 	public static final int MAX_NUMBER_CONTROLLERS = 3;
 	public static final int MAX_NUMBER_BUTTONS = 11; 
 	
@@ -79,7 +79,7 @@ public class ControllerBase {
 		RIGHT_STICK
 	}
 	
-	public ControllerBase(int gp, int l, int r) {
+	/*public ControllerBase(int gp, int l, int r) {
 		GAMEPAD = new Joystick(gp);
 		LEFT_STICK = new Joystick(l);
 		RIGHT_STICK = new Joystick(r);
@@ -94,6 +94,6 @@ public class ControllerBase {
 	
 	public boolean getPressedDown(int b) {
 		return GAMEPAD.getRawButton(b) && !pressed[b];
-	}
+	}*/
 	
 }
