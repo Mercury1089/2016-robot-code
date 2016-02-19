@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 
-		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
+		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro, camera);
 
 		// cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK,
 		// Ports.USB.RIGHT_STICK);
@@ -151,7 +151,7 @@ public class Robot extends IterativeRobot {
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.B)) {
-			drive.degreeRotate(camera.getTurnAngle(), 0.8);
+			drive.autoRotate(camera);
 			//drive.turnDistance(1);
 		}
 		
@@ -227,7 +227,7 @@ public class Robot extends IterativeRobot {
 		
 		if (button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN6)) {
 			//drive.turnDistance(1);
-			drive.degreeRotate(camera.getTurnAngle(), 0.8);
+			drive.autoRotate(camera);
 			if (Math.abs(camera.getTurnAngle()) < 1.5 && !drive.isMoving){
 				intake.raise(false);
 				shooter.raiseShootingHeight(camera.getHorizontalDist());
@@ -243,7 +243,6 @@ public class Robot extends IterativeRobot {
 			//intake.moveBall(0.0);
 		}*/
 
-		camera.getNTInfo();
 		debug();
 	}
 

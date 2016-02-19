@@ -15,15 +15,19 @@ public class DriveTrain {
 
 	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
 	private AnalogGyro gyro;
-	
-	public static boolean isMoving = false; // indicates we are moving (in position
-												// control mode)
-	private double startPosL, startPosR; // starting positions in position control mode
-	private double endPosL, endPosR; // ending positions in position control mode
-	
-	public static boolean isDegreeRotating = false; // indicates we are rotating (in gyro control mode)
+
+	public static boolean isMoving = false; // indicates we are moving (in
+											// position
+											// control mode)
+	private double startPosL, startPosR; // starting positions in position
+											// control mode
+	private double endPosL, endPosR; // ending positions in position control
+										// mode
+
+	public static boolean isDegreeRotating = false; // indicates we are rotating
+													// (in gyro control mode)
 	double _heading = 0.0; // heading when rotating
-	
+
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
@@ -32,7 +36,7 @@ public class DriveTrain {
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 100;
 	private static final double TURN_THRESH_VELOCITY = 10;
-	private int degRotCounter = 0;
+	private int autoRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
 	private Camera camera;
@@ -60,7 +64,8 @@ public class DriveTrain {
 	 * @param g
 	 *            the {@code AnalogGyro} used to track rotation
 	 */
-	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
+	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g,
+			Camera c) {
 		config = Config.getCurrent();
 
 		mercEncoder = new MercEncoder();
@@ -79,7 +84,7 @@ public class DriveTrain {
 		leftBackTalon.set(leftFrontTalon.getDeviceID());
 		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
-		camera = new Camera("GRIP/myContoursReport");
+		camera = c;
 	}
 
 	/**
@@ -101,8 +106,8 @@ public class DriveTrain {
 			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
 				return; // we keep moving as no joystick has been grabbed
 			} else {
-				if (isMoving) {					
-					setToManual();	
+				if (isMoving) {
+					setToManual();
 				} else { // if (isDegreeRotating)
 					isDegreeRotating = false; // in case we were rotating
 				}
@@ -210,19 +215,16 @@ public class DriveTrain {
 		double rightPos = rightFrontTalon.getEncPosition();
 		double leftVel = leftFrontTalon.getEncVelocity();
 		double rightVel = rightFrontTalon.getEncVelocity();
-		
-		if (isMoving)
-		{
+
+		if (isMoving) {
 			SmartDashboard.putNumber("left velocity", leftVel);
 			SmartDashboard.putNumber("right velocity", rightVel);
 			SmartDashboard.putNumber("left pos", leftPos);
 			SmartDashboard.putNumber("right pos", rightPos);
-			
-			if ((leftPos > endPosL - MOVE_THRESH_TICKS
-						&& leftPos < endPosL + MOVE_THRESH_TICKS)
-				&& (rightPos > endPosR - MOVE_THRESH_TICKS
-						&& rightPos < endPosR + MOVE_THRESH_TICKS)
-				&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
+
+			if ((leftPos > endPosL - MOVE_THRESH_TICKS && leftPos < endPosL + MOVE_THRESH_TICKS)
+					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
+					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
 
 				setToManual();
 			}
@@ -314,15 +316,22 @@ public class DriveTrain {
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 			speedRotate(s / 2.0);
 		}
-		if (Math.abs(gyro.getAngle()) - Math.abs(deg) > 1.0 && degRotCounter < 5){
-			degreeRotate(camera.getTurnAngle(), 0.8);
-			degRotCounter++;
-		} else {
-			degRotCounter = 0;
-			stop();
-		}
+		stop();
 		isMoving = false;
 	}
+
+	public void autoRotate(Camera c) {
+		autoRotCounter = 0;
+		double deg = 0;
+		do {
+			camera.getNTInfo();
+			deg = camera.getTurnAngle();
+			degreeRotate(deg, 0.8);
+			autoRotCounter++;
+		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5);
+
+	}
+	
 
 	/**
 	 * <pre>
@@ -331,7 +340,8 @@ public class DriveTrain {
 	 * 
 	 * Turns the base based to the specified heading
 	 * <p>
-	 * This is an asynchronous operation. Use waitDegreeRotateVoltage() to wait for completion.
+	 * This is an asynchronous operation. Use waitDegreeRotateVoltage() to wait
+	 * for completion.
 	 * </p>
 	 * 
 	 * @param heading
@@ -339,13 +349,15 @@ public class DriveTrain {
 	 */
 	public void degreeRotateVoltage(double heading) {
 		isDegreeRotating = true; // we flag that we are rotating asynchronously
-		gyro.reset(); // we start at zero since heading is relative to where we are
-					// (but we could also save the start angle and subtract in check method)
+		gyro.reset(); // we start at zero since heading is relative to where we
+						// are
+						// (but we could also save the start angle and subtract
+						// in check method)
 		_heading = heading; // we save where we want to go
 	}
-		
+
 	public boolean checkDegreeRotateVoltage() {
-		if (isDegreeRotating) {	// only if we have been told to rotate	
+		if (isDegreeRotating) { // only if we have been told to rotate
 			double vmax = 0.8;
 			double vmin = 0.2;
 			double dmax = 20.0;
@@ -353,17 +365,17 @@ public class DriveTrain {
 			double error = gyro.getAngle() - _heading;
 			double kp = (vmax - vmin) / (dmax - dmin);
 			double vout = -Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
-			
+
 			if (Math.abs(error) <= 1) {
 				isDegreeRotating = false; // we take the flag down
-				stop(); // we stop the motors 
+				stop(); // we stop the motors
 			} else {
 				speedRotate(vout); // we rotate until we are told otherwise
 			}
 		}
 		return isDegreeRotating;
 	}
-	
+
 	/**
 	 * <pre>
 	 * public void waitDegreeRotateVoltage()
