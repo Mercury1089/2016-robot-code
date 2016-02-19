@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter {
 	private Solenoid shooter;
 	private DoubleSolenoid highElevator, lowElevator;
+	
 	public final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
 	private static final double CLOSE_SHOT = 6;
 	public int position = HIGH;
+	
 	/**
 	 * <pre>
 	 * public Shooter()
@@ -34,13 +36,12 @@ public class Shooter {
 
 	/**
 	 * <pre>
-	 * public void raise(boolean level)
+	 * public void raise(int pos)
 	 * </pre>
 	 * 
-	 * Raises the elevator depending on whether or not the elevator is
-	 * considered level.
+	 * Raises the elevator to specified position.
 	 * 
-	 * @param level whether or not the elevator is considered level.
+	 * @param pos position
 	 */
 	public void raise(int pos) {
 		this.position = pos;

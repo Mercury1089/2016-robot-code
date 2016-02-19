@@ -294,7 +294,7 @@ public class DriveTrain {
 	public void degreeRotate(double deg, double s) {
 		double startAngle = gyro.getAngle();
 		double startTime = System.currentTimeMillis();
-		isMoving = true;
+		//isMoving = true;
 		if (deg > 0) {
 			s *= -1;
 		}
@@ -315,23 +315,23 @@ public class DriveTrain {
 			speedRotate(s / 2.0);
 		}
 		stop();
-		isMoving = false;
+		//isMoving = false;
 	}
-/**
- * Calls degreeRotate() if not in correct angle.
- * @param c
- */
+	
+	/**
+	 * Calls degreeRotate() if not in correct angle.
+	 * @param c
+	 */
 	public void autoRotate(Camera c) {
 		autoRotCounter = 0;
 		double deg = 0;
 		do {
 			c.getNTInfo();
 			deg = c.getTurnAngle();
-			degreeRotate(deg, 0.4);
+			degreeRotate(deg, 0.4); // TODO make speed a configurable value
 			Timer.delay(.150);
 			autoRotCounter++;
-		}while (Math.abs(deg) > 1.0 && autoRotCounter <= 5);
-
+		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5); // TODO make constants proper constants
 	}
 	
 

@@ -14,7 +14,7 @@ public class StrongholdAuton {
 	private int pos, state = 0, breachAttempts = 0;
 	private double centeredMoveDistance, angleToTurn, supportAngle;
 	private AimEnum aim;
-	private DefenseEnum defenseEnum;
+	//private DefenseEnum defenseEnum;
 	private Shooter shooter;
 	private AnalogGyro gyro;
 	protected DriveTrain drive;
@@ -23,7 +23,7 @@ public class StrongholdAuton {
 		drive = d;
 		camera = c;
 		pos = p;
-		defenseEnum = dE;
+		//defenseEnum = dE;
 		defense = new Defense(drive, shooter, dE);
 		aim = a ;
 		shooter = s;

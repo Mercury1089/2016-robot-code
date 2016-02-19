@@ -10,10 +10,10 @@ import org.usfirst.frc.team1089.auton.StrongholdAuton;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+//import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
+//import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -125,13 +125,13 @@ public class Robot extends IterativeRobot {
 		camera.getNTInfo();
 		
 		//Dealing with buttons on the different joysticks
-		for(int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
+		for (int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
 			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
 				btnPrev[i][j] = btn[i][j];
 			}
 		}
 
-		for(int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
+		for (int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
 			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
 				btn[i][j] = joysticks[i].getRawButton(j);
 			}
@@ -144,9 +144,7 @@ public class Robot extends IterativeRobot {
 		// Reset gyro with the A button on the gamepad
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.A)) {
 			gyro.reset();
-		}
-		
-		// begin asynchronous rotations
+		}	
 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
@@ -224,7 +222,7 @@ public class Robot extends IterativeRobot {
 		if (button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN6)) {
 			//drive.turnDistance(1);
 			drive.autoRotate(camera);
-			if (Math.abs(camera.getTurnAngle()) < 1.5 && !drive.isMoving){
+			if (Math.abs(camera.getTurnAngle()) < 1.5 /*&& !drive.isMoving*/) {
 				intake.raise(false);
 				shooter.raiseShootingHeight(camera.getHorizontalDist());
 				shooter.shoot();
