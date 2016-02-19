@@ -15,5 +15,8 @@ public class MercAccelerometer {
 		return accel.getZ();
 	}
 	
-	//TODO add method to calculate tilt as arcsine of (accel.getZ()/1.0)
+	public double getTilt() {
+		return Math.toDegrees(Math.acos(getAccelZ()/1.0)); // assumes getAccelZ() returns 1.0 when straight
+	}
+	
 }
