@@ -16,7 +16,7 @@ public class DriveTrain {
 	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
 	private AnalogGyro gyro;
 	
-	private static boolean isMoving = false; // indicates we are moving (in position
+	public static boolean isMoving = false; // indicates we are moving (in position
 												// control mode)
 	private double startPosL, startPosR; // starting positions in position control mode
 	private double endPosL, endPosR; // ending positions in position control mode
@@ -35,6 +35,7 @@ public class DriveTrain {
 	private int degRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
+	private Camera camera;
 
 	/**
 	 * <pre>
@@ -78,6 +79,7 @@ public class DriveTrain {
 		leftBackTalon.set(leftFrontTalon.getDeviceID());
 		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
+		camera = new Camera("GRIP/myContoursReport");
 	}
 
 	/**
@@ -292,6 +294,7 @@ public class DriveTrain {
 	public void degreeRotate(double deg, double s) {
 		double startAngle = gyro.getAngle();
 		double startTime = System.currentTimeMillis();
+		isMoving = true;
 		if (deg > 0) {
 			s *= -1;
 		}
@@ -312,12 +315,13 @@ public class DriveTrain {
 			speedRotate(s / 2.0);
 		}
 		if (Math.abs(gyro.getAngle()) - Math.abs(deg) > 1.0 && degRotCounter < 5){
-			degreeRotate(deg, 0.8);
+			degreeRotate(camera.getTurnAngle(), 0.8);
 			degRotCounter++;
 		} else {
 			degRotCounter = 0;
 			stop();
 		}
+		isMoving = false;
 	}
 
 	/**

@@ -226,7 +226,13 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN6)) {
-			drive.turnDistance(1);
+			//drive.turnDistance(1);
+			drive.degreeRotate(camera.getTurnAngle(), 0.8);
+			if (Math.abs(camera.getTurnAngle()) < 1.5 && !drive.isMoving){
+				intake.raise(false);
+				shooter.raiseShootingHeight(camera.getHorizontalDist());
+				shooter.shoot();
+			}
 		}
 		
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
