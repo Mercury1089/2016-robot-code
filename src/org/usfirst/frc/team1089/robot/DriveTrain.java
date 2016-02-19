@@ -39,7 +39,6 @@ public class DriveTrain {
 	private int autoRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
-	private Camera camera;
 
 	/**
 	 * <pre>
@@ -64,8 +63,7 @@ public class DriveTrain {
 	 * @param g
 	 *            the {@code AnalogGyro} used to track rotation
 	 */
-	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g,
-			Camera c) {
+	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
 		config = Config.getCurrent();
 
 		mercEncoder = new MercEncoder();
@@ -84,7 +82,6 @@ public class DriveTrain {
 		leftBackTalon.set(leftFrontTalon.getDeviceID());
 		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
-		camera = c;
 	}
 
 	/**
@@ -319,13 +316,16 @@ public class DriveTrain {
 		stop();
 		isMoving = false;
 	}
-
+/**
+ * Calls degreeRotate() if not in correct angle.
+ * @param c
+ */
 	public void autoRotate(Camera c) {
 		autoRotCounter = 0;
 		double deg = 0;
 		do {
-			camera.getNTInfo();
-			deg = camera.getTurnAngle();
+			c.getNTInfo();
+			deg = c.getTurnAngle();
 			degreeRotate(deg, 0.8);
 			autoRotCounter++;
 		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5);

@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 
-		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro, camera);
+		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 
 		// cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK,
 		// Ports.USB.RIGHT_STICK);
@@ -154,10 +154,6 @@ public class Robot extends IterativeRobot {
 			drive.autoRotate(camera);
 			//drive.turnDistance(1);
 		}
-		
-		drive.checkDegreeRotateVoltage();
-		
-		// end asynchronous rotations
 
 		//reset encoders
 		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
@@ -203,7 +199,7 @@ public class Robot extends IterativeRobot {
 			//intake.moveBall(1.0);
 		}
 		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN6)){
-			shooter.raise(shooter.HIGH);
+			shooter.raise(shooter.HIGH);			//close shooting height
 			//intake.moveBall(0.0);
 		}
 		

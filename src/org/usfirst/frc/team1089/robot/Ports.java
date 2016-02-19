@@ -38,14 +38,6 @@ public class Ports {
 		public static final int PCM_ID = 6;
 	}
 
-	@Deprecated
-	/**
-	 * The {@code PWM} subclass contains all the ports for anything using the PWM interface.
-	 */
-	public static class PWM {
-
-	}
-
 	/**
 	 * The {@code USB} subclass contains all the ports for anything using the USB interface.
 	 * This only contains the joysticks.
