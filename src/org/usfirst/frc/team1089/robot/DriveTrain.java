@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The {@code DriveTrain} class handles movement with the drive base of the
@@ -326,9 +327,10 @@ public class DriveTrain {
 		do {
 			c.getNTInfo();
 			deg = c.getTurnAngle();
-			degreeRotate(deg, 0.8);
+			degreeRotate(deg, 0.4);
+			Timer.delay(.150);
 			autoRotCounter++;
-		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5);
+		}while (Math.abs(deg) > 1.0 && autoRotCounter <= 5);
 
 	}
 	

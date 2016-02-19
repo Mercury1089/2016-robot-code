@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -31,18 +32,17 @@ public class Robot extends IterativeRobot {
 	private AnalogGyro gyro;
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private DriveTrain drive;
-	
+	private MercAccelerometer accel;
 	// private ControllerBase cBase;
 	private Joystick gamepad, leftStick, rightStick;
 
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
-
 	
 	@Override
 	public void robotInit() { 
 		camera = new Camera("GRIP/myContoursReport");
-		
+		accel = new MercAccelerometer();
 		shooter = new Shooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
@@ -278,6 +278,7 @@ public class Robot extends IterativeRobot {
 				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() , 1.0), 4) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
+		SmartDashboard.putNumber("Accel Z", accel.getAccelZ());
 		
 		// Camera
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
