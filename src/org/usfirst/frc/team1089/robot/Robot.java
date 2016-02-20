@@ -147,7 +147,7 @@ public class Robot extends IterativeRobot {
 		
 		//Camera Turn
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
-			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
+			drive.turnDistance(1);
 		}
 	
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
@@ -163,24 +163,24 @@ public class Robot extends IterativeRobot {
 			drive.degreeRotate(10, 0.4); 
 		}*/
 		 
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
 			shooter.shoot();			//shoot ball
 		}
 
 		//raising and lowering shooter elevator
-		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
 			shooter.raise(shooter.LOW);				//pancake
 			//intake.moveBall(0.0);
 		}
-		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+		else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(shooter.MEDIUM);			//shooting height
 			//intake.moveBall(0.0);
 		}
-		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN5)) {
+		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(shooter.DOWN);
 			//intake.moveBall(1.0);
 		}
-		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN6)){
+		else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)){
 			shooter.raise(shooter.HIGH);			//close shooting height
 			//intake.moveBall(0.0);
 		}
@@ -193,17 +193,17 @@ public class Robot extends IterativeRobot {
 			intake.raise(true); 
 		}
 		
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
+		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
 			intake.moveBall(-1.0);			//pull ball in
 		}
-		if(button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.R3)) {
+		if(button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			intake.moveBall(0);				//stop intake
 		}
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0);			//push ball out
 		}
 		
-		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN6)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			//drive.turnDistance(1);
 			drive.autoRotate(camera);
 			if (Math.abs(camera.getTurnAngle()) < 1.5 /*&& !drive.isMoving*/) {

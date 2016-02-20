@@ -109,7 +109,7 @@
 		<location x="1010" y="272"/>
 	</widget>
 	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
-		<location x="16" y="6"/>
+		<location x="8" y="6"/>
 		<width>615</width>
 		<height>444</height>
 	</static-widget>
@@ -119,11 +119,6 @@
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="639" y="409"/>
-	</static-widget>
-	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
-		<location x="16" y="6"/>
-		<width>615</width>
-		<height>444</height>
 	</static-widget>
 </dashboard>
 <live-window>
