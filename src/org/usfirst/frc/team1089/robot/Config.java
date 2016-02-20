@@ -131,4 +131,8 @@ public class Config {
 		}
 		return _current;
 	}
+	
+	public ConfigType getConfigType() {			
+		return getCurrent()._configType;
+	}
 }
