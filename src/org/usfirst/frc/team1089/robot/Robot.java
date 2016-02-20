@@ -10,18 +10,12 @@ import org.usfirst.frc.team1089.auton.StrongholdAuton;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
-//import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-//import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Robot extends IterativeRobot {
-	private static boolean[][] btn;
-	private static boolean[][] btnPrev;
-	private static Joystick[] joysticks;
-	
+public class Robot extends IterativeRobot {	
 	private Camera camera;
 	
 	private Shooter shooter;
@@ -33,7 +27,7 @@ public class Robot extends IterativeRobot {
 	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
-	// private ControllerBase cBase;
+	private ControllerBase cBase;
 	private Joystick gamepad, leftStick, rightStick;
 
 	private SendableChooser defenseChooser, shootChooser, posChooser;
@@ -42,6 +36,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() { 
 		camera = new Camera("GRIP/myContoursReport");
+		
 		accel = new MercAccelerometer();
 		shooter = new Shooter();
 		compressor = new Compressor();
@@ -62,16 +57,10 @@ public class Robot extends IterativeRobot {
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 
-		// cBase = new ControllerBase(Ports.USB.GAMEPAD, Ports.USB.LEFT_STICK,
-		// Ports.USB.RIGHT_STICK);
-
+		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
-		gamepad = new Joystick(Ports.USB.GAMEPAD);
-
-		btn = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
-		btnPrev = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
-		joysticks = new Joystick[]{rightStick, leftStick, gamepad};
+		cBase = new ControllerBase(gamepad, leftStick, rightStick);
 
 		//Set up our 3 Sendable Choosers for the SmartDashboard
 		
@@ -125,18 +114,7 @@ public class Robot extends IterativeRobot {
 		camera.getNTInfo();
 		
 		//Dealing with buttons on the different joysticks
-		for (int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
-			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
-				btnPrev[i][j] = btn[i][j];
-			}
-		}
-
-		for (int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
-			for (int j = 1; j < ControllerBase.MAX_NUMBER_BUTTONS; j++) {
-				btn[i][j] = joysticks[i].getRawButton(j);
-			}
-		}
-		
+		cBase.update();
 
 		// Teleop Tank with DriveTrain
 		drive.tankDrive(leftStick, rightStick);
@@ -250,11 +228,10 @@ public class Robot extends IterativeRobot {
 		drive.waitMove();
 		intake.raise(false);
 		shooter.shoot();
-
 	}
 
-	public static boolean button(int contNum, int buttonNum) {
-		return btn[contNum][buttonNum] && !btnPrev[contNum][buttonNum]; 
+	public boolean button(int contNum, int buttonNum) {
+		return cBase.getPressedDown(contNum, buttonNum); 
 	}
 
 	/**
@@ -266,17 +243,17 @@ public class Robot extends IterativeRobot {
 	 */
 	public void debug() {
 		// Display on SmartDash
-		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 2) + " deg.");
+		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 3) + " deg.");
 		
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition()); 
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition() , 1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition() , +1.0), 3) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() , 1.0), 4) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() , +1.0), 3) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
-		SmartDashboard.putNumber("Accel Z", accel.getAccelZ());
+		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
 		
 		// Camera
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
@@ -285,11 +262,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX()) + " px.");
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 
-		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 2) + " in.");
-		SmartDashboard.putString("Diagonal Distance", "" + Utilities.round(camera.getDiagonalDist(), 2) + " ft.");
-		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 2) + " ft.");
-		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 2) + " deg.");		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 2) + " in.");
-
+		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 3) + " in.");
+		SmartDashboard.putString("Diagonal Distance", "" + Utilities.round(camera.getDiagonalDist(), 3) + " ft.");
+		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
+		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
+		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 3) + " in.");
 		
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
