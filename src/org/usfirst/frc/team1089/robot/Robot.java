@@ -255,6 +255,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
+		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 2));
 		
 		// Camera
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
@@ -268,6 +269,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 3) + " in.");
+		SmartDashboard.putString("Config Type", "" + Config.getCurrent());
 		
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
