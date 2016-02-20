@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.auton;
 
 import org.usfirst.frc.team1089.robot.Camera;
 import org.usfirst.frc.team1089.robot.DriveTrain;
+import org.usfirst.frc.team1089.robot.MercAccelerometer;
 import org.usfirst.frc.team1089.robot.Shooter;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -14,20 +15,21 @@ public class StrongholdAuton {
 	private int pos, state = 0, breachAttempts = 0;
 	private double centeredMoveDistance, angleToTurn, supportAngle;
 	private AimEnum aim;
-	//private DefenseEnum defenseEnum;
+	private MercAccelerometer accel;
 	private Shooter shooter;
 	private AnalogGyro gyro;
 	protected DriveTrain drive;
 
-	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, AnalogGyro g, int p, AimEnum a, DefenseEnum dE) {
+	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, AnalogGyro g, int p,
+							AimEnum a, DefenseEnum dE, MercAccelerometer ac) {
 		drive = d;
 		camera = c;
 		pos = p;
-		//defenseEnum = dE;
 		defense = new Defense(drive, shooter, dE);
 		aim = a ;
 		shooter = s;
 		gyro = g;
+		accel = ac;
 	}
 
 	public void move() {
@@ -40,10 +42,11 @@ public class StrongholdAuton {
 				else if (breachAttempts == 1) {
 					state = DONE;
 				}
-				/*if(gyro z axis is zero)
-				  shooter.raise(shooter.MEDIUM);
-				  */
-				state++;
+				if (!accel.isTilted()) {
+					shooter.raise(shooter.MEDIUM);
+					state++;
+				}
+				  
 				break;
 			}
 			case CENTER: {
