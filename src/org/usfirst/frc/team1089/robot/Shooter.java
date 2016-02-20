@@ -16,7 +16,7 @@ public class Shooter {
 	
 	public final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
-	private static final double CLOSE_SHOT = 6;
+	private static final double CLOSE_SHOT_FEET = 6;
 	public int position = HIGH;
 	
 	/**
@@ -70,11 +70,11 @@ public class Shooter {
 	}
 	
 	public void raiseShootingHeight(double distance) {
-		if(distance <= CLOSE_SHOT) {									//Values to be changed
-			raise(3);
+		if (distance <= CLOSE_SHOT_FEET) {									//Values to be changed
+			raise(HIGH);
 		}
 		else {
-			raise(2);
+			raise(MEDIUM);
 		}
 	}
 	/**
