@@ -35,7 +35,7 @@ public class Config {
 	
 	// change the value below to specify the config type to use if not
 	// otherwise specified by calling setCurrent()
-	public final static ConfigType DEFAULT_CONFIG_TYPE = ConfigType.COMPETITION;
+	public final static ConfigType DEFAULT_CONFIG_TYPE = ConfigType.PROTO;
 	
 	public final ConfigType _configType; // Do not initialize - constructor will do it
 	
@@ -134,5 +134,15 @@ public class Config {
 	
 	public ConfigType getConfigType() {			
 		return getCurrent()._configType;
+	}
+	
+	public String toString() {
+		if (getConfigType() == ConfigType.COMPETITION) {
+			return "Competition";
+		} else if (getConfigType() == ConfigType.PROTO) {
+			return "Proto";
+		} else {
+			return "Unknown";
+		}
 	}
 }

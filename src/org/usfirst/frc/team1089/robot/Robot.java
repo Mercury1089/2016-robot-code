@@ -11,6 +11,7 @@ import org.usfirst.frc.team1089.robot.ControllerBase.Joysticks;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,11 +34,15 @@ public class Robot extends IterativeRobot {
 
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
+	private DriverStation driverStation;
+	private Config config;
 	
 	@Override
 	public void robotInit() { 
+		config = Config.getCurrent();
 		camera = new Camera("GRIP/myContoursReport");
 		
+		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new Shooter();
 		compressor = new Compressor();
@@ -269,10 +274,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 3) + " in.");
-		SmartDashboard.putString("Config Type", "" + Config.getCurrent());
+		SmartDashboard.putString("Config Type", config.toString());
 		
+		SmartDashboard.putBoolean("FMS" , driverStation.isFMSAttached());
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
+		SmartDashboard.putBoolean("Is flat", accel.isFlat());
 	}
 }

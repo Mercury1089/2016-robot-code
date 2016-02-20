@@ -1,16 +1,27 @@
 <xml version="1.0">
 <dashboard>
-	<widget field="right velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1003" y="110"/>
+	<widget field="Is flat" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1104" y="53"/>
+		<width>77</width>
+		<height>50</height>
 	</widget>
-	<widget field="left pos" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1195" y="145"/>
+	<widget field="Config Type" type="String" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="1100" y="5"/>
+		<width>199</width>
+		<height>21</height>
+		<property name="Background" value="255.102.0.255"/>
+		<property name="Font Size" value="16"/>
 	</widget>
-	<widget field="right pos" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1005" y="145"/>
+	<widget field="FMS" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="748" y="407"/>
+		<width>56</width>
+		<height>37</height>
 	</widget>
-	<widget field="left velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1177" y="109"/>
+	<widget field="Accel Tilt" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1164" y="195"/>
+	</widget>
+	<widget field="Accel Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1041" y="197"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
 		<location x="632" y="443"/>
@@ -29,22 +40,19 @@
 		<location x="640" y="10"/>
 	</widget>
 	<widget field="Is in range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="825" y="108"/>
-		<width>90</width>
-		<height>45</height>
+		<location x="798" y="93"/>
+		<width>117</width>
+		<height>60</height>
 	</widget>
 	<widget field="Is in turn angle" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="827" y="291"/>
-		<width>111</width>
-		<height>46</height>
+		<location x="802" y="277"/>
+		<width>136</width>
+		<height>60</height>
 	</widget>
 	<widget field="Is in line with goal" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="825" y="200"/>
-		<width>126</width>
-		<height>46</height>
-	</widget>
-	<widget field="Defense:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="0" y="49"/>
+		<location x="800" y="186"/>
+		<width>151</width>
+		<height>60</height>
 	</widget>
 	<widget field="rightFront error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1190" y="401"/>
@@ -65,7 +73,7 @@
 		<location x="1149" y="424"/>
 	</widget>
 	<widget field="Diagonal Distance" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="761" y="31"/>
+		<location x="1122" y="134"/>
 		<height>20</height>
 	</widget>
 	<widget field="Left Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -78,11 +86,11 @@
 		<location x="992" y="337"/>
 	</widget>
 	<widget field="Gyro" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="961" y="30"/>
+		<location x="1183" y="165"/>
 	</widget>
 	<widget field="Horizontal Distance: " type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1124" y="30"/>
-		<width>191</width>
+		<location x="1107" y="108"/>
+		<width>186</width>
 		<height>20</height>
 	</widget>
 	<widget field="Center Y:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -105,7 +113,21 @@
 		<width>615</width>
 		<height>444</height>
 	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="632" y="443"/>
+		<property name="Text" value="connection indicator"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="639" y="409"/>
+	</static-widget>
+	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
+		<location x="16" y="6"/>
+		<width>615</width>
+		<height>444</height>
+	</static-widget>
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="Is Tilted"/>
+	<hidden field="Is Flat"/>
 </xml>

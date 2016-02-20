@@ -17,7 +17,7 @@ public class MercAccelerometer {
 	}
 	
 	public double getTilt() {
-		return Math.toDegrees(Math.acos(getAccelZ()/1.0)); // assumes getAccelZ() returns 1.0 when straight
+		return Math.toDegrees(Math.acos(Math.min(getAccelZ(),1.0)/1.0)); // assumes getAccelZ() returns 1.0 when straight
 	}
 	
 	/**
@@ -25,8 +25,8 @@ public class MercAccelerometer {
 	 * 
 	 * @return true if the support onto which the accelerometer is attached is significantly tilted, false otherwise
 	 */
-	public boolean isTilted() {
-		return getTilt() > config.TILT_THRESH_DEGREES; // TODO tweak threshold if needed
+	public boolean isFlat() {
+		return getTilt() < config.TILT_THRESH_DEGREES; // TODO tweak threshold if needed
 	}
 	
 }
