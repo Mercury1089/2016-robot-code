@@ -19,7 +19,7 @@ public class Defense{
 	public void breach() {
 		switch (defenseEnum) {
 			case LOW_BAR: {
-				shooter.raise(shooter.LOW);
+				shooter.raise(shooter.DOWN);
 			}
 			case MOAT:
 			case ROUGH_TERRAIN:
