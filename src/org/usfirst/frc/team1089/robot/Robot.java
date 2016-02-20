@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.usfirst.frc.team1089.auton.AimEnum;
 import org.usfirst.frc.team1089.auton.DefenseEnum;
 import org.usfirst.frc.team1089.auton.StrongholdAuton;
+import org.usfirst.frc.team1089.robot.ControllerBase.Joysticks;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
@@ -120,19 +121,19 @@ public class Robot extends IterativeRobot {
 		drive.tankDrive(leftStick, rightStick);
 
 		// Reset gyro with the A button on the gamepad
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
 			gyro.reset();
 		}	
 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.B)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
 			drive.autoRotate(camera);
 			//drive.turnDistance(1);
 		}
 
 		//reset encoders
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
@@ -140,11 +141,11 @@ public class Robot extends IterativeRobot {
 		// begin asynchronous moves
 		
 		//Camera Turn
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
 			drive.turnDistance(drive.arcLength(camera.getTurnAngle()));
 		}
 	
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.START)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
 			//drive.encoderAngleRotate(360); // this is an asynchronous move
 			drive.encoderAngleRotate(/*camera.getTurnAngle()*/45);
 		}
@@ -153,51 +154,51 @@ public class Robot extends IterativeRobot {
 		
 		// end asynchronous moves
 		
-		/*if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
+		/*if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			drive.degreeRotate(10, 0.4); 
 		}*/
 		 
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			shooter.shoot();			//shoot ball
 		}
 
 		//raising and lowering shooter elevator
-		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(shooter.LOW);				//pancake
 			//intake.moveBall(0.0);
 		}
-		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			shooter.raise(shooter.MEDIUM);			//shooting height
 			//intake.moveBall(0.0);
 		}
-		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN5)) {
+		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN5)) {
 			shooter.raise(shooter.DOWN);
 			//intake.moveBall(1.0);
 		}
-		else if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN6)){
+		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN6)){
 			shooter.raise(shooter.HIGH);			//close shooting height
 			//intake.moveBall(0.0);
 		}
 		
-		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
+		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
 			intake.raise(false);		
 		}
 		
-		if (button(Ports.USB.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
 			intake.raise(true); 
 		}
 		
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
 			intake.moveBall(-1.0);			//pull ball in
 		}
-		if(button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.R3)) {
+		if(button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.R3)) {
 			intake.moveBall(0);				//stop intake
 		}
-		if (button(Ports.USB.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0);			//push ball out
 		}
 		
-		if (button(Ports.USB.LEFT_STICK, ControllerBase.JoystickButtons.BTN6)) {
+		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN6)) {
 			//drive.turnDistance(1);
 			drive.autoRotate(camera);
 			if (Math.abs(camera.getTurnAngle()) < 1.5 /*&& !drive.isMoving*/) {
@@ -230,7 +231,7 @@ public class Robot extends IterativeRobot {
 		shooter.shoot();
 	}
 
-	public boolean button(int contNum, int buttonNum) {
+	public boolean button(Joysticks contNum, int buttonNum) {
 		return cBase.getPressedDown(contNum, buttonNum); 
 	}
 

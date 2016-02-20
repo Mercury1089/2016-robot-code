@@ -77,19 +77,18 @@ public class ControllerBase {
 	 * namespaces for the gamepad, left joystick, and right joystick
 	 */
 	public enum Joysticks {
-		GAMEPAD,
-		LEFT_STICK,
-		RIGHT_STICK
+		GAMEPAD,	// 0
+		LEFT_STICK,	// 1
+		RIGHT_STICK	// 2
 	}
 	
 	public ControllerBase(Joystick gamepad, Joystick leftStick, Joystick rightStick) {		
 		btn = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
 		btnPrev = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
 		
-		// CAUTION: joysticks are indexed according to order defined in Ports.USB
-		// Therefore changes in Ports.USB need to be reflected here...
-		// TODO reconsider this
-		joysticks = new Joystick[]{rightStick, leftStick, gamepad};
+		// CAUTION: joysticks are indexed according to order defined in Joysticks enum
+		// Therefore changes in Joysticks enum need to be reflected here...
+		joysticks = new Joystick[]{gamepad, leftStick, rightStick};
 	}
 	
 	public void update() {
@@ -107,7 +106,7 @@ public class ControllerBase {
 		}
 	}	
 
-	public boolean getPressedDown(int contNum, int buttonNum) {
-		return btn[contNum][buttonNum] && !btnPrev[contNum][buttonNum]; 
+	public boolean getPressedDown(Joysticks contNum, int buttonNum) {
+		return btn[contNum.ordinal()][buttonNum] && !btnPrev[contNum.ordinal()][buttonNum]; 
 	}	
 }
