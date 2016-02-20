@@ -97,7 +97,7 @@ public class Config {
 			WHEEL_SIZE_INCHES = 9.9;
 			GEAR_RATIO = 4.0 / 3.0; // defined as speed in / speed out
 			
-			TILT_THRESH_DEGREES = 8.0;
+			TILT_THRESH_DEGREES = 15.0;
 			break;
 		}
 	}
