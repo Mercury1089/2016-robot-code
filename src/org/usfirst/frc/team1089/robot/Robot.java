@@ -260,7 +260,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
-		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 2));
+		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 3));
 		
 		// Camera
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
