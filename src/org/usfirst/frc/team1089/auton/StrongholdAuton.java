@@ -42,7 +42,7 @@ public class StrongholdAuton {
 				else if (breachAttempts == 1) {
 					state = DONE;
 				}
-				if (!accel.isTilted()) {
+				if (accel.isFlat()) {
 					shooter.raise(shooter.MEDIUM);
 					state++;
 				}
