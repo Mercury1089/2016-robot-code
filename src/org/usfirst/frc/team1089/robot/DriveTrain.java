@@ -36,6 +36,7 @@ public class DriveTrain {
 	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.0;
 	private static final int AUTOROTATE_MAX_ATTEMPTS = 5;
 	private static final double AUTOROTATE_SPEED = 0.77;
+	private static final double AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS = 0.500;
 	private static final double TURN_TIMEOUT_MILLIS = 4000;
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 100;
@@ -323,6 +324,9 @@ public class DriveTrain {
 	
 	/**
 	 * Calls degreeRotate() if not in correct angle.
+	 * 
+	 * Network Table info is fetched prior to returning
+	 * 
 	 * @param c the camera to get the angle from 
 	 */
 	public void autoRotate(Camera c) {
@@ -333,13 +337,24 @@ public class DriveTrain {
 			c.getNTInfo();
 			deg = c.getTurnAngle();
 			degreeRotate(deg, AUTOROTATE_SPEED);
-			Timer.delay(.500);
+			Timer.delay(AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			autoRotCounter++;
 		} while ((Math.abs(deg) > AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES)
 				&& (autoRotCounter <= AUTOROTATE_MAX_ATTEMPTS)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS * 2)); 
+		
+		// finally we we refresh the network table info
+		// in case this routine is called directly from shootProcedure
+		c.getNTInfo();
 	}
 	
+	/**
+	 * Calls degreeRotate() if not in correct angle.
+	 * 
+	 * Network Table info is fetched prior to returning
+	 * 
+	 * @param c the camera to get the angle from 
+	 */
 	public void autoRotateNew(Camera c) {
 		autoRotCounter = 0;
 		double earliestStartTime = System.currentTimeMillis();
@@ -382,6 +397,11 @@ public class DriveTrain {
 		} while ((Math.abs(deg) > AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES)
 				&& (autoRotCounter <= AUTOROTATE_MAX_ATTEMPTS)
 				&& (System.currentTimeMillis() - earliestStartTime <= TURN_TIMEOUT_MILLIS * 2));
+		
+		// finally we force a delay and we refresh the network table info
+		// in case this routine is called directly from shootProcedure
+		Timer.delay(AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+		c.getNTInfo();
 	}
 
 	/**

@@ -232,9 +232,9 @@ public class Robot extends IterativeRobot {
 		
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			shooter.raiseShootingHeight(camera);
-			Timer.delay(0.500);
+			Timer.delay(0.500); // waits for shooter to get in position
 			drive.autoRotate(camera);
-			if (camera.isInTurnAngle()){
+			if (camera.isInTurnAngle()){ // assumes NT info is up to date coming out of rotation routine
 				shooter.shoot();
 			}
 		}
@@ -253,8 +253,9 @@ public class Robot extends IterativeRobot {
 	 */
 	public void debug() {
 		// Display on SmartDash
-		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 3) + " deg.");
 		
+		// DriveTrain
+		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 3) + " deg.");
 		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition()); 
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
@@ -263,6 +264,8 @@ public class Robot extends IterativeRobot {
 				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() , +1.0), 3) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
+		
+		// Accelerometer
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
 		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 3));
 		
@@ -278,8 +281,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 3) + " in.");
-		SmartDashboard.putString("Config Type", config.toString());
 		
+		// Compound and miscellaneous indicators
+		SmartDashboard.putString("Config Type", config.toString());
 		SmartDashboard.putBoolean("FMS" , driverStation.isFMSAttached());
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
