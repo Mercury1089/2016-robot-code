@@ -413,11 +413,12 @@ public class DriveTrain {
 			double vmin = 0.2;
 			double dmax = 20.0;
 			double dmin = 5.0;
-			double error = gyro.getAngle() - _heading;
+			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
+			// speed sign opposite of desired angle
 			double vout = -Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
 
-			if (Math.abs(error) <= 1) {
+			if (Math.abs(error) <= AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES) {
 				isDegreeRotating = false; // we take the flag down
 				stop(); // we stop the motors
 			} else {
