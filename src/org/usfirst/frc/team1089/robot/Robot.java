@@ -208,17 +208,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
-			//drive.turnDistance(1);
-			intake.lower(false);
-			
-			if (camera.isInDistance() && camera.isInLineWithGoal()) {
-				shooter.raiseShootingHeight(camera);
-				Timer.delay(0.500);
-				drive.autoRotate(camera);
-				if (camera.isInTurnAngle()){
-					shooter.shoot();
-				}
-			}
+			shootProcedure();
 		}
 		
 		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
@@ -238,10 +228,16 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void shootProcedure(){
-		drive.encoderAngleRotate(camera.getTurnAngle());
-		drive.waitMove();
 		intake.lower(false);
-		shooter.shoot();
+		
+		if (camera.isInDistance() && camera.isInLineWithGoal()) {
+			shooter.raiseShootingHeight(camera);
+			Timer.delay(0.500);
+			drive.autoRotate(camera);
+			if (camera.isInTurnAngle()){
+				shooter.shoot();
+			}
+		}
 	}
 
 	public boolean button(Joysticks contNum, int buttonNum) {
