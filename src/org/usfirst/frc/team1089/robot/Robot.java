@@ -147,12 +147,12 @@ public class Robot extends IterativeRobot {
 		
 		//Camera Turn
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
-			drive.turnDistance(1);
+			drive.encoderAngleRotate(360);
 		}
 	
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
 			//drive.encoderAngleRotate(360); // this is an asynchronous move
-			drive.encoderAngleRotate(/*camera.getTurnAngle()*/45);
+			drive.encoderAngleRotate(camera.getTurnAngle());
 		}
 
 		drive.checkMove();

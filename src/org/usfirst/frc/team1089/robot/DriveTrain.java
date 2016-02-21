@@ -328,7 +328,7 @@ public class DriveTrain {
 		do {
 			c.getNTInfo();
 			deg = c.getTurnAngle();
-			degreeRotate(deg, 0.4); // TODO make speed a configurable value
+			degreeRotate(deg, 0.78); // TODO make speed a configurable value
 			Timer.delay(.150);
 			autoRotCounter++;
 		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5); // TODO make constants proper constants
