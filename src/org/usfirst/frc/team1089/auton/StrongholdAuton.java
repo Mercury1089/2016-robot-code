@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class StrongholdAuton {
 	private static final int BREACH = 0, CENTER = 1, MOVE = 2, SHOOT = 3, DONE = 4;
-	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL = 7.0;
+	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL_FEET = 7.0;
 	private Defense defense;
 	private Camera camera;
 	private int pos, state = 0, breachAttempts = 0;
@@ -40,7 +40,7 @@ public class StrongholdAuton {
 	 * @param g
 	 *            the {@code AnalogGyro} for centering the robot after coming off of a defense
 	 * @param p
-	 *            pos            
+	 *            the initial position            
 	 * @param a
 	 *            the {@code AimEnum} used for position of the shooter based on which goal we are shooting in
 	 * @param dE
@@ -75,7 +75,7 @@ public class StrongholdAuton {
 			case BREACH: {//Breaching Phase
 				if (breachAttempts == 0) {
 					defense.breach();
-					breachAttempts++;
+					breachAttempts++; // TODO explain the purpose of the breachAttempts counter
 				}
 				else if (breachAttempts == 1) {
 					state = DONE;
@@ -92,11 +92,14 @@ public class StrongholdAuton {
 					state = DONE;
 				}
 				else {
-					drive.degreeRotate(-gyro.getAngle(), TURN_SPEED);
+					drive.degreeRotate(-gyro.getAngle(), TURN_SPEED); // TODO explain the assumptions made on the gyro
 					camera.getNTInfo();
+					// TODO replace 10.0 in lines below by proper constant
+					// (and set to 9.0 feet as this is optimal shooting distance)
 					angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / 10.0));
 					supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
 					centeredMoveDistance = (10.0 * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
+					// TODO consider what to do if centeredMoveDistance is abnormally high
 					if (centeredMoveDistance > 0) {
 						state++;
 					}
@@ -111,7 +114,9 @@ public class StrongholdAuton {
 				drive.waitMove();
 				drive.encoderAngleRotate(angleToTurn);
 				drive.waitMove();
-				if (camera.isInDistance() && camera.isInLineWithGoal() && camera.isInTurnAngle()) {
+				camera.getNTInfo();
+				// TODO consider adding intermediate ROTATE state between MOVE and SHOOT
+				if (camera.isInDistance() && camera.isInLineWithGoal() /*&& camera.isInTurnAngle()*/) {
 					state++;
 				}
 				else {
@@ -121,10 +126,11 @@ public class StrongholdAuton {
 			}
 			case SHOOT: {//Shoot into high or low goal
 				if (aim == AimEnum.HIGH) {
+					// TODO see if Robot.shootProcedure() is appropriate
 					//shooter.shootProcedure();
 				}
 				else if (aim == AimEnum.LOW) {
-					drive.moveDistance(DISTANCE_TO_LOW_GOAL);
+					drive.moveDistance(DISTANCE_TO_LOW_GOAL_FEET);
 					drive.waitMove();
 					shooter.raise(shooter.DOWN);
 					shooter.shoot();
