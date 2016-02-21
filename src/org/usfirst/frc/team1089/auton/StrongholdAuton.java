@@ -39,6 +39,8 @@ public class StrongholdAuton {
 	 *            the {@code Shooter} for shooting the ball into either goal
 	 * @param g
 	 *            the {@code AnalogGyro} for centering the robot after coming off of a defense
+	 * @param p
+	 *            pos            
 	 * @param a
 	 *            the {@code AimEnum} used for position of the shooter based on which goal we are shooting in
 	 * @param dE
@@ -63,6 +65,7 @@ public class StrongholdAuton {
 	/**
 	 * <pre>
 	 * public void move()
+	 * </pre>
 	 * 
 	 * Crosses defense, centers, moves 10 feet away from goal, and shoots in auton
 	 * 

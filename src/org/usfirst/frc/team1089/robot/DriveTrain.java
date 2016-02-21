@@ -323,7 +323,7 @@ public class DriveTrain {
 	
 	/**
 	 * Calls degreeRotate() if not in correct angle.
-	 * @param c
+	 * @param c the camera to get the angle from 
 	 */
 	public void autoRotate(Camera c) {
 		autoRotCounter = 0;

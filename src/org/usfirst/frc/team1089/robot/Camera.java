@@ -197,7 +197,7 @@ public class Camera {
 	 * public boolean isInDistance()
 	 * </pre>
 	 * 
-	 * Gets if the robot is within a certain distance of the goal.
+	 * Gets if the robot is within shooting distance of the goal.
 	 * 
 	 * @return true if the robot is in range, false if the robot is too close or
 	 *         too far
@@ -205,13 +205,22 @@ public class Camera {
 	public boolean isInDistance(){
 		return isInFarDistance() || isInCloseDistance();
 	}
+	
+	/**
+	 * Returns if the robot is within long-range shooting distance of the goal
+	 * 
+	 * @return true if within long-range shooting distance
+	 */
 	public boolean isInFarDistance() {
-		// TODO take into account the position of the shooter (pass as variable and check against different requirements depending on position)
 		return (getHorizontalDist() > config.HORIZ_DIST_MIN_FEET && getHorizontalDist() < config.HORIZ_DIST_MAX_FEET);
 	}
 	
+	/**
+	 * Returns if the robot is within short-range shooting distance of the goal
+	 * 
+	 * @return true if within short-range shooting distance
+	 */
 	public boolean isInCloseDistance() {
-		// TODO take into account the position of the shooter (pass as variable and check against different requirements depending on position)
 		return (getHorizontalDist() > config.HORIZ_CLOSE_DIST_MIN_FEET && getHorizontalDist() < config.HORIZ_CLOSE_DIST_MAX_FEET);
 	}
 
@@ -220,10 +229,10 @@ public class Camera {
 	 * public boolean isInTurnAngle()
 	 * </pre>
 	 * 
-	 * Gets whether or not the robot is within turning distance of the goal.
+	 * Gets whether or not the robot is properly aiming at the center of the goal.
 	 * 
-	 * @return true if the robot can see the target and can turn to it, false if
-	 *         the target is out of the robot's turning range
+	 * @return true if the robot is aiming at the center of the goal, false if
+	 *         otherwise
 	 */
 	public boolean isInTurnAngle() {
 		if (isTargetFound()) {
