@@ -16,7 +16,7 @@ public class Shooter {
 	
 	public final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
-	private static final double CLOSE_SHOT_FEET = 6;
+	//private static final double CLOSE_SHOT_FEET = 6;
 	public int position = HIGH;
 	
 	/**
@@ -70,12 +70,13 @@ public class Shooter {
 	}
 	
 	public void raiseShootingHeight(Camera cam) {
-		if (cam.isInFarDistance()) {									//Values to be changed
+		if (cam.isInFarDistance()) {
 			raise(MEDIUM);
 		}
 		else if (cam.isInCloseDistance()){
 			raise(HIGH);
 		}
+		// else we don't do anything
 	}
 	/**
 	 * <pre>

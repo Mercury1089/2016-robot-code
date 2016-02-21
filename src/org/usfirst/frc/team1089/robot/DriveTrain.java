@@ -33,6 +33,9 @@ public class DriveTrain {
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
 	private static final double TIER_4_DEGREES_FROM_TARGET = 1;
+	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.0;
+	private static final int AUTOROTATE_MAX_ATTEMPTS = 5;
+	private static final double AUTOROTATE_SPEED = 0.77;
 	private static final double TURN_TIMEOUT_MILLIS = 4000;
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 100;
@@ -325,13 +328,16 @@ public class DriveTrain {
 	public void autoRotate(Camera c) {
 		autoRotCounter = 0;
 		double deg = 0;
+		double startTime = System.currentTimeMillis();
 		do {
 			c.getNTInfo();
 			deg = c.getTurnAngle();
-			degreeRotate(deg, 0.77); // TODO make speed a configurable value
+			degreeRotate(deg, AUTOROTATE_SPEED);
 			Timer.delay(.500);
 			autoRotCounter++;
-		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5); // TODO make constants proper constants
+		} while ((Math.abs(deg) > AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES)
+				&& (autoRotCounter <= AUTOROTATE_MAX_ATTEMPTS)
+				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS * 2)); 
 	}
 	
 	public void autoRotateNew(Camera c) {
