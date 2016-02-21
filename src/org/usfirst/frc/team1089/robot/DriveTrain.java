@@ -329,9 +329,45 @@ public class DriveTrain {
 			c.getNTInfo();
 			deg = c.getTurnAngle();
 			degreeRotate(deg, 0.77); // TODO make speed a configurable value
-			Timer.delay(.150);
+			Timer.delay(.500);
 			autoRotCounter++;
 		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5); // TODO make constants proper constants
+	}
+	
+	public void autoRotateNew(Camera c) {
+		autoRotCounter = 0;
+		c.getNTInfo();
+		double deg = c.getTurnAngle();
+		double setpoint = deg + gyro.getAngle();
+		double s = 0.77;
+		
+		do {
+			double startTime = System.currentTimeMillis();
+			double startAngle = gyro.getAngle();
+			if (deg > 0) {
+				s *= -1;
+			}
+			//isMoving = true;
+			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
+					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
+				speedRotate(s);
+			}
+			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_2_DEGREES_FROM_TARGET)
+					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
+				speedRotate(s / 1.75);
+			}
+			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_3_DEGREES_FROM_TARGET)
+					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
+				speedRotate(s / 1.90);
+			}
+			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_4_DEGREES_FROM_TARGET)
+					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
+				speedRotate(s / 2.0);
+			}
+			autoRotCounter++;
+			deg = Math.signum(setpoint - gyro.getAngle()) * Math.abs(setpoint - gyro.getAngle());
+		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5); // TODO make constants proper constants
+		stop();
 	}
 	
 
