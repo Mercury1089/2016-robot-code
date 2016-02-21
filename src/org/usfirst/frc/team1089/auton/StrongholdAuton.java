@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class StrongholdAuton {
 	private static final int BREACH = 0, CENTER = 1, MOVE = 2, SHOOT = 3, DONE = 4;
-	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL_FEET = 7.0;
+	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL_FEET = 7.0, DISTANCE_TO_HIGH_GOAL_FEET = 9.0;
 	private Defense defense;
 	private Camera camera;
 	private int pos, state = 0, breachAttempts = 0;
@@ -96,9 +96,9 @@ public class StrongholdAuton {
 					camera.getNTInfo();
 					// TODO replace 10.0 in lines below by proper constant
 					// (and set to 9.0 feet as this is optimal shooting distance)
-					angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / 10.0));
+					angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / DISTANCE_TO_HIGH_GOAL_FEET));
 					supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
-					centeredMoveDistance = (10.0 * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
+					centeredMoveDistance = (DISTANCE_TO_HIGH_GOAL_FEET * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
 					// TODO consider what to do if centeredMoveDistance is abnormally high
 					if (centeredMoveDistance > 0) {
 						state++;
