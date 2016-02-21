@@ -3,7 +3,7 @@
 package org.usfirst.frc.team1089.robot;
 
 import java.util.Arrays;
- 
+
 import org.usfirst.frc.team1089.auton.AimEnum;
 import org.usfirst.frc.team1089.auton.DefenseEnum;
 import org.usfirst.frc.team1089.auton.StrongholdAuton;
@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Robot extends IterativeRobot {	
+public class Robot extends IterativeRobot {
 	private Camera camera;
-	
+
 	private Shooter shooter;
 	private Intake intake;
 	private Compressor compressor;
@@ -37,19 +37,19 @@ public class Robot extends IterativeRobot {
 	private StrongholdAuton auton;
 	private DriverStation driverStation;
 	private Config config;
-	
+
 	@Override
-	public void robotInit() { 
+	public void robotInit() {
 		config = Config.getCurrent();
 		camera = new Camera("GRIP/myContoursReport");
-		
+
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new Shooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
 		intake = new Intake();
-		
+
 		mercEncoder = new MercEncoder();
 
 		// Set up gyro
@@ -69,8 +69,8 @@ public class Robot extends IterativeRobot {
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		cBase = new ControllerBase(gamepad, leftStick, rightStick);
 
-		//Set up our 3 Sendable Choosers for the SmartDashboard
-		
+		// Set up our 3 Sendable Choosers for the SmartDashboard
+
 		defenseChooser = new SendableChooser();
 		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
 		defenseChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
@@ -96,11 +96,11 @@ public class Robot extends IterativeRobot {
 
 		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
-	}
+		}
 
 	@Override
 	public void autonomousInit() {
-		
+
 	}
 
 	@Override
@@ -119,8 +119,8 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// Get initial info
 		camera.getNTInfo();
-		
-		//Dealing with buttons on the different joysticks
+
+		// Dealing with buttons on the different joysticks
 		cBase.update();
 
 		// Teleop Tank with DriveTrain
@@ -129,98 +129,94 @@ public class Robot extends IterativeRobot {
 		// Reset gyro with the A button on the gamepad
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
 			gyro.reset();
-		}	
+		}
 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
 			drive.autoRotate(camera);
-			//drive.turnDistance(1);
+			// drive.turnDistance(1);
 		}
 
-		//reset encoders
+		// reset encoders
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
-		
+
 		// begin asynchronous moves
-		
-		//Camera Turn
+
+		// Camera Turn
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
-			//drive.encoderAngleRotate(360);
+			// drive.encoderAngleRotate(360);
 			drive.degreeRotateVoltage(camera.getTurnAngle());
 		}
-		
+
 		drive.checkDegreeRotateVoltage();
-	
+
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
-			//drive.encoderAngleRotate(360); // this is an asynchronous move
+			// drive.encoderAngleRotate(360); // this is an asynchronous move
 			drive.encoderAngleRotate(camera.getTurnAngle());
 		}
 
 		drive.checkMove();
-		
+
 		// end asynchronous moves
-		
-		/*if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
-			drive.degreeRotate(10, 0.4); 
-		}*/
-		 
+
+		/*
+		 * if (button(ControllerBase.Joysticks.GAMEPAD,
+		 * ControllerBase.GamepadButtons.BACK)) { drive.degreeRotate(10, 0.4); }
+		 */
+
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
-			shooter.shoot();			//shoot ball
+			shooter.shoot(); // shoot ball
 		}
 
-		//raising and lowering shooter elevator
+		// raising and lowering shooter elevator
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			shooter.raise(shooter.LOW);				//pancake
-			//intake.moveBall(0.0);
-		}
-		else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(shooter.MEDIUM);			//shooting height
-			//intake.moveBall(0.0);
-		}
-		else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			shooter.raise(shooter.LOW); // pancake
+			// intake.moveBall(0.0);
+		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			shooter.raise(shooter.MEDIUM); // shooting height
+			// intake.moveBall(0.0);
+		} else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(shooter.DOWN);
-			//intake.moveBall(1.0);
+			// intake.moveBall(1.0);
+		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+			shooter.raise(shooter.HIGH); // close shooting height
+			// intake.moveBall(0.0);
 		}
-		else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)){
-			shooter.raise(shooter.HIGH);			//close shooting height
-			//intake.moveBall(0.0);
-		}
-		
+
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			intake.lower(true);				//down
+			intake.lower(true); // down
 		}
-		
+
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
-			intake.lower(false); 			//up
+			intake.lower(false); // up
 		}
-		
+
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
-			intake.moveBall(-1.0);			//pull ball in
+			intake.moveBall(-1.0); // pull ball in
 		}
-		if(button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
-			intake.moveBall(0);				//stop intake
+		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+			intake.moveBall(0); // stop intake
 		}
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
-			intake.moveBall(1.0);			//push ball out
+			intake.moveBall(1.0); // push ball out
 		}
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)){
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
 			intake.lower(false);
 		}
-		
+
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			shootProcedure();
 		}
-		
-		/*if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
-			shooter.raise(false);
-			//intake.moveBall(-1.0);
-		} else {
-			shooter.raise(true);
-			//intake.moveBall(0.0);
-		}*/
+
+		/*
+		 * if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
+		 * shooter.raise(false); //intake.moveBall(-1.0); } else {
+		 * shooter.raise(true); //intake.moveBall(0.0); }
+		 */
 
 		debug();
 	}
@@ -229,22 +225,23 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 
 	}
-	
-	public void shootProcedure(){
+
+	public void shootProcedure() {
 		intake.lower(false);
-		
+
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			shooter.raiseShootingHeight(camera);
 			Timer.delay(0.500); // waits for shooter to get in position
-			drive.autoRotate/*New*/(camera);
-			if (camera.isInTurnAngle()){ // assumes NT info is up to date coming out of rotation routine
+			drive.autoRotate/* New */(camera);
+			if (camera.isInTurnAngle()) { // assumes NT info is up to date
+											// coming out of rotation routine
 				shooter.shoot();
 			}
 		}
 	}
 
 	public boolean button(Joysticks contNum, int buttonNum) {
-		return cBase.getPressedDown(contNum, buttonNum); 
+		return cBase.getPressedDown(contNum, buttonNum);
 	}
 
 	/**
@@ -256,22 +253,22 @@ public class Robot extends IterativeRobot {
 	 */
 	public void debug() {
 		// Display on SmartDash
-		
+
 		// DriveTrain
 		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 3) + " deg.");
-		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition()); 
+		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
 		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition() , +1.0), 3) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition(), +1.0), 3) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition() , +1.0), 3) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), +1.0), 3) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
-		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());	
-		
+		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
+
 		// Accelerometer
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
 		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 3));
-		
+
 		// Camera
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
@@ -284,10 +281,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 3) + " in.");
-		
+
 		// Compound and miscellaneous indicators
 		SmartDashboard.putString("Config Type", config.toString());
-		SmartDashboard.putBoolean("FMS" , driverStation.isFMSAttached());
+		SmartDashboard.putBoolean("FMS", driverStation.isFMSAttached());
 		SmartDashboard.putBoolean("Is in range", camera.isInDistance());
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
