@@ -108,6 +108,20 @@
 	<widget field="Center X:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1010" y="272"/>
 	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="632" y="443"/>
+		<property name="Text" value="connection indicator"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="639" y="409"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="632" y="443"/>
+		<property name="Text" value="connection indicator"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="639" y="409"/>
+	</static-widget>
 	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
 		<location x="8" y="6"/>
 		<width>615</width>
@@ -123,6 +137,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Is Tilted"/>
-	<hidden field="Is Flat"/>
 </xml>

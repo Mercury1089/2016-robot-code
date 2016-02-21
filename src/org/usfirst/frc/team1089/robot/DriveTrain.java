@@ -299,8 +299,8 @@ public class DriveTrain {
 		double startAngle = gyro.getAngle();
 		double startTime = System.currentTimeMillis();
 		//isMoving = true;
-		if (deg > 0) {
-			s *= -1; // speed sign opposite of desired angle
+		if (deg < 0) {
+			s *= -1; // speed sign same as desired angle
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
@@ -367,9 +367,9 @@ public class DriveTrain {
 			double startTime = System.currentTimeMillis();
 			double startAngle = gyro.getAngle();
 			if (deg > 0) {
-				s = - AUTOROTATE_SPEED; // speed sign opposite of desired angle
+				s = AUTOROTATE_SPEED; // speed sign same as desired angle
 			} else {
-				s = AUTOROTATE_SPEED; // speed sign opposite of desired angle
+				s = -AUTOROTATE_SPEED; // speed sign same as desired angle
 			}
 
 			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)

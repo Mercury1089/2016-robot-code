@@ -233,7 +233,7 @@ public class Robot extends IterativeRobot {
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			shooter.raiseShootingHeight(camera);
 			Timer.delay(0.500); // waits for shooter to get in position
-			drive.autoRotate(camera);
+			drive.autoRotate/*New*/(camera);
 			if (camera.isInTurnAngle()){ // assumes NT info is up to date coming out of rotation routine
 				shooter.shoot();
 			}
