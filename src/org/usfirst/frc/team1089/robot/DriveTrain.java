@@ -33,7 +33,7 @@ public class DriveTrain {
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
 	private static final double TIER_4_DEGREES_FROM_TARGET = 1;
-	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.0;
+	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.5;
 	private static final int AUTOROTATE_MAX_ATTEMPTS = 5;
 	private static final double AUTOROTATE_SPEED = 0.77;
 	private static final double AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS = 0.500;
@@ -429,15 +429,25 @@ public class DriveTrain {
 
 	public boolean checkDegreeRotateVoltage() {
 		if (isDegreeRotating) { // only if we have been told to rotate
-			double vmax = 0.75;
-			double vmin = 0.40;
+			double vmax = Math.pow(0.75, 1.0);		//change to 3 for cubic
+			double vmin = Math.pow(0.35, 1.0);
 			double dmax = 20.0;
 			double dmin = 5.0;
 			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
-			// speed sign same as desired angle
-			double vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
-
+			/*// speed sign same as desired angle
+			double vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, kp*(Math.abs(error));
+			vout = Math.pow(vout, 1.0/3);*/
+			double vout = 0;
+			
+			
+			if(error > config.TURN_ANGLE_MAX_DEGREES){
+				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error-5))));
+			}		
+			else if(error < config.TURN_ANGLE_MIN_DEGREES){
+				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+5))));
+			}
+			
 			if (Math.abs(error) <= AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES) {
 				isDegreeRotating = false; // we take the flag down
 				stop(); // we stop the motors
