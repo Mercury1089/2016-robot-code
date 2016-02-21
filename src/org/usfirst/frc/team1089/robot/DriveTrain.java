@@ -429,14 +429,14 @@ public class DriveTrain {
 
 	public boolean checkDegreeRotateVoltage() {
 		if (isDegreeRotating) { // only if we have been told to rotate
-			double vmax = 0.8;
-			double vmin = 0.2;
+			double vmax = 0.75;
+			double vmin = 0.40;
 			double dmax = 20.0;
 			double dmin = 5.0;
 			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
-			// speed sign opposite of desired angle
-			double vout = -Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
+			// speed sign same as desired angle
+			double vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, Math.abs(error) * kp));
 
 			if (Math.abs(error) <= AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES) {
 				isDegreeRotating = false; // we take the flag down
