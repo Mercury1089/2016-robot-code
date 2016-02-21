@@ -33,7 +33,7 @@ public class DriveTrain {
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
 	private static final double TIER_4_DEGREES_FROM_TARGET = 1;
-	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.5;
+	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.0;
 	private static final int AUTOROTATE_MAX_ATTEMPTS = 5;
 	private static final double AUTOROTATE_SPEED = 0.77;
 	public static final double AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS = 0.500;
@@ -418,7 +418,7 @@ public class DriveTrain {
 	 * @param heading
 	 *            the heading in degree
 	 */
-	public void degreeRotateVoltage(double heading) {
+	public void degreeRotateVoltage(double heading) {				//THE RAJ METHOD
 		isDegreeRotating = true; // we flag that we are rotating asynchronously
 		gyro.reset(); // we start at zero since heading is relative to where we
 						// are

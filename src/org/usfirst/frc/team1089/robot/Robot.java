@@ -212,6 +212,13 @@ public class Robot extends IterativeRobot {
 			shootProcedure();
 		}
 
+		if (camera.isInDistance() && camera.isInLineWithGoal()){
+			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 1);
+			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 1);
+		} else{
+			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
+			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
+		}
 		/*
 		 * if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
 		 * shooter.raise(false); //intake.moveBall(-1.0); } else {
