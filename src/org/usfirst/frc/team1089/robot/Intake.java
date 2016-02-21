@@ -49,12 +49,12 @@ public class Intake {
 	
 	/**
 	 * <pre>
-	 * public void raise(boolean readyToShoot)
+	 * public void lower(boolean readyToShoot)
 	 * </pre>
 	 * Raises or lowers the elevator depending on whether or not the driver is ready to shoot.
 	 * @param readyToShoot whether or not the driver is ready to shoot
 	 */
-	public void raise(boolean readyToShoot) {	//have to check values
+	public void lower(boolean readyToShoot) {	//have to check values
 		if (readyToShoot)
 			elevator.set(DoubleSolenoid.Value.kForward);
 		else

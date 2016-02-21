@@ -186,11 +186,11 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			intake.raise(false);		
+			intake.lower(true);				//down
 		}
 		
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
-			intake.raise(true); 
+			intake.lower(false); 			//up
 		}
 		
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
@@ -205,9 +205,10 @@ public class Robot extends IterativeRobot {
 		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			//drive.turnDistance(1);
+			intake.lower(false);
 			drive.autoRotate(camera);
 			if (Math.abs(camera.getTurnAngle()) < 1.5 /*&& !drive.isMoving*/) {
-				intake.raise(false);
+				intake.lower(false);
 				shooter.raiseShootingHeight(camera.getHorizontalDist());
 				shooter.shoot();
 			}
@@ -232,7 +233,7 @@ public class Robot extends IterativeRobot {
 	public void shootProcedure(){
 		drive.encoderAngleRotate(camera.getTurnAngle());
 		drive.waitMove();
-		intake.raise(false);
+		intake.lower(false);
 		shooter.shoot();
 	}
 
