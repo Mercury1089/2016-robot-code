@@ -94,9 +94,9 @@ public class Robot extends IterativeRobot {
 		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(),
-				(AimEnum) shootChooser.getSelected(), (DefenseEnum) defenseChooser.getSelected(), accel);
-	}
+		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
+				(DefenseEnum) defenseChooser.getSelected(), accel, this);
+		}
 
 	@Override
 	public void autonomousInit() {

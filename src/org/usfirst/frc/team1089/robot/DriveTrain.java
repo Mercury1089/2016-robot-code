@@ -36,7 +36,7 @@ public class DriveTrain {
 	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.5;
 	private static final int AUTOROTATE_MAX_ATTEMPTS = 5;
 	private static final double AUTOROTATE_SPEED = 0.77;
-	private static final double AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS = 0.500;
+	public static final double AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS = 0.500;
 	private static final double TURN_TIMEOUT_MILLIS = 4000;
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 100;
