@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -202,15 +203,21 @@ public class Robot extends IterativeRobot {
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0);			//push ball out
 		}
+		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)){
+			intake.lower(false);
+		}
 		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			//drive.turnDistance(1);
 			intake.lower(false);
-			drive.autoRotate(camera);
-			if (Math.abs(camera.getTurnAngle()) < 1.5 /*&& !drive.isMoving*/) {
-				intake.lower(false);
-				shooter.raiseShootingHeight(camera.getHorizontalDist());
-				shooter.shoot();
+			
+			if (camera.isInDistance() && camera.isInLineWithGoal()) {
+				shooter.raiseShootingHeight(camera);
+				Timer.delay(0.500);
+				drive.autoRotate(camera);
+				if (camera.isInTurnAngle()){
+					shooter.shoot();
+				}
 			}
 		}
 		

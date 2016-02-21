@@ -69,12 +69,12 @@ public class Shooter {
 		}
 	}
 	
-	public void raiseShootingHeight(double distance) {
-		if (distance <= CLOSE_SHOT_FEET) {									//Values to be changed
-			raise(HIGH);
-		}
-		else {
+	public void raiseShootingHeight(Camera cam) {
+		if (cam.isInFarDistance()) {									//Values to be changed
 			raise(MEDIUM);
+		}
+		else if (cam.isInCloseDistance()){
+			raise(HIGH);
 		}
 	}
 	/**

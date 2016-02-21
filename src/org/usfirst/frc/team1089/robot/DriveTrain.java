@@ -33,7 +33,7 @@ public class DriveTrain {
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
 	private static final double TIER_4_DEGREES_FROM_TARGET = 1;
-	private static final double TURN_TIMEOUT_MILLIS = 10000;
+	private static final double TURN_TIMEOUT_MILLIS = 4000;
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 100;
 	private static final double TURN_THRESH_VELOCITY = 10;

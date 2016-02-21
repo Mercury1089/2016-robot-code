@@ -202,9 +202,17 @@ public class Camera {
 	 * @return true if the robot is in range, false if the robot is too close or
 	 *         too far
 	 */
-	public boolean isInDistance() {
+	public boolean isInDistance(){
+		return isInFarDistance() || isInCloseDistance();
+	}
+	public boolean isInFarDistance() {
 		// TODO take into account the position of the shooter (pass as variable and check against different requirements depending on position)
-		return getHorizontalDist() > config.HORIZ_DIST_MIN_FEET && getHorizontalDist() < config.HORIZ_DIST_MAX_FEET;
+		return (getHorizontalDist() > config.HORIZ_DIST_MIN_FEET && getHorizontalDist() < config.HORIZ_DIST_MAX_FEET);
+	}
+	
+	public boolean isInCloseDistance() {
+		// TODO take into account the position of the shooter (pass as variable and check against different requirements depending on position)
+		return (getHorizontalDist() > config.HORIZ_CLOSE_DIST_MIN_FEET && getHorizontalDist() < config.HORIZ_CLOSE_DIST_MAX_FEET);
 	}
 
 	/**

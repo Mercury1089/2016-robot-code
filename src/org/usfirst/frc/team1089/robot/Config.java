@@ -13,6 +13,8 @@ public class Config {
 	public final double IN_LINE_MIN;
 	public final double HORIZ_DIST_MIN_FEET;
 	public final double HORIZ_DIST_MAX_FEET;
+	public final double HORIZ_CLOSE_DIST_MIN_FEET;
+	public final double HORIZ_CLOSE_DIST_MAX_FEET;
 
 	public final double AXLE_TRACK_INCHES;
 	public final double LEFT_ENC_SIGN;
@@ -61,7 +63,8 @@ public class Config {
 			IN_LINE_MIN = 1.2;
 			HORIZ_DIST_MIN_FEET = 7.0;
 			HORIZ_DIST_MAX_FEET = 11.0;
-
+			HORIZ_CLOSE_DIST_MIN_FEET = 4.0;
+			HORIZ_CLOSE_DIST_MAX_FEET = 5.5;
 			
 			AXLE_TRACK_INCHES = 15.126 * 2;
 			LEFT_ENC_SIGN = 1.0;
@@ -88,6 +91,8 @@ public class Config {
 			IN_LINE_MIN = 1.2;
 			HORIZ_DIST_MIN_FEET = 7.5;
 			HORIZ_DIST_MAX_FEET = 10.5;
+			HORIZ_CLOSE_DIST_MIN_FEET = 4.0;
+			HORIZ_CLOSE_DIST_MAX_FEET = 5.5;
 			
 			AXLE_TRACK_INCHES = 30.329;
 			LEFT_ENC_SIGN = 1.0;
