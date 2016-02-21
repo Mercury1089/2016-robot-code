@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
  */
 
 public class StrongholdAuton {
-	private static final int BREACH = 0, CENTER = 1, MOVE = 2, SHOOT = 3, DONE = 4;
+	private static final int BREACH = 0, CENTER = 1, MOVE = 2, ROTATE = 3, SHOOT = 4, DONE = 5;
 	private static final double TURN_SPEED = 0.5, DISTANCE_TO_LOW_GOAL_FEET = 7.0, DISTANCE_TO_HIGH_GOAL_FEET = 9.0;
 	private Defense defense;
 	private Camera camera;
@@ -92,19 +92,22 @@ public class StrongholdAuton {
 					state = DONE;
 				}
 				else {
-					drive.degreeRotate(-gyro.getAngle(), TURN_SPEED); // TODO explain the assumptions made on the gyro
+					drive.degreeRotate(-gyro.getAngle(), TURN_SPEED); // Assume gyro has been reset to zero before breaching
 					camera.getNTInfo();
-					// TODO replace 10.0 in lines below by proper constant
-					// (and set to 9.0 feet as this is optimal shooting distance)
-					angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / DISTANCE_TO_HIGH_GOAL_FEET));
-					supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
-					centeredMoveDistance = (DISTANCE_TO_HIGH_GOAL_FEET * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
-					// TODO consider what to do if centeredMoveDistance is abnormally high
-					if (centeredMoveDistance > 0) {
-						state++;
+					if (camera.getHorizontalDist() > 20 || camera.getHorizontalDist() < 10){
+						state = DONE;
 					}
 					else {
-						state = DONE;
+						angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / DISTANCE_TO_HIGH_GOAL_FEET));
+						supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
+						centeredMoveDistance = (DISTANCE_TO_HIGH_GOAL_FEET * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
+						// TODO consider what to do if centeredMoveDistance is abnormally high
+						if (centeredMoveDistance > 0) {
+							state++;
+						}
+						else {
+							state = DONE;
+						}
 					}
 				}
 				break;
@@ -115,8 +118,19 @@ public class StrongholdAuton {
 				drive.encoderAngleRotate(angleToTurn);
 				drive.waitMove();
 				camera.getNTInfo();
-				// TODO consider adding intermediate ROTATE state between MOVE and SHOOT
-				if (camera.isInDistance() && camera.isInLineWithGoal() /*&& camera.isInTurnAngle()*/) {
+				// check we are within shooting range
+				if (camera.isInDistance() && camera.isInLineWithGoal()) {
+					state++;
+				}
+				else {
+					state = DONE;
+				}
+				break;
+			}
+			case ROTATE: {//Rotate again using camera
+				// auto-rotate?
+				camera.getNTInfo();
+				if (camera.isInTurnAngle()) {
 					state++;
 				}
 				else {
