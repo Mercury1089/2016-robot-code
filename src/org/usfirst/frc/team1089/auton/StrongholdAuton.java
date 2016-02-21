@@ -76,12 +76,13 @@ public class StrongholdAuton {
 	 * public void move()
 	 * </pre>
 	 * 
-	 * Crosses defense, centers, moves 10 feet away from goal, and shoots in auton
+	 * Crosses defense, centers, moves 9 feet away from goal, and shoots in auton
 	 * 
 	 */
 	public void move() {
 		switch (state) {
 			case BREACH: {//Breaching Phase
+				shooter.raise(shooter.MEDIUM);
 				if (breachAttempts == 0) {
 					defense.breach();
 					breachAttempts++; //Breach only once

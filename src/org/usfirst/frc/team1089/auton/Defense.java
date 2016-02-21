@@ -8,7 +8,8 @@ public class Defense{
 	private DriveTrain drive;
 	private Shooter shooter;
 	
-	private final int MOVE_DISTANCE_FEET = 7;
+	private final int MOVE_DISTANCE_FEET = 7, 
+					  APPROACH_CHEVAL_DE_FRISE_DISTANCE_FEET = 3, REMAINING_CHEVAL_DE_FRISE_DISTANCE_FEET = 4;
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
 		drive = d;
@@ -28,6 +29,13 @@ public class Defense{
 				drive.moveDistance(MOVE_DISTANCE_FEET);
 				drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
 				break;
+			}
+			case CHEVAL_DE_FRISE: {
+				drive.moveDistance(APPROACH_CHEVAL_DE_FRISE_DISTANCE_FEET);
+				drive.waitMove();
+				shooter.raise(shooter.DOWN);
+				drive.moveDistance(REMAINING_CHEVAL_DE_FRISE_DISTANCE_FEET);
+				drive.waitMove();
 			}
 			default:
 				break;
