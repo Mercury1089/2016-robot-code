@@ -299,7 +299,7 @@ public class DriveTrain {
 		double startTime = System.currentTimeMillis();
 		//isMoving = true;
 		if (deg > 0) {
-			s *= -1;
+			s *= -1; // speed sign opposite of desired angle
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
@@ -342,18 +342,21 @@ public class DriveTrain {
 	
 	public void autoRotateNew(Camera c) {
 		autoRotCounter = 0;
+		double earliestStartTime = System.currentTimeMillis();
 		c.getNTInfo();
-		double deg = c.getTurnAngle();
-		double setpoint = deg + gyro.getAngle();
-		double s = 0.77;
+		double deg = c.getTurnAngle(); // delta from initial position
+		double setpoint = deg + gyro.getAngle(); // setpoint
+		double s;
 		
 		do {
 			double startTime = System.currentTimeMillis();
 			double startAngle = gyro.getAngle();
 			if (deg > 0) {
-				s *= -1;
+				s = - AUTOROTATE_SPEED; // speed sign opposite of desired angle
+			} else {
+				s = AUTOROTATE_SPEED; // speed sign opposite of desired angle
 			}
-			//isMoving = true;
+
 			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
 					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 				speedRotate(s);
@@ -370,12 +373,16 @@ public class DriveTrain {
 					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 				speedRotate(s / 2.0);
 			}
+			stop(); // we stop so that startAngle and deg are in sync if we loop again
+			
+			// calculates new delta based on setpoint and current position
+			deg = setpoint - gyro.getAngle();
+			
 			autoRotCounter++;
-			deg = Math.signum(setpoint - gyro.getAngle()) * Math.abs(setpoint - gyro.getAngle());
-		} while (Math.abs(deg) > 1.0 && autoRotCounter <= 5); // TODO make constants proper constants
-		stop();
+		} while ((Math.abs(deg) > AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES)
+				&& (autoRotCounter <= AUTOROTATE_MAX_ATTEMPTS)
+				&& (System.currentTimeMillis() - earliestStartTime <= TURN_TIMEOUT_MILLIS * 2));
 	}
-	
 
 	/**
 	 * <pre>
