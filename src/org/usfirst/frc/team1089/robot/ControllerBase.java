@@ -109,4 +109,7 @@ public class ControllerBase {
 	public boolean getPressedDown(Joysticks contNum, int buttonNum) {
 		return btn[contNum.ordinal()][buttonNum] && !btnPrev[contNum.ordinal()][buttonNum]; 
 	}	
+	public static boolean getReleasedUp(Joysticks contNum, int buttonNum){
+		return !btn[contNum.ordinal()][buttonNum] && btnPrev[contNum.ordinal()][buttonNum];
+	}
 }

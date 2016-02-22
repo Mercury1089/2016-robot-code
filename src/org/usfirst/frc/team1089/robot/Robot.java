@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import javafx.scene.control.Slider;
 
 public class Robot extends IterativeRobot {
 
@@ -188,9 +189,13 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
+		if (gamepad.getRawButton(ControllerBase.GamepadButtons.START)) {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move
-			drive.encoderAngleRotate(camera.getTurnAngle());
+			//drive.encoderAngleRotate(camera.getTurnAngle());
+			drive.speedRotate(SmartDashboard.getNumber("Speed Rotate Method"));
+		}
+		else if (ControllerBase.getReleasedUp(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)){
+			drive.speedRotate(0);
 		}
 
 		drive.checkMove();
