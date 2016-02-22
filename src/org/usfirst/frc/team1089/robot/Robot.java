@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
+
 	private Camera camera;
 
 	private Shooter shooter;
@@ -38,7 +39,9 @@ public class Robot extends IterativeRobot {
 	private DriverStation driverStation;
 	private Config config;
 
+	private int shootingAttemptCounter = 0;
 	public static boolean isShooting = false; 
+	private static final int MAX_SHOOTING_ATTEMPT = 1;
 	
 	@Override
 	public void robotInit() {
@@ -168,16 +171,20 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (!drive.checkDegreeRotateVoltage() && isShooting) {
-			isShooting = false;
+			
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
 			if (camera.isInTurnAngle()) { // assumes NT info is up to date
 				// coming out of rotation routine
+				isShooting = false;
 				shooter.shoot();
-				//isShooting = false;
+			}
+			else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT){
+				drive.degreeRotateVoltage(camera.getTurnAngle());
+				shootingAttemptCounter ++;
 			}
 			else{
-				//drive.degreeRotateVoltage(camera.getTurnAngle());
+				isShooting = false;
 			}
 		}
 
@@ -214,16 +221,13 @@ public class Robot extends IterativeRobot {
 			// intake.moveBall(0.0);
 		}
 
-		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			intake.lower(true); // down
-		}
-
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
 			intake.lower(false); // up
 		}
 
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
 			intake.moveBall(-1.0); // pull ball in
+			intake.lower(true); // down
 		}
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			intake.moveBall(0); // stop intake
