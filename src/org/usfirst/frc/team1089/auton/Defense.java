@@ -33,7 +33,7 @@ public class Defense{
 			case CHEVAL_DE_FRISE: {
 				drive.moveDistance(APPROACH_CHEVAL_DE_FRISE_DISTANCE_FEET);
 				drive.waitMove();
-				shooter.raise(shooter.DOWN);
+				shooter.raise(Shooter.DOWN);
 				drive.moveDistanceAuton(REMAINING_CHEVAL_DE_FRISE_DISTANCE_FEET, 0.4, 0.0005, -0.001); //TODO test and change these values
 				drive.waitMove();
 			}
