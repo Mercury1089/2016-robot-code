@@ -165,6 +165,25 @@ public class DriveTrain {
 		leftFrontTalon.set(endPosL);
 		rightFrontTalon.set(endPosR);
 	}
+	
+	public void moveDistanceAuton(double changePos, double p, double i, double d) {
+		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		startPosL = leftFrontTalon.getEncPosition();
+		startPosR = rightFrontTalon.getEncPosition();
+		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
+		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
+		leftFrontTalon.setPID(p, i, d);
+		rightFrontTalon.setPID(p, i, d);
+		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		leftFrontTalon.configNominalOutputVoltage(0, 0);
+		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
+		setToAuto();
+		leftFrontTalon.enableControl();
+		rightFrontTalon.enableControl();
+		leftFrontTalon.set(endPosL);
+		rightFrontTalon.set(endPosR);
+	}
 
 	/**
 	 * <pre>
