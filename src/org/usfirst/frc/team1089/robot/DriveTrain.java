@@ -417,31 +417,33 @@ public class DriveTrain {
 
 	public boolean checkDegreeRotateVoltage() {
 		if (isDegreeRotating) { // only if we have been told to rotate
-			double vmax = Math.pow(0.75, 1.0);		//change to 3 for cubic
-			double vmin = Math.pow(0.35, 1.0);
+			double vmax = Math.pow(0.75, 1.0/3);		//change to 3 for cubic
+			double vmin = Math.pow(0.35, 1.0/3);
 			double dmax = 20.0;
 			double dmin = 5.0;
 			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
 			// speed sign same as desired angle
-			/*double vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, kp*(Math.abs(error))));
-			vout = Math.pow(vout, 1.0/3);*/
-			double vout = 0;
-			
+			double vout = 0;			
 			
 			if(error > config.TURN_ANGLE_MAX_DEGREES){
 				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error-5))));
+				vout = Math.pow(vout, 3);
+				speedRotate(vout); // we rotate until we are told otherwise
 			}		
 			else if(error < config.TURN_ANGLE_MIN_DEGREES){
 				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+5))));
-			}
-			
-			if (Math.abs(error) <= AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES) {
-				isDegreeRotating = false; // we take the flag down
-				stop(); // we stop the motors
-			} else {
+				vout = Math.pow(vout, 3);
 				speedRotate(vout); // we rotate until we are told otherwise
 			}
+			
+			else {
+				isDegreeRotating = false; // we take the flag down
+				stop(); // we stop the motors
+				
+			} 
+				
+			
 		}
 		return isDegreeRotating;
 	}
