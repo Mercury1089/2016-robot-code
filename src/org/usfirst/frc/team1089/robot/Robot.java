@@ -114,6 +114,8 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
+		gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
+		gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
 	}
 
 	@Override
@@ -145,6 +147,11 @@ public class Robot extends IterativeRobot {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
+		
+		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
+			isShooting = false;
+			drive.stop();
+		}
 
 		// begin asynchronous moves
 
@@ -161,15 +168,16 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (!drive.checkDegreeRotateVoltage() && isShooting) {
+			isShooting = false;
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
 			if (camera.isInTurnAngle()) { // assumes NT info is up to date
 				// coming out of rotation routine
 				shooter.shoot();
-				isShooting = false;
+				//isShooting = false;
 			}
 			else{
-				drive.degreeRotateVoltage(camera.getTurnAngle());
+				//drive.degreeRotateVoltage(camera.getTurnAngle());
 			}
 		}
 

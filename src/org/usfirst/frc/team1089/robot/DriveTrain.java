@@ -104,32 +104,22 @@ public class DriveTrain {
 	 *            the {@code Joystick} to control the right set of wheels
 	 */
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
-		if (isMoving || isDegreeRotating) {
-			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
-				return; // we keep moving as no joystick has been grabbed
+		if (!isMoving && !isDegreeRotating) {
+			if (isOutOfDeadzone(leftStick, 1)) {
+				double rawValue = leftStick.getRawAxis(1);
+				leftFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+						* config.LEFT_DRIVE_SIGN);
 			} else {
-				if (isMoving) {
-					setToManual();
-				} else { // if (isDegreeRotating)
-					isDegreeRotating = false; // in case we were rotating
-				}
+				leftFrontTalon.set(0);
 			}
-		}
 
-		if (isOutOfDeadzone(leftStick, 1)) {
-			double rawValue = leftStick.getRawAxis(1);
-			leftFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
-					* config.LEFT_DRIVE_SIGN);
-		} else {
-			leftFrontTalon.set(0);
-		}
-
-		if (isOutOfDeadzone(rightStick, 1)) {
-			double rawValue = rightStick.getRawAxis(1);
-			rightFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
-					* config.RIGHT_DRIVE_SIGN);
-		} else {
-			rightFrontTalon.set(0);
+			if (isOutOfDeadzone(rightStick, 1)) {
+				double rawValue = rightStick.getRawAxis(1);
+				rightFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+						* config.RIGHT_DRIVE_SIGN);
+			} else {
+				rightFrontTalon.set(0);
+			}
 		}
 	}
 
@@ -274,9 +264,7 @@ public class DriveTrain {
 	 * Sets both {@code CANTalon} speeds to 0.
 	 */
 	public void stop() {
-		if (isMoving) {
-			setToManual();
-		}
+		setToManual();
 		isDegreeRotating = false;
 		leftFrontTalon.set(0);
 		rightFrontTalon.set(0);
