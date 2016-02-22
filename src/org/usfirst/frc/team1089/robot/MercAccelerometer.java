@@ -21,12 +21,12 @@ public class MercAccelerometer {
 	}
 	
 	/**
-	 * Indicates if the support onto which the accelerometer is attached is significantly tilted
+	 * Indicates if the support onto which the accelerometer is attached is flat
 	 * 
-	 * @return true if the support onto which the accelerometer is attached is significantly tilted, false otherwise
+	 * @return true if the support onto which the accelerometer is attached is flat, false otherwise
 	 */
 	public boolean isFlat() {
-		return getTilt() < config.TILT_THRESH_DEGREES; // TODO tweak threshold if needed
+		return getTilt() < config.TILT_THRESH_DEGREES;
 	}
 	
 }
