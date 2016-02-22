@@ -7,9 +7,9 @@ import java.util.*;
 import edu.wpi.first.wpilibj.DriverStation;
 
 
-public class MercLogger {
+public class Logger {
 	
-	private static MercLogger _currentLogger = null;
+	private static Logger _currentLogger = null;
 
 	private static Formatter formatter;
 	
@@ -23,7 +23,7 @@ public class MercLogger {
 	}
 	
 	
-	private MercLogger() {
+	private Logger() {
 		try {
 			formatter = new Formatter("/home/lvuser/log/" + new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss")+".log");
 		} catch (FileNotFoundException e) {
@@ -34,9 +34,9 @@ public class MercLogger {
 	}
 	
 
-	public synchronized static MercLogger getCurrent() {
+	public synchronized static Logger getCurrent() {
 		if (_currentLogger == null) {
-			_currentLogger = new MercLogger();
+			_currentLogger = new Logger();
 		}
 		return _currentLogger;
 	}

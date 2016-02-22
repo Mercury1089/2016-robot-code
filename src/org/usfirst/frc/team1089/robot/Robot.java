@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import javafx.scene.control.Slider;
 
 public class Robot extends IterativeRobot {
 
@@ -41,7 +40,7 @@ public class Robot extends IterativeRobot {
 	private Config config;
 
 	private int shootingAttemptCounter = 0;
-	public static boolean isShooting = false; 
+	public boolean isShooting = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 1;
 	
 	@Override
@@ -102,6 +101,7 @@ public class Robot extends IterativeRobot {
 
 		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
+		
 		SmartDashboard.putNumber("Speed Rotate Method", 0.25);
 	}
 		
@@ -163,8 +163,8 @@ public class Robot extends IterativeRobot {
 
 		// Camera Turn
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
-			// drive.encoderAngleRotate(360);
 			intake.lower(false);
+			
 			if (camera.isInDistance() && camera.isInLineWithGoal()) {
 				shooter.raiseShootingHeight(camera);
 				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
@@ -173,30 +173,28 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
-		if (!drive.checkDegreeRotateVoltage() && isShooting) {
-			
+		if (!drive.checkDegreeRotateVoltage() && isShooting) {		
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
+			
 			if (camera.isInTurnAngle()) { // assumes NT info is up to date
 				// coming out of rotation routine
 				isShooting = false;
 				shooter.shoot();
-			}
-			else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT){
+			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
-				shootingAttemptCounter ++;
-			}
-			else{
+				shootingAttemptCounter++;
+			} else {
 				isShooting = false;
 			}
 		}
 
 		if (gamepad.getRawButton(ControllerBase.GamepadButtons.START)) {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move
-			//drive.encoderAngleRotate(camera.getTurnAngle());
+			// drive.encoderAngleRotate(camera.getTurnAngle());
 			drive.speedRotate(SmartDashboard.getNumber("Speed Rotate Method"));
-		}
-		else if (ControllerBase.getReleasedUp(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)){
+		} else if (cBase.getReleasedUp(ControllerBase.Joysticks.GAMEPAD,
+				ControllerBase.GamepadButtons.START)) {
 			drive.stop();
 		}
 
@@ -236,12 +234,15 @@ public class Robot extends IterativeRobot {
 			intake.moveBall(-1.0); // pull ball in
 			intake.lower(true); // down
 		}
+		
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			intake.moveBall(0); // stop intake
 		}
+		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0); // push ball out
 		}
+		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
 			intake.lower(false);
 		}
@@ -250,10 +251,10 @@ public class Robot extends IterativeRobot {
 			shootProcedure();
 		}
 
-		if (camera.isInDistance() && camera.isInLineWithGoal()){
+		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 1);
 			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 1);
-		} else{
+		} else {
 			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
 			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
 		}
@@ -276,8 +277,9 @@ public class Robot extends IterativeRobot {
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			shooter.raiseShootingHeight(camera);
-			Timer.delay(0.500); // waits for shooter to get in position
+			Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
 			drive.autoRotate/* New */(camera);
+			
 			if (camera.isInTurnAngle()) { // assumes NT info is up to date
 											// coming out of rotation routine
 				shooter.shoot();
