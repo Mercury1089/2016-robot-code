@@ -214,12 +214,14 @@ public class Robot extends IterativeRobot {
 		// raising and lowering shooter elevator
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
 			shooter.raise(Shooter.LOW); // pancake
+			intake.lower(true);
 			// intake.moveBall(0.0);
 		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(Shooter.MEDIUM); // shooting height
 			// intake.moveBall(0.0);
 		} else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(Shooter.DOWN);
+			intake.lower(true);
 			// intake.moveBall(1.0);
 		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
 			shooter.raise(Shooter.HIGH); // close shooting height
@@ -230,7 +232,7 @@ public class Robot extends IterativeRobot {
 			intake.lower(false); // up
 		}
 
-		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
+		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN5)) {
 			intake.moveBall(-1.0); // pull ball in
 			intake.lower(true); // down
 		}
@@ -241,10 +243,6 @@ public class Robot extends IterativeRobot {
 		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0); // push ball out
-		}
-		
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
-			intake.lower(false);
 		}
 
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
