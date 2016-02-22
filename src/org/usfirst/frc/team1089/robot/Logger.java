@@ -13,7 +13,7 @@ public class Logger {
 	
 	private static Logger _currentLogger = null; //Initialized by getCurrent() if necessary
 
-	private static Formatter formatter; //Formatter object, used to write data onto a text file
+	private Formatter formatter; //Formatter object, used to write data onto a text file
 	
 	private static String shooterTemplate = DriverStation.getInstance().getMatchTime() + "%d\t"; //Time during match when the data was collected
 	private static String buttonTemplate = DriverStation.getInstance().getMatchTime()  + "%d\t";
@@ -54,6 +54,15 @@ public class Logger {
 	}
 
 	/**
+	 * Returns reference to formatter of logger instance
+	 * 
+	 * @return formatter
+	 */
+	private Formatter GetFormatter() {
+		return formatter;
+	}
+	
+	/**
 	 * <pre>
 	 * public synchronized static void Logger debug()
 	 * </pre>
@@ -66,10 +75,10 @@ public class Logger {
 	public synchronized static void debug(LoggerType lE, Object... o) {		
 		switch(lE) {
 		case SHOOTING_DATA:
-			formatter.format(shooterTemplate, o);
+			getCurrent().GetFormatter().format(shooterTemplate, o);
 			break;
 		case BUTTON_PRESSED:
-			formatter.format(buttonTemplate,  o);
+			getCurrent().GetFormatter().format(buttonTemplate,  o);
 			break;
 		}
 	}
