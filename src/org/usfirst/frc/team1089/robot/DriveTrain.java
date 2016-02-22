@@ -210,10 +210,10 @@ public class DriveTrain {
 		double rightVel = rightFrontTalon.getEncVelocity();
 
 		if (isMoving) {
-			SmartDashboard.putNumber("left velocity", leftVel);
+			/*SmartDashboard.putNumber("left velocity", leftVel);
 			SmartDashboard.putNumber("right velocity", rightVel);
 			SmartDashboard.putNumber("left pos", leftPos);
-			SmartDashboard.putNumber("right pos", rightPos);
+			SmartDashboard.putNumber("right pos", rightPos);*/
 
 			if ((leftPos > endPosL - MOVE_THRESH_TICKS && leftPos < endPosL + MOVE_THRESH_TICKS)
 					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
