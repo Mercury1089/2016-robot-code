@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
+
 	private Camera camera;
 
 	private Shooter shooter;
@@ -38,6 +39,10 @@ public class Robot extends IterativeRobot {
 	private DriverStation driverStation;
 	private Config config;
 
+	private int shootingAttemptCounter = 0;
+	private boolean isShooting = false; 
+	private static final int MAX_SHOOTING_ATTEMPT = 1;
+	
 	@Override
 	public void robotInit() {
 		config = Config.getCurrent();
@@ -96,7 +101,10 @@ public class Robot extends IterativeRobot {
 
 		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
-		}
+		
+		SmartDashboard.putNumber("Speed Rotate Method", 0.25);
+	}
+		
 
 	@Override
 	public void autonomousInit() {
@@ -112,6 +120,8 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
+		gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
+		gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
 	}
 
 	@Override
@@ -143,20 +153,49 @@ public class Robot extends IterativeRobot {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
+		
+		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
+			isShooting = false;
+			drive.stop();
+		}
 
 		// begin asynchronous moves
 
 		// Camera Turn
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
-			// drive.encoderAngleRotate(360);
-			drive.degreeRotateVoltage(camera.getTurnAngle());
+			intake.lower(false);
+			
+			if (camera.isInDistance() && camera.isInLineWithGoal()) {
+				shooter.raiseShootingHeight(camera);
+				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
+				isShooting = true;
+				drive.degreeRotateVoltage(camera.getTurnAngle());
+			}
 		}
 
-		drive.checkDegreeRotateVoltage();
+		if (!drive.checkDegreeRotateVoltage() && isShooting) {		
+			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+			camera.getNTInfo();
+			
+			if (camera.isInTurnAngle()) { // assumes NT info is up to date
+				// coming out of rotation routine
+				isShooting = false;
+				shooter.shoot();
+			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
+				drive.degreeRotateVoltage(camera.getTurnAngle());
+				shootingAttemptCounter++;
+			} else {
+				isShooting = false;
+			}
+		}
 
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
+		if (gamepad.getRawButton(ControllerBase.GamepadButtons.START)) {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move
-			drive.encoderAngleRotate(camera.getTurnAngle());
+			// drive.encoderAngleRotate(camera.getTurnAngle());
+			drive.speedRotate(SmartDashboard.getNumber("Speed Rotate Method"));
+		} else if (cBase.getReleasedUp(ControllerBase.Joysticks.GAMEPAD,
+				ControllerBase.GamepadButtons.START)) {
+			drive.stop();
 		}
 
 		drive.checkMove();
@@ -174,21 +213,17 @@ public class Robot extends IterativeRobot {
 
 		// raising and lowering shooter elevator
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			shooter.raise(shooter.LOW); // pancake
+			shooter.raise(Shooter.LOW); // pancake
 			// intake.moveBall(0.0);
 		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(shooter.MEDIUM); // shooting height
+			shooter.raise(Shooter.MEDIUM); // shooting height
 			// intake.moveBall(0.0);
 		} else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(shooter.DOWN);
+			shooter.raise(Shooter.DOWN);
 			// intake.moveBall(1.0);
 		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
-			shooter.raise(shooter.HIGH); // close shooting height
+			shooter.raise(Shooter.HIGH); // close shooting height
 			// intake.moveBall(0.0);
-		}
-
-		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			intake.lower(true); // down
 		}
 
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
@@ -197,13 +232,17 @@ public class Robot extends IterativeRobot {
 
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
 			intake.moveBall(-1.0); // pull ball in
+			intake.lower(true); // down
 		}
+		
 		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			intake.moveBall(0); // stop intake
 		}
+		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0); // push ball out
 		}
+		
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.L3)) {
 			intake.lower(false);
 		}
@@ -212,10 +251,10 @@ public class Robot extends IterativeRobot {
 			shootProcedure();
 		}
 
-		if (camera.isInDistance() && camera.isInLineWithGoal()){
+		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 1);
 			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 1);
-		} else{
+		} else {
 			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
 			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
 		}
@@ -238,8 +277,9 @@ public class Robot extends IterativeRobot {
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			shooter.raiseShootingHeight(camera);
-			Timer.delay(0.500); // waits for shooter to get in position
+			Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
 			drive.autoRotate/* New */(camera);
+			
 			if (camera.isInTurnAngle()) { // assumes NT info is up to date
 											// coming out of rotation routine
 				shooter.shoot();

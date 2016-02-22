@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -17,7 +17,7 @@ public class DriveTrain {
 	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
 	private AnalogGyro gyro;
 
-	public static boolean isMoving = false; // indicates we are moving (in
+	private boolean isMoving = false; // indicates we are moving (in
 											// position
 											// control mode)
 	private double startPosL, startPosR; // starting positions in position
@@ -25,9 +25,9 @@ public class DriveTrain {
 	private double endPosL, endPosR; // ending positions in position control
 										// mode
 
-	public static boolean isDegreeRotating = false; // indicates we are rotating
+	private boolean isDegreeRotating = false; // indicates we are rotating
 													// (in gyro control mode)
-	double _heading = 0.0; // heading when rotating
+	private double _heading = 0.0; // heading when rotating
 
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
@@ -41,6 +41,7 @@ public class DriveTrain {
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 100;
 	private static final double TURN_THRESH_VELOCITY = 10;
+	
 	private int autoRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
@@ -104,32 +105,22 @@ public class DriveTrain {
 	 *            the {@code Joystick} to control the right set of wheels
 	 */
 	public void tankDrive(Joystick leftStick, Joystick rightStick) {
-		if (isMoving || isDegreeRotating) {
-			if (!isOutOfDeadzone(leftStick, 1) && !isOutOfDeadzone(rightStick, 1)) {
-				return; // we keep moving as no joystick has been grabbed
+		if (!isMoving && !isDegreeRotating) {
+			if (isOutOfDeadzone(leftStick, 1)) {
+				double rawValue = leftStick.getRawAxis(1);
+				leftFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+						* config.LEFT_DRIVE_SIGN);
 			} else {
-				if (isMoving) {
-					setToManual();
-				} else { // if (isDegreeRotating)
-					isDegreeRotating = false; // in case we were rotating
-				}
+				leftFrontTalon.set(0);
 			}
-		}
 
-		if (isOutOfDeadzone(leftStick, 1)) {
-			double rawValue = leftStick.getRawAxis(1);
-			leftFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
-					* config.LEFT_DRIVE_SIGN);
-		} else {
-			leftFrontTalon.set(0);
-		}
-
-		if (isOutOfDeadzone(rightStick, 1)) {
-			double rawValue = rightStick.getRawAxis(1);
-			rightFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
-					* config.RIGHT_DRIVE_SIGN);
-		} else {
-			rightFrontTalon.set(0);
+			if (isOutOfDeadzone(rightStick, 1)) {
+				double rawValue = rightStick.getRawAxis(1);
+				rightFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+						* config.RIGHT_DRIVE_SIGN);
+			} else {
+				rightFrontTalon.set(0);
+			}
 		}
 	}
 
@@ -238,10 +229,10 @@ public class DriveTrain {
 		double rightVel = rightFrontTalon.getEncVelocity();
 
 		if (isMoving) {
-			SmartDashboard.putNumber("left velocity", leftVel);
+			/*SmartDashboard.putNumber("left velocity", leftVel);
 			SmartDashboard.putNumber("right velocity", rightVel);
 			SmartDashboard.putNumber("left pos", leftPos);
-			SmartDashboard.putNumber("right pos", rightPos);
+			SmartDashboard.putNumber("right pos", rightPos);*/
 
 			if ((leftPos > endPosL - MOVE_THRESH_TICKS && leftPos < endPosL + MOVE_THRESH_TICKS)
 					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
@@ -293,9 +284,7 @@ public class DriveTrain {
 	 * Sets both {@code CANTalon} speeds to 0.
 	 */
 	public void stop() {
-		if (isMoving) {
-			setToManual();
-		}
+		setToManual();
 		isDegreeRotating = false;
 		leftFrontTalon.set(0);
 		rightFrontTalon.set(0);
@@ -342,8 +331,9 @@ public class DriveTrain {
 	}
 	
 	/**
-	 * Calls degreeRotate() if not in correct angle.
+	 * Calls degreeRotate() if angle reported by camera is not acceptable.
 	 * 
+	 * Camera angle is checked at each attempt
 	 * Network Table info is fetched prior to returning
 	 * 
 	 * @param c the camera to get the angle from 
@@ -368,8 +358,9 @@ public class DriveTrain {
 	}
 	
 	/**
-	 * Calls degreeRotate() if not in correct angle.
+	 * Calls degreeRotate() if if angle reported by camera is not acceptable.
 	 * 
+	 * Camera angle is checked only once to set setpoint
 	 * Network Table info is fetched prior to returning
 	 * 
 	 * @param c the camera to get the angle from 
@@ -446,33 +437,42 @@ public class DriveTrain {
 		_heading = heading; // we save where we want to go
 	}
 
+	/**
+	 * <pre>
+	 * public boolean checkDegreeRotateVoltage()
+	 * </pre>
+	 * 
+	 * Checks to see if the robot is rotating.
+	 * 
+	 * @return true if the robot is rotating, false
+	 *         if otherwise.
+	 */
 	public boolean checkDegreeRotateVoltage() {
 		if (isDegreeRotating) { // only if we have been told to rotate
-			double vmax = Math.pow(0.75, 1.0);		//change to 3 for cubic
-			double vmin = Math.pow(0.35, 1.0);
+			final double BOOST = 3.0; //change to 1 for linear, 3 for cubic
+			double vmax = Math.pow(0.75, 1.0/BOOST);		
+			double vmin = Math.pow(0.35, 1.0/BOOST);
 			double dmax = 20.0;
 			double dmin = 5.0;
 			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
-			/*// speed sign same as desired angle
-			double vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, kp*(Math.abs(error));
-			vout = Math.pow(vout, 1.0/3);*/
-			double vout = 0;
+			// speed sign same as desired angle
+			double vout = 0;			
 			
-			
-			if(error > config.TURN_ANGLE_MAX_DEGREES){
+			if (error > config.TURN_ANGLE_MAX_DEGREES) {
 				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error-5))));
-			}		
-			else if(error < config.TURN_ANGLE_MIN_DEGREES){
-				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+5))));
-			}
-			
-			if (Math.abs(error) <= AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES) {
-				isDegreeRotating = false; // we take the flag down
-				stop(); // we stop the motors
-			} else {
+				vout = Math.pow(vout, BOOST);
 				speedRotate(vout); // we rotate until we are told otherwise
-			}
+			}		
+			else if (error < config.TURN_ANGLE_MIN_DEGREES) {
+				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+5))));
+				vout = Math.pow(vout, BOOST);
+				speedRotate(vout); // we rotate until we are told otherwise
+			}			
+			else {
+				isDegreeRotating = false; // we take the flag down
+				stop(); // we stop the motors			
+			} 			
 		}
 		return isDegreeRotating;
 	}

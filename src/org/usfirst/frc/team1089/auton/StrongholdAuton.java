@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Timer;
  * The {@code StrongholdAuton} class contains fields and methods for crossing a defense
  * and shooting in the high/low goal during auton
  */
-
 public class StrongholdAuton {
 	private static final int BREACH = 0, CENTER = 1, MOVE = 2, ROTATE = 3, SHOOT = 4, DONE = 5;
 	private static final double TURN_SPEED = 0.5, DISTANCE_TO_HIGH_GOAL_FEET = 9.0, LENGTH_OF_BATTER_FEET = 4.0, 
@@ -54,9 +53,10 @@ public class StrongholdAuton {
 	 * 			  the {@code DefenseEnum} says which defense we will be crossing
 	 * @param ac
 	 * 			  the {@code MercAccelerometer} used to see if we have breached, with the z-axis
-	 *  
+	 *
+	 * @param r
+	 *            the robot            
 	 */
-	
 	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, AnalogGyro g, int p,
 							AimEnum a, DefenseEnum dE, MercAccelerometer ac, Robot r) {
 		drive = d;
@@ -82,6 +82,8 @@ public class StrongholdAuton {
 	public void move() {
 		switch (state) {
 			case BREACH: {//Breaching Phase
+
+				shooter.raise(Shooter.MEDIUM);
 				if (breachAttempts == 0) {
 					defense.breach();
 					breachAttempts++; //Breach only once
@@ -90,7 +92,7 @@ public class StrongholdAuton {
 					state = DONE;
 				}
 				if (accel.isFlat()) {
-					shooter.raise(shooter.MEDIUM);
+					shooter.raise(Shooter.MEDIUM);
 					state++;
 				}
 				  
@@ -160,7 +162,7 @@ public class StrongholdAuton {
 				else if (aim == AimEnum.LOW) {
 					drive.moveDistance(DISTANCE_TO_GET_TO_LOW_GOAL_FEET);
 					drive.waitMove();
-					shooter.raise(shooter.DOWN);
+					shooter.raise(Shooter.DOWN);
 					shooter.shoot();
 				}
 				state++;

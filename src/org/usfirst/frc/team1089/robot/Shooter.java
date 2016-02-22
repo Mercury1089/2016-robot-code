@@ -14,10 +14,11 @@ public class Shooter {
 	private Solenoid shooter;
 	private DoubleSolenoid highElevator, lowElevator;
 	
-	public final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
+	public static final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
-	//private static final double CLOSE_SHOT_FEET = 6;
-	public int position = HIGH;
+	public static final double RAISE_SHOOTER_CATCHUP_DELAY_SECS = .500;
+	
+	private int position = HIGH;
 	
 	/**
 	 * <pre>
@@ -67,6 +68,10 @@ public class Shooter {
 				break;
 			}
 		}
+	}
+	
+	public int getPosition() {
+		return position;
 	}
 	
 	public void raiseShootingHeight(Camera cam) {
@@ -126,6 +131,5 @@ public class Shooter {
 		public void run() {
 			_shooter.set(false);
 		}
-
-	}
+	}	
 }

@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.Joystick;
  * to get input, buttons, etc.
  */
 public class ControllerBase {
-	private static Joystick[] joysticks;
+	private Joystick[] joysticks;
 	
-	private static boolean[][] btn;
-	private static boolean[][] btnPrev;
+	private boolean[][] btn;
+	private boolean[][] btnPrev;
 
 	public static final int MAX_NUMBER_CONTROLLERS = 3;
 	public static final int MAX_NUMBER_BUTTONS = 11; 
@@ -109,4 +109,7 @@ public class ControllerBase {
 	public boolean getPressedDown(Joysticks contNum, int buttonNum) {
 		return btn[contNum.ordinal()][buttonNum] && !btnPrev[contNum.ordinal()][buttonNum]; 
 	}	
+	public boolean getReleasedUp(Joysticks contNum, int buttonNum){
+		return !btn[contNum.ordinal()][buttonNum] && btnPrev[contNum.ordinal()][buttonNum];
+	}
 }
