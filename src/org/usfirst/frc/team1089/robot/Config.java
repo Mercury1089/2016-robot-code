@@ -39,7 +39,7 @@ public class Config {
 	// otherwise specified by calling setCurrent()
 	public final static ConfigType DEFAULT_CONFIG_TYPE = ConfigType.COMPETITION;
 	
-	public final ConfigType _configType; // Do not initialize - constructor will do it
+	private final ConfigType _configType; // Do not initialize - constructor will do it
 	
 	private static Config _current = null; // Do not initialize - getCurrent() does it if necessary.
 
