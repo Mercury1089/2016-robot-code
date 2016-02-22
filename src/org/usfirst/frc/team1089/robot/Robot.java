@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot {
 	private Config config;
 
 	private int shootingAttemptCounter = 0;
-	public boolean isShooting = false; 
+	private boolean isShooting = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 1;
 	
 	@Override
@@ -213,16 +213,16 @@ public class Robot extends IterativeRobot {
 
 		// raising and lowering shooter elevator
 		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			shooter.raise(shooter.LOW); // pancake
+			shooter.raise(Shooter.LOW); // pancake
 			// intake.moveBall(0.0);
 		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(shooter.MEDIUM); // shooting height
+			shooter.raise(Shooter.MEDIUM); // shooting height
 			// intake.moveBall(0.0);
 		} else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(shooter.DOWN);
+			shooter.raise(Shooter.DOWN);
 			// intake.moveBall(1.0);
 		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
-			shooter.raise(shooter.HIGH); // close shooting height
+			shooter.raise(Shooter.HIGH); // close shooting height
 			// intake.moveBall(0.0);
 		}
 

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -17,7 +17,7 @@ public class DriveTrain {
 	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
 	private AnalogGyro gyro;
 
-	public boolean isMoving = false; // indicates we are moving (in
+	private boolean isMoving = false; // indicates we are moving (in
 											// position
 											// control mode)
 	private double startPosL, startPosR; // starting positions in position
@@ -25,9 +25,9 @@ public class DriveTrain {
 	private double endPosL, endPosR; // ending positions in position control
 										// mode
 
-	public boolean isDegreeRotating = false; // indicates we are rotating
+	private boolean isDegreeRotating = false; // indicates we are rotating
 													// (in gyro control mode)
-	double _heading = 0.0; // heading when rotating
+	private double _heading = 0.0; // heading when rotating
 
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12;

@@ -82,7 +82,7 @@ public class StrongholdAuton {
 	public void move() {
 		switch (state) {
 			case BREACH: {//Breaching Phase
-				shooter.raise(shooter.MEDIUM);
+				shooter.raise(Shooter.MEDIUM);
 				if (breachAttempts == 0) {
 					defense.breach();
 					breachAttempts++; //Breach only once
@@ -91,7 +91,7 @@ public class StrongholdAuton {
 					state = DONE;
 				}
 				if (accel.isFlat()) {
-					shooter.raise(shooter.MEDIUM);
+					shooter.raise(Shooter.MEDIUM);
 					state++;
 				}
 				  
@@ -161,7 +161,7 @@ public class StrongholdAuton {
 				else if (aim == AimEnum.LOW) {
 					drive.moveDistance(DISTANCE_TO_GET_TO_LOW_GOAL_FEET);
 					drive.waitMove();
-					shooter.raise(shooter.DOWN);
+					shooter.raise(Shooter.DOWN);
 					shooter.shoot();
 				}
 				state++;
