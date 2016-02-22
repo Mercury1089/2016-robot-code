@@ -38,6 +38,8 @@ public class Robot extends IterativeRobot {
 	private DriverStation driverStation;
 	private Config config;
 
+	public static boolean isShooting = false; 
+	
 	@Override
 	public void robotInit() {
 		config = Config.getCurrent();
@@ -149,10 +151,27 @@ public class Robot extends IterativeRobot {
 		// Camera Turn
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
 			// drive.encoderAngleRotate(360);
-			drive.degreeRotateVoltage(camera.getTurnAngle());
+			intake.lower(false);
+			if (camera.isInDistance() && camera.isInLineWithGoal()) {
+				shooter.raiseShootingHeight(camera);
+				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
+				isShooting = true;
+				drive.degreeRotateVoltage(camera.getTurnAngle());
+			}
 		}
 
-		drive.checkDegreeRotateVoltage();
+		if (!drive.checkDegreeRotateVoltage() && isShooting) {
+			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+			camera.getNTInfo();
+			if (camera.isInTurnAngle()) { // assumes NT info is up to date
+				// coming out of rotation routine
+				shooter.shoot();
+				isShooting = false;
+			}
+			else{
+				drive.degreeRotateVoltage(camera.getTurnAngle());
+			}
+		}
 
 		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move

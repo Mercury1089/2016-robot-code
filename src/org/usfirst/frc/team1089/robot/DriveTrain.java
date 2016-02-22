@@ -435,8 +435,8 @@ public class DriveTrain {
 			double dmin = 5.0;
 			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
-			/*// speed sign same as desired angle
-			double vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, kp*(Math.abs(error));
+			// speed sign same as desired angle
+			/*double vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, kp*(Math.abs(error))));
 			vout = Math.pow(vout, 1.0/3);*/
 			double vout = 0;
 			

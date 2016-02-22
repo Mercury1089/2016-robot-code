@@ -16,6 +16,7 @@ public class Shooter {
 	
 	public final int DOWN = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
 	private static final long SHOOTER_RELEASE_DELAY_MS = 500;
+	public static final double RAISE_SHOOTER_CATCHUP_DELAY_SECS = .500;
 	//private static final double CLOSE_SHOT_FEET = 6;
 	public int position = HIGH;
 	
