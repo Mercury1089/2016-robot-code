@@ -102,7 +102,9 @@ public class Robot extends IterativeRobot {
 
 		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
-		}
+		SmartDashboard.putNumber("Speed Rotate Method", 0.25);
+	}
+		
 
 	@Override
 	public void autonomousInit() {
@@ -195,7 +197,7 @@ public class Robot extends IterativeRobot {
 			drive.speedRotate(SmartDashboard.getNumber("Speed Rotate Method"));
 		}
 		else if (ControllerBase.getReleasedUp(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)){
-			drive.speedRotate(0);
+			drive.stop();
 		}
 
 		drive.checkMove();
