@@ -496,7 +496,7 @@ public class DriveTrain {
 			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
 			double vmax = Math.pow(0.77, 1.0/BOOST); // 0.75	
 			double vmin = Math.pow(0.37, 1.0/BOOST); // 0.35
-			double dmax = 45.0; // 25.0; // 20.0;
+			double dmax = 45.0; // 25.0; // 20.0; // TODO ALSO TRY 60.0
 			double dmin = 0.0; // 5.0;
 			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
