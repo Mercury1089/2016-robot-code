@@ -347,6 +347,7 @@ public class DriveTrain {
 			s *= -1; // speed sign same as desired angle
 		}
 		
+		// we probably would want to take sign into account here
 		/*speedRotate(0.65 + (.05 * c));
 		Timer.delay(.020);*/
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
@@ -533,6 +534,85 @@ public class DriveTrain {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * public void degreeRotateVoltageNew(double heading)
+	 * </pre>
+	 * 
+	 * Turns the base based to the specified heading
+	 * <p>
+	 * This is an asynchronous operation. Use waitDegreeRotateVoltageNew() to wait
+	 * for completion.
+	 * </p>
+	 * 
+	 * @param heading
+	 *            the heading in degree
+	 */
+	public void degreeRotateVoltageNew(double heading) {				
+		isDegreeRotating = true; // we flag that we are rotating asynchronously
+		gyro.reset(); // we start at zero since heading is relative to where we
+						// are
+						// (but we could also save the start angle and subtract
+						// in check method)
+		_heading = heading; // we save where we want to go
+		
+		//insert initial kick here if needed
+	}	
+	
+	/**
+	 * <pre>
+	 * public boolean checkDegreeRotateVoltageNew()
+	 * </pre>
+	 * 
+	 * Checks to see if the robot is rotating.
+	 * 
+	 * @return true if the robot is rotating, false
+	 *         if otherwise.
+	 */
+	public boolean checkDegreeRotateVoltageNew() {
+		if (isDegreeRotating) { // only if we have been told to rotate
+			double deg = _heading - gyro.getAngle();
+			double s = 0;
+			
+			if (deg > 0) {
+				s = AUTOROTATE_SPEED; // speed sign same as desired angle
+			} else {
+				s = -AUTOROTATE_SPEED; // speed sign same as desired angle
+			}
+			
+			if ((Math.abs(gyro.getAngle()) < Math.abs(_heading) - TIER_1_DEGREES_FROM_TARGET)) {
+				speedRotate(s);
+			}
+			else if ((Math.abs(gyro.getAngle()) < Math.abs(_heading) - TIER_2_DEGREES_FROM_TARGET)) {
+				speedRotate(s / 1.75);
+			}
+			else if ((Math.abs(gyro.getAngle()) < Math.abs(_heading) - TIER_3_DEGREES_FROM_TARGET)) {
+				speedRotate(s / 1.90);
+			}
+			else if ((Math.abs(gyro.getAngle()) < Math.abs(_heading) - TIER_4_DEGREES_FROM_TARGET)) {
+				speedRotate(s / 2.0);
+			}
+			else {
+				isDegreeRotating = false; // we take the flag down
+				stop(); // we stop the motors			
+			} 			
+		}
+		return isDegreeRotating;
+	}
+
+	/**
+	 * <pre>
+	 * public void waitDegreeRotateVoltageNew()
+	 * </pre>
+	 * 
+	 * Hangs the process until the robot is not rotating.
+	 */
+	public void waitDegreeRotateVoltageNew() {
+		while (checkDegreeRotateVoltageNew()) {
+			// do nothing
+		}
+	}
+	
 	// like turnDistance, but input is in degrees
 	public void encoderAngleRotate(double rotDegrees) {
 		turnDistance(arcLength(rotDegrees));
