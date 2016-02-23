@@ -25,19 +25,19 @@ public class Logger {
 		SHOOTING_DATA("SHOOT"),
 		BUTTON_PRESSED("BUTTON");
 
-		private final String text;
+		private final String name;
 		private LoggerType(String n) {
             name=n;
 		}
 
-		public toString() {
+		public String toString() {
             return name;
 		}
 	}
 
 	static {
 		try {
-			formatter = new Formatter("C:\\Users\\Mercury 1089\\Documents\\LOGGERPRO.txt"); //Location of the file
+			formatter = new Formatter("/home/lvuser/log/" + new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss")+".log"); //Location of the file 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -75,7 +75,7 @@ public class Logger {
                 getFormatter().format(buttonTemplate, DriverStation.getInstance().getMatchTime(), lE.toString(), o);
                 break;
             }
-        } catch(MissingFormatArgumentException) {
+        } catch(MissingFormatArgumentException exception) {
             getFormatter().format("%4.1d\tERROR/%s\tArgument list too short", DriverStation.getInstance().getMatchTime(), lE.toString());
         }
 	}
