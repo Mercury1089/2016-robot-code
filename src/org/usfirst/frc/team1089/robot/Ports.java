@@ -50,8 +50,6 @@ public class Ports {
 
 	/**
 	 * The {@code PCM} subclass contains all the ports for anything connected to the pneumatics control module (PCM).
-	 * @author 2lyNJ
-	 *
 	 */
 	public static class PCM {
 		public static final int SHOOTER = 0;

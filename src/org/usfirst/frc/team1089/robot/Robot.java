@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 
 	private int shootingAttemptCounter = 0;
 	private boolean isShooting = false; 
-	private static final int MAX_SHOOTING_ATTEMPT = 1;
+	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
 	@Override
 	public void robotInit() {
@@ -192,7 +192,7 @@ public class Robot extends IterativeRobot {
 		if (gamepad.getRawButton(ControllerBase.GamepadButtons.START)) {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move
 			// drive.encoderAngleRotate(camera.getTurnAngle());
-			drive.speedRotate(SmartDashboard.getNumber("Speed Rotate Method"));
+			drive.speedRotate(0.35);
 		} else if (cBase.getReleasedUp(ControllerBase.Joysticks.GAMEPAD,
 				ControllerBase.GamepadButtons.START)) {
 			drive.stop();
@@ -232,7 +232,7 @@ public class Robot extends IterativeRobot {
 			intake.lower(false); // up
 		}
 
-		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN5)) {
+		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
 			intake.moveBall(-1.0); // pull ball in
 			intake.lower(true); // down
 		}

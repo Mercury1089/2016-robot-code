@@ -13,8 +13,9 @@ public class Logger {
 
 	private static Formatter formatter; //Formatter object, used to write data onto a text file
 	
-	private static String shooterTemplate = DriverStation.getInstance().getMatchTime() + "%d\t"; //Time during match when the data was collected
-	private static String buttonTemplate = DriverStation.getInstance().getMatchTime()  + "%d\t";
+	private static String 
+		shooterTemplate = DriverStation.getInstance().getMatchTime() + "%d\t", //Time during match when the data was collected
+		buttonTemplate = DriverStation.getInstance().getMatchTime()  + "%d\t";
 
 	/**
 	 * The {@code LoggerType} is an enum for the possible kinds of data that will be collected.
@@ -23,12 +24,11 @@ public class Logger {
 	public enum LoggerType {
 		SHOOTING_DATA,
 		BUTTON_PRESSED;
-	}
-	
+	}	
 	
 	static {
 		try {
-			formatter = new Formatter("/home/lvuser/log/" + new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss")+".log"); //Location of the file
+			formatter = new Formatter("C:\\Users\\Mercury 1089\\Documents\\LOGGERPRO.txt"); //Location of the file
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

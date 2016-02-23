@@ -3,6 +3,8 @@ package org.usfirst.frc.team1089.robot;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.usfirst.frc.team1089.robot.Logger.LoggerType;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -96,6 +98,7 @@ public class Shooter {
 		shooter.set(true);
 		Timer timer = new Timer();
 		timer.schedule(new ShooterReleaseTask(shooter), SHOOTER_RELEASE_DELAY_MS);
+		//Logger.debug(LoggerType.SHOOTING_DATA, "SHOT!");
 	}
 
 	/**

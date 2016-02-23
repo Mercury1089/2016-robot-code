@@ -30,7 +30,7 @@ public class DriveTrain {
 	private double _heading = 0.0; // heading when rotating
 
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
-	private static final double TIER_2_DEGREES_FROM_TARGET = 12;
+	private static final double TIER_2_DEGREES_FROM_TARGET = 15;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
 	private static final double TIER_4_DEGREES_FROM_TARGET = 1;
 	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.0;
@@ -268,6 +268,7 @@ public class DriveTrain {
 	 *            speed value to rotate; positive values are clockwise, negative
 	 *            values are counterclockwise
 	 */
+
 	public void speedRotate(double s) {
 		if (isMoving) {
 			setToManual();
@@ -276,6 +277,19 @@ public class DriveTrain {
 		rightFrontTalon.set(s);
 	}
 
+	public void speedRotateNew(double s) {
+		if (isMoving) {
+			setToManual();
+		}
+		
+		if (s > 0) {
+			leftFrontTalon.set(s);
+		}
+		else {
+			rightFrontTalon.set(s);
+		}
+	}
+	
 	/**
 	 * <pre>
 	 * public void stop()
@@ -289,7 +303,9 @@ public class DriveTrain {
 		leftFrontTalon.set(0);
 		rightFrontTalon.set(0);
 	}
-
+	public void degreeRotate(double deg, double s) {
+		degreeRotate(deg,s,1);
+	}
 	/**
 	 * <pre>
 	 * public void degreeRotate(double deg, 
@@ -303,28 +319,35 @@ public class DriveTrain {
 	 * @param s
 	 *            speed to rotate at
 	 */
-	public void degreeRotate(double deg, double s) {
+	public void degreeRotate(double deg, double s, int c) {
 		double startAngle = gyro.getAngle();
 		double startTime = System.currentTimeMillis();
 		//isMoving = true;
 		if (deg < 0) {
 			s *= -1; // speed sign same as desired angle
 		}
+		
+		speedRotate(0.65 + (.05 * c));
+		Timer.delay(.040);
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s);
+			//speedRotate(s);
+			speedRotate(Math.signum(deg) * 0.65);
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_2_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 1.75);
+			//speedRotate(s / 1.75);
+			speedRotate(Math.signum(deg) * 0.5);
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_3_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 1.90);
+			//speedRotate(s / 1.90);
+			speedRotate(Math.signum(deg) * 0.35);
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_4_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 2.0);
+			//speedRotate(s / 2.0);
+			speedRotate(Math.signum(deg) * 0.25);
 		}
 		stop();
 		//isMoving = false;
@@ -345,7 +368,7 @@ public class DriveTrain {
 		do {
 			c.getNTInfo();
 			deg = c.getTurnAngle();
-			degreeRotate(deg, AUTOROTATE_SPEED);
+			degreeRotate(deg, AUTOROTATE_SPEED, autoRotCounter);
 			Timer.delay(AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			autoRotCounter++;
 		} while ((Math.abs(deg) > AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES)
@@ -449,11 +472,11 @@ public class DriveTrain {
 	 */
 	public boolean checkDegreeRotateVoltage() {
 		if (isDegreeRotating) { // only if we have been told to rotate
-			final double BOOST = 3.0; //change to 1 for linear, 3 for cubic
+			final double BOOST = 1.0; //change to 1 for linear, 3 for cubic
 			double vmax = Math.pow(0.75, 1.0/BOOST);		
 			double vmin = Math.pow(0.35, 1.0/BOOST);
-			double dmax = 20.0;
-			double dmin = 5.0;
+			double dmax = 25.0;
+			double dmin = 0.0;
 			double error = _heading - gyro.getAngle();
 			double kp = (vmax - vmin) / (dmax - dmin);
 			// speed sign same as desired angle
