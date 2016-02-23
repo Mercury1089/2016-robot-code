@@ -169,16 +169,15 @@ public class Robot extends IterativeRobot {
 				shooter.raiseShootingHeight(camera);
 				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
 				isShooting = true;
-				drive.degreeRotateVoltage(camera.getTurnAngle());
+				drive.degreeRotateVoltageNew(camera.getTurnAngle()); // TODO COMPARE NEW TO OLD
 			}
 		}
 
-		if (!drive.checkDegreeRotateVoltage() && isShooting) {		
+		if (!drive.checkDegreeRotateVoltageNew() && isShooting) { // TODO COMPARE NEW TO OLD		
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
 			
-			if (camera.isInTurnAngle()) { // assumes NT info is up to date
-				// coming out of rotation routine
+			if (camera.isInTurnAngle()) {
 				isShooting = false;
 				shooter.shoot();
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
