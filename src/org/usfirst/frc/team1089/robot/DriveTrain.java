@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * The {@code DriveTrain} class handles movement with the drive base of the
@@ -614,9 +616,10 @@ public class DriveTrain {
 		}
 	}
 
-	private PIDController rotater = PIDController(0.02, 0.001, 0, gyro, leftFrontTalon);
+	private PIDController rotater = null;//PIDController(0.02, 0.001, 0, gyro, leftFrontTalon); WRONG GYRO
+	
 	public void degreeRotatePID(double heading) {
-        gyro.setPidSourceType(PIDSourceType.kDisplacement);
+        //gyro.setPidSourceType(PIDSourceType.kDisplacement); WRONG GYRO - Gyro.java is currently unused
         leftFrontTalon.setPIDSourceType(PIDSourceType.kDisplacement);
         rotater.setAbsoluteTolerance(config.IN_LINE_MIN);
         rotater.enable();
