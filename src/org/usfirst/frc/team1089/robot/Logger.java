@@ -12,40 +12,49 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Logger {
 
 	private static Formatter formatter; //Formatter object, used to write data onto a text file
-	
-	private static String 
-		shooterTemplate = DriverStation.getInstance().getMatchTime() + "%d\t", //Time during match when the data was collected
-		buttonTemplate = DriverStation.getInstance().getMatchTime()  + "%d\t";
+
+	private static String
+		shooterTemplate = "%4.1d\t%s", //Time during match when the data was collected
+		buttonTemplate = "%4.1d\t%s";
 
 	/**
 	 * The {@code LoggerType} is an enum for the possible kinds of data that will be collected.
 	 */
 
 	public enum LoggerType {
-		SHOOTING_DATA,
-		BUTTON_PRESSED;
-	}	
-	
+		SHOOTING_DATA("SHOOT"),
+		BUTTON_PRESSED("BUTTON");
+
+		private final String text;
+		private LoggerType(String n) {
+            name=n;
+		}
+
+		public toString() {
+            return name;
+		}
+	}
+
 	static {
 		try {
 			formatter = new Formatter("C:\\Users\\Mercury 1089\\Documents\\LOGGERPRO.txt"); //Location of the file
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		formatter.format("Shooter Information: Horizontal Distance\t Width:Height\t Angle To Turn\t Z-Axis \tButton Pressed: Gamepad\t Joystick");
 				//Headers of the columns for the data
 	}
 
 	/**
 	 * Returns reference to formatter of logger instance
-	 * 
+	 *
 	 * @return formatter
 	 */
 	private static Formatter getFormatter() {
 		return formatter;
 	}
-	
+
 	/**
 	 * <pre>
 	 * public synchronized static void Logger debug()
@@ -56,14 +65,18 @@ public class Logger {
 	 * @param o
 	 * 				the {@code Object} creates an Object[] for the data that comes in
 	 */
-	public synchronized static void debug(LoggerType lE, Object... o) {		
-		switch(lE) {
-		case SHOOTING_DATA:
-			getFormatter().format(shooterTemplate, o);
-			break;
-		case BUTTON_PRESSED:
-			getFormatter().format(buttonTemplate,  o);
-			break;
-		}
+	public synchronized static void debug(LoggerType lE, Object... o) {
+        try {
+            switch(lE) {
+            case SHOOTING_DATA:
+                getFormatter().format(shooterTemplate, DriverStation.getInstance().getMatchTime(), lE.toString(), o);
+                break;
+            case BUTTON_PRESSED:
+                getFormatter().format(buttonTemplate, DriverStation.getInstance().getMatchTime(), lE.toString(), o);
+                break;
+            }
+        } catch(MissingFormatArgumentException) {
+            getFormatter().format("%4.1d\tERROR/%s\tArgument list too short", DriverStation.getInstance().getMatchTime(), lE.toString());
+        }
 	}
 }
