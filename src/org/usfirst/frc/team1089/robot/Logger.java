@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -18,6 +19,14 @@ public class Logger {
 	private static PrintWriter writer;
 	private static DriverStation ds;
 	
+	private static final Calendar CALENDAR;
+	private static final SimpleDateFormat DAY;
+	
+	static {
+		CALENDAR = Calendar.getInstance();
+		DAY = new SimpleDateFormat("yyyy-MM-dd_HH,mm,ss");
+	}
+	
 	/**
 	 * <pre>
 	 * public static void init(String location)
@@ -29,15 +38,9 @@ public class Logger {
 	public static void init(String location) {
 		if (log == null) {
 			try {
-				int iteration = 1;
-				location += "log_" + new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+				location += "log_" + DAY.format(CALENDAR.getTime());
 				
 				log = new File(location + ".txt");
-				
-				while(log.exists()) {
-					log = new File(location + iteration + ".txt");
-					iteration++;
-				}
 				
 				log.createNewFile();
 				
@@ -51,14 +54,17 @@ public class Logger {
 	
 	/**
 	 * <pre>
-	 * public static synchronized void log(String input)
+	 * public static synchronized void log(Object... input)
 	 * </pre>
-	 * Logs the specified input into the log file, and timestamps it with the current time of the match.
+	 * Logs the specified input into the log file, separating elements by tabs, and timestamps it with the current time of the match.
 	 * @param input the text to put into the log.
 	 */
-	public static synchronized void log(String input){
+	public static synchronized void log(Object... input){
 		try {
-			writer.println("[" + ds.getMatchTime() + "]: " + input);
+			String out = "";
+			for (Object o : input)
+				out += o.toString() + '\t';
+			writer.println("[" + ds.getMatchTime() + "]: " + out);
 		} catch (Exception e) { }
 	}
 	
