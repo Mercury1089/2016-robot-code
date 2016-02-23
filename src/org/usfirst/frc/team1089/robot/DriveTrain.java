@@ -157,6 +157,8 @@ public class DriveTrain {
 		rightFrontTalon.set(endPosR);
 	}
 	
+	// this is a custom version of moveDistance for Auton
+	// moveDistance could probably just call this method 
 	public void moveDistanceAuton(double changePos, double p, double i, double d) {
 		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = leftFrontTalon.getEncPosition();
@@ -277,6 +279,7 @@ public class DriveTrain {
 		rightFrontTalon.set(s);
 	}
 
+	// rotates the robot a the specified speed around an undetermined center of rotation
 	public void speedRotateNew(double s) {
 		if (isMoving) {
 			setToManual();
@@ -303,9 +306,7 @@ public class DriveTrain {
 		leftFrontTalon.set(0);
 		rightFrontTalon.set(0);
 	}
-	public void degreeRotate(double deg, double s) {
-		degreeRotate(deg,s,1);
-	}
+	
 	/**
 	 * <pre>
 	 * public void degreeRotate(double deg, 
@@ -318,6 +319,25 @@ public class DriveTrain {
 	 *            amount of degrees to rotate
 	 * @param s
 	 *            speed to rotate at
+	 */
+	public void degreeRotate(double deg, double s) {
+		degreeRotate(deg,s,1);
+	}
+	
+	/**
+	 * <pre>
+	 * public void degreeRotate(double deg, 
+	 *                          double s)
+	 * </pre>
+	 * 
+	 * Rotates the robot to a specified amount of degrees at a certain speed.
+	 * 
+	 * @param deg
+	 *            amount of degrees to rotate
+	 * @param s
+	 *            speed to rotate at
+	 * @param c
+	 *            a custom counter
 	 */
 	public void degreeRotate(double deg, double s, int c) {
 		double startAngle = gyro.getAngle();
@@ -513,6 +533,7 @@ public class DriveTrain {
 		}
 	}
 
+	// like turnDistance, but input is in degrees
 	public void encoderAngleRotate(double rotDegrees) {
 		turnDistance(arcLength(rotDegrees));
 	}
