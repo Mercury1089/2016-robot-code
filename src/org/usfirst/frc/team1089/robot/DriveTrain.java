@@ -327,8 +327,8 @@ public class DriveTrain {
 			s *= -1; // speed sign same as desired angle
 		}
 		
-		speedRotate(0.65 + (.05 * c));
-		Timer.delay(.040);
+		/*speedRotate(0.65 + (.05 * c));
+		Timer.delay(.020);*/
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 			//speedRotate(s);
@@ -337,17 +337,17 @@ public class DriveTrain {
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_2_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 			//speedRotate(s / 1.75);
-			speedRotate(Math.signum(deg) * 0.5);
+			speedRotate(Math.signum(deg) * 0.55);
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_3_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 			//speedRotate(s / 1.90);
-			speedRotate(Math.signum(deg) * 0.35);
+			speedRotate(Math.signum(deg) * 0.4);
 		}
 		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_4_DEGREES_FROM_TARGET)
 				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
 			//speedRotate(s / 2.0);
-			speedRotate(Math.signum(deg) * 0.25);
+			speedRotate(Math.signum(deg) * 0.35);
 		}
 		stop();
 		//isMoving = false;
