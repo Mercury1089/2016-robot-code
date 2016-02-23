@@ -42,6 +42,7 @@ public class Logger {
 				
 				log = new File(location + ".txt");
 				
+				log.getParentFile().mkdirs();
 				log.createNewFile();
 				
 				out = new FileWriter(log.getAbsolutePath());
