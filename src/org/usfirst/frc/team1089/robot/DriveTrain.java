@@ -613,7 +613,8 @@ public class DriveTrain {
 			// do nothing
 		}
 	}
-
+/*
+ *  This caused the robot code to die....
 	private PIDController rotater = new PIDController(0.02, 0.001, 0, gyro, leftFrontTalon);
 	
 	public void degreeRotatePID(double heading) {
@@ -628,7 +629,7 @@ public class DriveTrain {
             rotater.disable();
         }
     }
-
+*/
 	// like turnDistance, but input is in degrees
 	public void encoderAngleRotate(double rotDegrees) {
 		turnDistance(arcLength(rotDegrees));
