@@ -614,10 +614,10 @@ public class DriveTrain {
 		}
 	}
 
-	private PIDController rotater = null;//PIDController(0.02, 0.001, 0, gyro, leftFrontTalon); WRONG GYRO
+	private PIDController rotater = new PIDController(0.02, 0.001, 0, gyro, leftFrontTalon);
 	
 	public void degreeRotatePID(double heading) {
-        //gyro.setPidSourceType(PIDSourceType.kDisplacement); WRONG GYRO - Gyro.java is currently unused
+        gyro.setPIDSourceType(PIDSourceType.kDisplacement);
         leftFrontTalon.setPIDSourceType(PIDSourceType.kDisplacement);
         rotater.setAbsoluteTolerance(config.IN_LINE_MIN);
         rotater.enable();
