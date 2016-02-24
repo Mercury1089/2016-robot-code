@@ -169,11 +169,11 @@ public class Robot extends IterativeRobot {
 				shooter.raiseShootingHeight(camera);
 				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
 				isShooting = true;
-				drive.degreeRotateVoltageNew(camera.getTurnAngle()); // TODO COMPARE NEW TO OLD
+				drive.degreeRotateVoltage/*New*/(camera.getTurnAngle()); // TODO COMPARE NEW TO OLD
 			}
 		}
 
-		if (!drive.checkDegreeRotateVoltageNew() && isShooting) { // TODO COMPARE NEW TO OLD		
+		if (!drive.checkDegreeRotateVoltage/*New*/() && isShooting) { // TODO COMPARE NEW TO OLD		
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
 			

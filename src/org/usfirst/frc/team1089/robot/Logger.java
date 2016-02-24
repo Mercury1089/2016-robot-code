@@ -29,13 +29,13 @@ public class Logger {
 	
 	/**
 	 * <pre>
-	 * public static void init(String location)
+	 * public synchronized static void init(String location)
 	 * </pre>
 	 * Initializes the current {@code Logger} with the file at the specified location.
 	 * @param location the location to store the log file. Note that it is only the path;
 	 *        the filename itself is handled inside the method.
 	 */
-	public static void init(String location) {
+	public synchronized static void init(String location) {
 		if (log == null) {
 			try {
 				location += "log_" + DAY.format(CALENDAR.getTime());

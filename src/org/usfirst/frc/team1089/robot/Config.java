@@ -25,6 +25,8 @@ public class Config {
 	public final double GEAR_RATIO;
 	
 	public final double TILT_THRESH_DEGREES;
+	
+	public final String LOG_PATH;
 
 	/**
 	 * The {@code ConfigType} is an enum for two possible uses of the code:
@@ -74,7 +76,9 @@ public class Config {
 			WHEEL_SIZE_INCHES = 4.0;
 			GEAR_RATIO = 1.0;
 			
-			TILT_THRESH_DEGREES = 15.0;			
+			TILT_THRESH_DEGREES = 15.0;	
+			
+			LOG_PATH = "logs\\";
 			break;
 			
 		default: // COMPETITION
@@ -89,8 +93,8 @@ public class Config {
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
 			IN_LINE_MIN = 1.2;
-			HORIZ_DIST_MIN_FEET = 7.5;
-			HORIZ_DIST_MAX_FEET = 10.5;
+			HORIZ_DIST_MIN_FEET = 7.0;
+			HORIZ_DIST_MAX_FEET = 14.0;
 			HORIZ_CLOSE_DIST_MIN_FEET = 4.0;
 			HORIZ_CLOSE_DIST_MAX_FEET = 5.5;
 			
@@ -103,6 +107,8 @@ public class Config {
 			GEAR_RATIO = 4.0 / 3.0; // defined as speed in / speed out
 			
 			TILT_THRESH_DEGREES = 15.0;
+			
+			LOG_PATH = "home\\lvuser\\log\\";
 			break;
 		}
 	}
