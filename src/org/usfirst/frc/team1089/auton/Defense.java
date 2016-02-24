@@ -8,7 +8,7 @@ public class Defense{
 	private DriveTrain drive;
 	private Shooter shooter;
 	
-	private static final int MOVE_DISTANCE_FEET = 7, 
+	private static final int MOVE_DISTANCE_FEET = 17, 
 					  APPROACH_CHEVAL_DE_FRISE_DISTANCE_FEET = 3, REMAINING_CHEVAL_DE_FRISE_DISTANCE_FEET = 4;
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
@@ -26,7 +26,7 @@ public class Defense{
 			case ROUGH_TERRAIN:
 			case RAMPARTS:
 			case ROCK_WALL: {
-				drive.moveDistanceAuton(MOVE_DISTANCE_FEET, 0.4, 0.0005, -0.001); //TODO test and change these values
+				drive.moveDistanceAuton(MOVE_DISTANCE_FEET, 0.4, 0, 0, 4.5); //TODO test and change these values
 				drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
 				break;
 			}
@@ -34,7 +34,7 @@ public class Defense{
 				drive.moveDistance(APPROACH_CHEVAL_DE_FRISE_DISTANCE_FEET);
 				drive.waitMove();
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistanceAuton(REMAINING_CHEVAL_DE_FRISE_DISTANCE_FEET, 0.4, 0.0005, -0.001); //TODO test and change these values
+				drive.moveDistanceAuton(REMAINING_CHEVAL_DE_FRISE_DISTANCE_FEET, 0.4, 0, 0, 4.5); //TODO test and change these values
 				drive.waitMove();
 			}
 			default:

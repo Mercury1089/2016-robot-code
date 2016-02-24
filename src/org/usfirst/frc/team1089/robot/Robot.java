@@ -99,7 +99,7 @@ public class Robot extends IterativeRobot {
 		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		auton = new StrongholdAuton(drive, camera, shooter, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
+		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
 		
 		SmartDashboard.putNumber("Speed Rotate Method", 0.25);
@@ -108,12 +108,13 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-
+		gyro.reset();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
 		auton.move();
+		debug();
 	}
 
 	@Override
@@ -269,6 +270,7 @@ public class Robot extends IterativeRobot {
 
 	}
 
+	@Deprecated
 	public void shootProcedure() {
 		intake.lower(false);
 
@@ -283,7 +285,41 @@ public class Robot extends IterativeRobot {
 			}
 		}
 	}
+	
+	public void aimProc() {
+		intake.lower(false);
 
+		if (camera.isInDistance() && camera.isInLineWithGoal()) {
+			shooter.raiseShootingHeight(camera);
+			Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for
+																	// shooter
+																	// to get in
+																	// position
+			isShooting = true;
+			drive.degreeRotateVoltage(camera.getTurnAngle()); // TODO COMPARE
+																// NEW TO OLD
+		}
+	}
+	public void shootProc() {
+		if (!drive.checkDegreeRotateVoltage() && isShooting) { // TODO COMPARE
+																// NEW TO OLD
+			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+			camera.getNTInfo();
+
+			if (camera.isInTurnAngle()) {
+				isShooting = false;
+				shooter.shoot();
+			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
+				drive.degreeRotateVoltage(camera.getTurnAngle());
+				shootingAttemptCounter++;
+			} else {
+				isShooting = false;
+			}
+		}
+	}
+	public boolean getIsShooting() {
+		return isShooting;
+	}
 	public boolean button(Joysticks contNum, int buttonNum) {
 		return cBase.getPressedDown(contNum, buttonNum);
 	}

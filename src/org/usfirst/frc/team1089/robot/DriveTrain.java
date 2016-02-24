@@ -41,7 +41,7 @@ public class DriveTrain {
 	public static final double AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS = 0.500;
 	private static final double TURN_TIMEOUT_MILLIS = 4000;
 	private static final double DEADZONE_LIMIT = 0.3;
-	private static final double MOVE_THRESH_TICKS = 100;
+	private static final double MOVE_THRESH_TICKS = 500;
 	private static final double TURN_THRESH_VELOCITY = 10;
 
 	private int autoRotCounter = 0;
@@ -161,7 +161,7 @@ public class DriveTrain {
 
 	// this is a custom version of moveDistance for Auton
 	// moveDistance could probably just call this method
-	public void moveDistanceAuton(double changePos, double p, double i, double d) {
+	public void moveDistanceAuton(double changePos, double p, double i, double d, double maxV) {
 		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = leftFrontTalon.getEncPosition();
 		startPosR = rightFrontTalon.getEncPosition();
@@ -169,9 +169,9 @@ public class DriveTrain {
 		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
 		leftFrontTalon.setPID(p, i, d);
 		rightFrontTalon.setPID(p, i, d);
-		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		leftFrontTalon.configPeakOutputVoltage(maxV, -maxV);
 		leftFrontTalon.configNominalOutputVoltage(0, 0);
-		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
+		rightFrontTalon.configPeakOutputVoltage(maxV, -maxV);
 		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
 		setToAuto();
 		leftFrontTalon.enableControl();

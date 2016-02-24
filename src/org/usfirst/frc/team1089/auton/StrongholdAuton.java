@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.auton;
 
 import org.usfirst.frc.team1089.robot.Camera;
 import org.usfirst.frc.team1089.robot.DriveTrain;
+import org.usfirst.frc.team1089.robot.Intake;
 import org.usfirst.frc.team1089.robot.MercAccelerometer;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.Shooter;
@@ -15,7 +16,7 @@ import edu.wpi.first.wpilibj.Timer;
  * and shooting in the high/low goal during auton
  */
 public class StrongholdAuton {
-	private static final int BREACH = 0, CENTER = 1, MOVE = 2, ROTATE = 3, SHOOT = 4, DONE = 5;
+	private static final int START = 0, BREACH = 1, CENTER = 2, ROTATE1 = 3, CALCULATE = 4, MOVE = 5, ROTATE2 = 6, AIM = 7, SHOOT = 8, DONE = 9;
 	private static final double TURN_SPEED = 0.5, DISTANCE_TO_HIGH_GOAL_FEET = 9.0, LENGTH_OF_BATTER_FEET = 4.0, 
 								DISTANCE_TO_GET_TO_LOW_GOAL_FEET = DISTANCE_TO_HIGH_GOAL_FEET - LENGTH_OF_BATTER_FEET, 
 								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 10.0, 
@@ -30,6 +31,7 @@ public class StrongholdAuton {
 	private AnalogGyro gyro;
 	protected DriveTrain drive;
 	private Robot robot;
+	private Intake intake;
 
 	/**
 	 * <pre>
@@ -57,18 +59,18 @@ public class StrongholdAuton {
 	 * @param r
 	 *            the robot            
 	 */
-	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, AnalogGyro g, int p,
+	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, Intake i, AnalogGyro g, int p,
 							AimEnum a, DefenseEnum dE, MercAccelerometer ac, Robot r) {
 		drive = d;
 		camera = c;
 		pos = p;
-		defense = new Defense(drive, shooter, dE);
 		aim = a ;
 		shooter = s;
 		gyro = g;
 		accel = ac;
 		robot = r;
-		
+		intake = i;
+		defense = new Defense(drive, shooter, dE);
 	}
 
 	/**
@@ -81,15 +83,15 @@ public class StrongholdAuton {
 	 */
 	public void move() {
 		switch (state) {
-			case BREACH: {//Breaching Phase
-
+			case START: {
 				shooter.raise(Shooter.MEDIUM);
+				intake.lower(true);
+				state++;
+			}
+			case BREACH: {//Breaching Phase
 				if (breachAttempts == 0) {
 					defense.breach();
 					breachAttempts++; //Breach only once
-				}
-				else if (breachAttempts == 1) {
-					state = DONE;
 				}
 				if (accel.isFlat()) {
 					shooter.raise(Shooter.MEDIUM);
@@ -99,36 +101,52 @@ public class StrongholdAuton {
 				break;
 			}
 			case CENTER: {//Center with goal
-				if (aim == AimEnum.NONE) {
+				/*if (aim == AimEnum.NONE) {
 					state = DONE;
 				}
 				else {
-					drive.degreeRotate(-gyro.getAngle(), TURN_SPEED); // Assume gyro has been reset to zero before breaching
-					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-					camera.getNTInfo();
-					//If the distance from goal is unrealistic, then abort
-					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-						state = DONE;
+					drive.degreeRotateVoltage(-gyro.getAngle()); // Assume gyro has been reset to zero before breaching
+					drive.waitDegreeRotateVoltage();
+					state++;
+				}*/
+				state++;
+				break;
+			}
+			case ROTATE1: {
+				drive.degreeRotateVoltage(35);// will need to eventually take position into account
+				drive.waitDegreeRotateVoltage();
+				intake.lower(false);
+				state++;
+				break;
+			}
+			case CALCULATE: {
+				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+				camera.getNTInfo();
+				//If the distance from goal is unrealistic, then abort
+				if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+					state = DONE;
+				}
+				else {
+					//Assume we are looking at the correct goal
+					//angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / DISTANCE_TO_HIGH_GOAL_FEET));
+					//supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
+					centeredMoveDistance = camera.getHorizontalDist() - 11;
+							//(DISTANCE_TO_HIGH_GOAL_FEET * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
+					// If distance to center is not unrealistic, continue
+					if (centeredMoveDistance > MIN_CENTER_DISTANCE_FEET && centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+						state++;
 					}
 					else {
-						//Assume we are looking at the correct goal
-						angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / DISTANCE_TO_HIGH_GOAL_FEET));
-						supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
-						centeredMoveDistance = (DISTANCE_TO_HIGH_GOAL_FEET * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
-						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance > MIN_CENTER_DISTANCE_FEET && centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
-							state++;
-						}
-						else {
-							state = DONE;
-						}
+						state = DONE;
 					}
 				}
 				break;
 			}
 			case MOVE: {//Move so that distance from goal is 9 feet
-				drive.moveDistance(centeredMoveDistance);
+				drive.moveDistanceAuton(centeredMoveDistance, 0.4, 0, 0, 4.5);
 				drive.waitMove();
+				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+				camera.getNTInfo();
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				drive.waitDegreeRotateVoltage();
 				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
@@ -142,7 +160,7 @@ public class StrongholdAuton {
 				}
 				break;
 			}
-			case ROTATE: {//Rotate again using camera
+			case ROTATE2: {//Rotate again using camera
 				/*// auto-rotate?
 				camera.getNTInfo();
 				if (camera.isInTurnAngle()) {
@@ -154,18 +172,28 @@ public class StrongholdAuton {
 				state++;
 				break;
 			}
+			case AIM: {
+				if (aim == AimEnum.HIGH) {
+					robot.aimProc();
+				}
+				state++;
+				break;
+			}
 			case SHOOT: {//Shoot into high or low goal
 				if (aim == AimEnum.HIGH) {
-					robot.shootProcedure();
+					robot.shootProc();
+					if (!robot.getIsShooting()) {
+						state++;
+					}
 					//shooter.shootProcedure();
 				}
 				else if (aim == AimEnum.LOW) {
-					drive.moveDistance(DISTANCE_TO_GET_TO_LOW_GOAL_FEET);
+					drive.moveDistanceAuton(DISTANCE_TO_GET_TO_LOW_GOAL_FEET, 0.4, 0, 0, 4.5);
 					drive.waitMove();
 					shooter.raise(Shooter.DOWN);
 					shooter.shoot();
+					state++;
 				}
-				state++;
 				break;
 			}
 			case DONE: {
