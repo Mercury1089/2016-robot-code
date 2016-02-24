@@ -129,8 +129,8 @@ public class StrongholdAuton {
 			case MOVE: {//Move so that distance from goal is 9 feet
 				drive.moveDistance(centeredMoveDistance);
 				drive.waitMove();
-				drive.encoderAngleRotate(angleToTurn);//TODO put in the most accurate turning method
-				drive.waitMove();
+				drive.degreeRotateVoltage(camera.getTurnAngle());
+				drive.waitDegreeRotateVoltage();
 				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 				camera.getNTInfo();
 				// check we are within shooting range
