@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 /**
  * The {@code Gyro} class is a {@code PIDSubsystem} containing fields and methods for reading the gyro on the robot.
  */
+@Deprecated
 public class Gyro extends PIDSubsystem {
 
 	/*

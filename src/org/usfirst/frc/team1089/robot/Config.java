@@ -115,13 +115,13 @@ public class Config {
 
 	/**
 	 * <pre>
-	 * public synchronized static void setCurrent(ConfigType configType)
+	 * public synchronized static void init(ConfigType configType)
 	 * </pre>
-	 * Sets the current state of the {@code Config} to the specified type.
+	 * Initializes the current {@code Config} to use the specified settings.
 	 * @param configType the type to set the {@code Config} to.
-	 * @throws IllegalStateException if a different state has already been set
+	 * @throws IllegalStateException if the {@code Config} has already been initialized.
 	 */
-	public synchronized static void setCurrent(ConfigType configType) {
+	public synchronized static void init(ConfigType configType) {
 		if (_current == null) {
 			_current = new Config(configType);
 		} else if (_current._configType != configType) {
@@ -131,20 +131,20 @@ public class Config {
 
 	/**
 	 * <pre>
-	 * public static Config getCurrent()
+	 * public static Config getInstance()
 	 * </pre>
 	 * Gets the current {@code Config} being used by the robot.
 	 * @return the current {@code Config} being used by the robot.
 	 */
-	public static Config getCurrent() {
+	public static Config getInstance() {
 		if (_current == null) {
-			setCurrent(DEFAULT_CONFIG_TYPE);
+			init(DEFAULT_CONFIG_TYPE);
 		}
 		return _current;
 	}
 	
 	public ConfigType getConfigType() {			
-		return getCurrent()._configType;
+		return getInstance()._configType;
 	}
 	
 	public String toString() {

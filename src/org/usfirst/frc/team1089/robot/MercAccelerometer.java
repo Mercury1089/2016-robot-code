@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 
 public class MercAccelerometer {
-	private final Config config = Config.getCurrent();
+	private final Config config = Config.getInstance();
 	private BuiltInAccelerometer accel;
 	
 	public MercAccelerometer(){

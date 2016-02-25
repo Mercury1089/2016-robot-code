@@ -5,7 +5,7 @@ package org.usfirst.frc.team1089.robot;
  */
 public class MercEncoder {
 
-	private final Config config = Config.getCurrent();
+	private final Config config = Config.getInstance();
 
 	public final static double TICKS_PER_ROTATION = 1440;
 	public final double DISTANCE_PER_TICK_INCHES = 

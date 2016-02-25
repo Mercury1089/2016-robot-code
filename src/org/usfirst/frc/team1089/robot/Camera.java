@@ -38,7 +38,7 @@ public class Camera {
 	 */
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
-		config = Config.getCurrent();
+		config = Config.getInstance();
 	}
 
 	/**

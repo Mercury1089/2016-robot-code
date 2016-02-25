@@ -43,11 +43,13 @@ public class ControllerBase {
 			
 		}
 	}
+	
 	/**
 	 * The {@code JoystickButtons} class contains all the button bindings for the
 	 * Joysticks.
 	 */
 	public static class JoystickButtons {
+		// Well this defeats the purpose of constants, doesn't it?
 		public static final int
 			BTN1 = 1,
 			BTN2 = 2,
@@ -60,6 +62,7 @@ public class ControllerBase {
 			BTN9 = 9,
 			BTN10 = 10,
 			BTN11 = 11;
+		
 		/**
 		 * <pre>
 		 * private JoystickButtons()
@@ -67,9 +70,7 @@ public class ControllerBase {
 		 * 
 		 * Unused constructor.
 		 */
-		private JoystickButtons() {
-			
-		}
+		private JoystickButtons() { }
 	}
 	
 	/**
@@ -82,6 +83,18 @@ public class ControllerBase {
 		RIGHT_STICK	// 2
 	}
 	
+	/**
+	 * <pre>
+	 * public ControllerBase(Joystick gamepad,
+	 *                       Joystick leftStick,
+	 *                       Joystick rightStick)
+	 * </pre>
+	 * Constructs a new {@code ControllerBase} with the specified {@code Joysticks}
+	 * for the gamepad, left joystick, and right joystick.
+	 * @param gamepad    the {@code Joystick} to use for the gamepad.
+	 * @param leftStick  the {@code Joystick} to use for the left joystick.
+	 * @param rightStick the {@code Joystick} to use for the right joystick.
+	 */
 	public ControllerBase(Joystick gamepad, Joystick leftStick, Joystick rightStick) {		
 		btn = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
 		btnPrev = new boolean[ControllerBase.MAX_NUMBER_CONTROLLERS][ControllerBase.MAX_NUMBER_BUTTONS];
@@ -91,6 +104,12 @@ public class ControllerBase {
 		joysticks = new Joystick[]{gamepad, leftStick, rightStick};
 	}
 	
+	/**
+	 * <pre>
+	 * public void update()
+	 * </pre>
+	 * Updates the {@code btn} and {@code btnPrev} arrays.
+	 */
 	public void update() {
 		//Dealing with buttons on the different joysticks
 		for (int i = 0; i < ControllerBase.MAX_NUMBER_CONTROLLERS; i++) {
@@ -106,10 +125,33 @@ public class ControllerBase {
 		}
 	}	
 
+	/**
+	 * <pre>
+	 * public boolean getPressedDown(Joysticks contNum, 
+	 *                               int buttonNum)
+	 * </pre>
+	 * Gets whether or not a button from the specified {@code Joystick} is pressed.
+	 * @param contNum the {@code Joystick} to check the button from
+	 * @param buttonNum the index of the button to test
+	 * @return true if the button on the specified {@code Joystick} is pressed,
+	 *         false otherwise
+	 */
 	public boolean getPressedDown(Joysticks contNum, int buttonNum) {
 		return btn[contNum.ordinal()][buttonNum] && !btnPrev[contNum.ordinal()][buttonNum]; 
 	}	
-	public boolean getReleasedUp(Joysticks contNum, int buttonNum){
+	
+	/**
+	 * <pre>
+	 * public boolean getReleased(Joysticks contNum, 
+	 *                               int buttonNum)
+	 * </pre>
+	 * Gets whether or not a button from the specified {@code Joystick} was released.
+	 * @param contNum the {@code Joystick} to check the button from
+	 * @param buttonNum the index of the button to test
+	 * @return true if the button on the specified {@code Joystick} was released,
+	 *         false otherwise
+	 */
+	public boolean getReleased(Joysticks contNum, int buttonNum){
 		return !btn[contNum.ordinal()][buttonNum] && btnPrev[contNum.ordinal()][buttonNum];
 	}
 }

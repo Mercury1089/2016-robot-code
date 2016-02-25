@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
-		config = Config.getCurrent();
+		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
 
 		driverStation = DriverStation.getInstance();
@@ -138,24 +138,24 @@ public class Robot extends IterativeRobot {
 		drive.tankDrive(leftStick, rightStick);
 
 		// Reset gyro with the A button on the gamepad
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
 			gyro.reset();
 		}
 
 		// Gets turnAngle if there is one target
 		// Turn yourself towards the target
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
 			drive.autoRotate(camera);
 			// drive.turnDistance(1);
 		}
 
 		// reset encoders
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
 			leftFront.setEncPosition(0);
 			rightFront.setEncPosition(0);
 		}
 		
-		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
+		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
 			isShooting = false;
 			drive.stop();
 		}
@@ -163,7 +163,7 @@ public class Robot extends IterativeRobot {
 		// begin asynchronous moves
 
 		// Camera Turn
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
 			intake.lower(false);
 			
 			if (camera.isInDistance() && camera.isInLineWithGoal()) {
@@ -193,7 +193,7 @@ public class Robot extends IterativeRobot {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move
 			// drive.encoderAngleRotate(camera.getTurnAngle());
 			drive.speedRotate(0.35);
-		} else if (cBase.getReleasedUp(ControllerBase.Joysticks.GAMEPAD,
+		} else if (cBase.getReleased(ControllerBase.Joysticks.GAMEPAD,
 				ControllerBase.GamepadButtons.START)) {
 			drive.stop();
 		}
@@ -207,45 +207,45 @@ public class Robot extends IterativeRobot {
 		 * ControllerBase.GamepadButtons.BACK)) { drive.degreeRotate(10, 0.4); }
 		 */
 
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
 			shooter.shoot(); // shoot ball
 		}
 
 		// raising and lowering shooter elevator
-		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
+		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
 			shooter.raise(Shooter.LOW); // pancake
 			intake.lower(true);
 			// intake.moveBall(0.0);
-		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(Shooter.MEDIUM); // shooting height
 			// intake.moveBall(0.0);
-		} else if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+		} else if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(Shooter.DOWN);
 			intake.lower(true);
 			// intake.moveBall(1.0);
-		} else if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
 			shooter.raise(Shooter.HIGH); // close shooting height
 			// intake.moveBall(0.0);
 		}
 
-		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
 			intake.lower(false); // up
 		}
 
-		if (button(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
+		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
 			intake.moveBall(-1.0); // pull ball in
 			intake.lower(true); // down
 		}
 		
-		if (button(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
 			intake.moveBall(0); // stop intake
 		}
 		
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			intake.moveBall(1.0); // push ball out
 		}
 
-		if (button(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			shootProcedure();
 		}
 
@@ -267,9 +267,15 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void testPeriodic() {
-
 	}
 
+	/**
+	 * <pre>
+	 * public void shootProcedure()
+	 * </pre>
+	 * Goes through the shoot procedure
+	 * @deprecated As of 1.0, use shootProc() 
+	 */
 	@Deprecated
 	public void shootProcedure() {
 		intake.lower(false);
@@ -286,6 +292,12 @@ public class Robot extends IterativeRobot {
 		}
 	}
 	
+	/**
+	 * <pre>
+	 * public void aimProc()
+	 * </pre>
+	 * Goes through the aiming procedure to get ready to shoot.
+	 */
 	public void aimProc() {
 		intake.lower(false);
 
@@ -300,6 +312,13 @@ public class Robot extends IterativeRobot {
 																// NEW TO OLD
 		}
 	}
+	
+	/**
+	 * <pre>
+	 * public void shootProc()
+	 * </pre>
+	 * Goes through the shooting procedure.
+	 */
 	public void shootProc() {
 		if (!drive.checkDegreeRotateVoltage() && isShooting) { // TODO COMPARE
 																// NEW TO OLD
@@ -317,10 +336,30 @@ public class Robot extends IterativeRobot {
 			}
 		}
 	}
-	public boolean getIsShooting() {
+	
+	/**
+	 * <pre>
+	 * public boolean isShooting()
+	 * </pre>
+	 * Gets whether or not the robot is shooting.
+	 * @return isShooting
+	 */
+	public boolean isShooting() {
 		return isShooting;
 	}
-	public boolean button(Joysticks contNum, int buttonNum) {
+	
+	/**
+	 * <pre>
+	 * public boolean getPressedDown(Joysticks contNum, 
+	 *                               int buttonNum)
+	 * </pre>
+	 * Gets whether or not a button from the specified {@code Joystick} is pressed.
+	 * @param contNum the {@code Joystick} to check the button from
+	 * @param buttonNum the index of the button to test
+	 * @return true if the button on the specified {@code Joystick} is pressed,
+	 *         false otherwise
+	 */
+	public boolean getPressedDown(Joysticks contNum, int buttonNum) {
 		return cBase.getPressedDown(contNum, buttonNum);
 	}
 

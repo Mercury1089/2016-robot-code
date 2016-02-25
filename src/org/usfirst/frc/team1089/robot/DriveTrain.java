@@ -72,7 +72,7 @@ public class DriveTrain {
 	 *            the {@code AnalogGyro} used to track rotation
 	 */
 	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
-		config = Config.getCurrent();
+		config = Config.getInstance();
 
 		mercEncoder = new MercEncoder();
 		leftFrontTalon = leftFront;
@@ -256,9 +256,7 @@ public class DriveTrain {
 	 * Hangs the process until the robot is not moving.
 	 */
 	public void waitMove() {
-		while (checkMove()) {
-			// do nothing
-		}
+		while (checkMove());
 	}
 
 	/**

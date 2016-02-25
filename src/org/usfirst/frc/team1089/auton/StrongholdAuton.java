@@ -182,7 +182,7 @@ public class StrongholdAuton {
 			case SHOOT: {//Shoot into high or low goal
 				if (aim == AimEnum.HIGH) {
 					robot.shootProc();
-					if (!robot.getIsShooting()) {
+					if (!robot.isShooting()) {
 						state++;
 					}
 					//shooter.shootProcedure();

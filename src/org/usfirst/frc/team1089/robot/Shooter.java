@@ -41,10 +41,8 @@ public class Shooter {
 	 * <pre>
 	 * public void raise(int pos)
 	 * </pre>
-	 * 
 	 * Raises the elevator to specified position.
-	 * 
-	 * @param pos position
+	 * @param pos the position to set the elevator
 	 */
 	public void raise(int pos) {
 		this.position = pos;
@@ -72,15 +70,28 @@ public class Shooter {
 		}
 	}
 	
+	/**
+	 * <pre>
+	 * public int getPosition()
+	 * </pre>
+	 * Gets the current position of the elevator
+	 * @return the index of the current position
+	 */
 	public int getPosition() {
 		return position;
 	}
 	
+	/**
+	 * <pre>
+	 * public void raiseShootingHeight(Camera cam) 
+	 * </pre>
+	 * Raises the shooting height depending on distance from the target.
+	 * @param cam the {@code Camera} to use for targeting
+	 */
 	public void raiseShootingHeight(Camera cam) {
 		if (cam.isInFarDistance()) {
 			raise(MEDIUM);
-		}
-		else if (cam.isInCloseDistance()){
+		} else if (cam.isInCloseDistance()){
 			raise(HIGH);
 		}
 		// else we don't do anything
