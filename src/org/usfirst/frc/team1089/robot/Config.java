@@ -45,8 +45,14 @@ public class Config {
 	
 	private static Config _current = null; // Do not initialize - getCurrent() does it if necessary.
 
+	/**
+	 * <pre>
+	 * private Config(ConfigType configType)
+	 * </pre>
+	 * Constructs a new {@code Config} for the specified robot.
+	 * @param configType the robot being used (prototype or competition bot)
+	 */
 	private Config(ConfigType configType) {
-		
 		this._configType = configType;
 		
 		switch (configType) {
@@ -80,7 +86,6 @@ public class Config {
 			
 			LOG_PATH = "logs\\";
 			break;
-			
 		default: // COMPETITION
 			// calibrated value for Axis M1013 
 			HFOV_DEGREES = 58.0; 
@@ -143,10 +148,26 @@ public class Config {
 		return _current;
 	}
 	
+	/**
+	 * <pre>
+	 * public ConfigType getConfigType()
+	 * </pre>
+	 * Gets the current {@code ConfigType} being used by the robot
+	 * @return the current {@code Config} instance's {@code ConfigType}
+	 */
 	public ConfigType getConfigType() {			
 		return getInstance()._configType;
 	}
 	
+	/**
+	 * <pre>
+	 * public String toString()
+	 * </pre>
+	 * Returns the current {@code Config}'s {@code ConfigType}.
+	 * @return "Competition" in competition state,
+	 *         "Proto" in prototype state,
+	 *         "Unknown" if there is no current config type
+	 */
 	public String toString() {
 		if (getConfigType() == ConfigType.COMPETITION) {
 			return "Competition";

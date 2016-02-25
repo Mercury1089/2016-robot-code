@@ -3,8 +3,6 @@ package org.usfirst.frc.team1089.robot;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.usfirst.frc.team1089.robot.LoggerLegacy.LoggerType;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 
