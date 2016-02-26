@@ -156,9 +156,12 @@ public class ControllerBase {
 	}
 	
 	/**
+	 * <pre>
+	 * public void rumble(boolean rumble)
+	 * </pre>
 	 * Rumbles the gamepad
 	 * 
-	 * @param rumble to enable to disable rumbling
+	 * @param rumble whether or not to set the rumble on
 	 */
 	public void rumble(boolean rumble) {
 		if (rumble) {
