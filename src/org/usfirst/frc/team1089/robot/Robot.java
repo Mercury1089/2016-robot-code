@@ -114,6 +114,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		auton.move();
+		
+		camera.getNTInfo(); // in case not already called in move()
 		debug();
 	}
 
@@ -121,6 +123,7 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
+		
 		gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
 		gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
 	}
@@ -155,6 +158,7 @@ public class Robot extends IterativeRobot {
 			rightFront.setEncPosition(0);
 		}
 		
+		// Aborts shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
 			isShooting = false;
 			drive.stop();
@@ -162,32 +166,12 @@ public class Robot extends IterativeRobot {
 
 		// begin asynchronous moves
 
-		// Camera Turn
+		// Aims at target / initiates asynchronous shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
-			intake.lower(false);
-			
-			if (camera.isInDistance() && camera.isInLineWithGoal()) {
-				shooter.raiseShootingHeight(camera);
-				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
-				isShooting = true;
-				drive.degreeRotateVoltage(camera.getTurnAngle()); // TODO COMPARE NEW TO OLD
-			}
+			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
 
-		if (!drive.checkDegreeRotateVoltage() && isShooting) { // TODO COMPARE NEW TO OLD		
-			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-			camera.getNTInfo();
-			
-			if (camera.isInTurnAngle()) {
-				isShooting = false;
-				shooter.shoot();
-			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
-				drive.degreeRotateVoltage(camera.getTurnAngle());
-				shootingAttemptCounter++;
-			} else {
-				isShooting = false;
-			}
-		}
+		shootProc(); // completes shooting sequence once aiming is successful (if initiated) 
 
 		if (gamepad.getRawButton(ControllerBase.GamepadButtons.START)) {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move
@@ -198,7 +182,7 @@ public class Robot extends IterativeRobot {
 			drive.stop();
 		}
 
-		drive.checkMove();
+		drive.checkMove(); // completes asynchronous move if started
 
 		// end asynchronous moves
 
@@ -246,7 +230,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
-			shootProcedure();
+			aimAndShootProcedure();
 		}
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
@@ -271,13 +255,13 @@ public class Robot extends IterativeRobot {
 
 	/**
 	 * <pre>
-	 * public void shootProcedure()
+	 * public void aimAndShootProcedure()
 	 * </pre>
 	 * Goes through the shoot procedure
-	 * @deprecated As of 1.0, use shootProc() 
+	 * @deprecated As of 1.0, use aimProc() and shootProc() 
 	 */
 	@Deprecated
-	public void shootProcedure() {
+	public void aimAndShootProcedure() {
 		intake.lower(false);
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
@@ -308,8 +292,7 @@ public class Robot extends IterativeRobot {
 																	// to get in
 																	// position
 			isShooting = true;
-			drive.degreeRotateVoltage(camera.getTurnAngle()); // TODO COMPARE
-																// NEW TO OLD
+			drive.degreeRotateVoltage(camera.getTurnAngle());
 		}
 	}
 	
@@ -317,11 +300,10 @@ public class Robot extends IterativeRobot {
 	 * <pre>
 	 * public void shootProc()
 	 * </pre>
-	 * Goes through the shooting procedure.
+	 * Goes through the shooting procedure (requires prior call to aimProc()).
 	 */
 	public void shootProc() {
-		if (!drive.checkDegreeRotateVoltage() && isShooting) { // TODO COMPARE
-																// NEW TO OLD
+		if (!drive.checkDegreeRotateVoltage() && isShooting) { 
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
 
