@@ -124,8 +124,7 @@ public class Robot extends IterativeRobot {
 		camera.getNTInfo();
 		debug();
 		
-		gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
-		gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
+		cBase.rumble(false);
 	}
 
 	@Override
@@ -234,11 +233,9 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
-			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 1);
-			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 1);
+			cBase.rumble(true);
 		} else {
-			gamepad.setRumble(Joystick.RumbleType.kLeftRumble, 0);
-			gamepad.setRumble(Joystick.RumbleType.kRightRumble, 0);
+			cBase.rumble(false);
 		}
 		/*
 		 * if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {

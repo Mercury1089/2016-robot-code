@@ -154,4 +154,19 @@ public class ControllerBase {
 	public boolean getReleased(Joysticks contNum, int buttonNum){
 		return !btn[contNum.ordinal()][buttonNum] && btnPrev[contNum.ordinal()][buttonNum];
 	}
+	
+	/**
+	 * Rumbles the gamepad
+	 * 
+	 * @param rumble to enable to disable rumbling
+	 */
+	public void rumble(boolean rumble) {
+		if (rumble) {
+			joysticks[Joysticks.GAMEPAD.ordinal()].setRumble(Joystick.RumbleType.kLeftRumble, 1);
+			joysticks[Joysticks.GAMEPAD.ordinal()].setRumble(Joystick.RumbleType.kRightRumble, 1);
+		} else {
+			joysticks[Joysticks.GAMEPAD.ordinal()].setRumble(Joystick.RumbleType.kLeftRumble, 0);
+			joysticks[Joysticks.GAMEPAD.ordinal()].setRumble(Joystick.RumbleType.kRightRumble, 0);
+		}		
+	}
 }
