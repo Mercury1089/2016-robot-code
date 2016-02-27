@@ -23,7 +23,8 @@ public class StrongholdAuton {
 								MAX_CENTER_DISTANCE_FEET = 7.0, MIN_CENTER_DISTANCE_FEET = 0.0;
 	private Defense defense;
 	private Camera camera;
-	private int pos, state = 0, breachAttempts = 0;
+	private int state = 0, breachAttempts = 0;
+	private PosEnum pos;
 	private double centeredMoveDistance, angleToTurn, supportAngle;
 	private AimEnum aim;
 	private MercAccelerometer accel;
@@ -47,8 +48,8 @@ public class StrongholdAuton {
 	 *            the {@code Shooter} for shooting the ball into either goal
 	 * @param g
 	 *            the {@code AnalogGyro} for centering the robot after coming off of a defense
-	 * @param p
-	 *            the initial position            
+	 * @param p		
+	 *            the {@code PosEnum} shows the initial position            
 	 * @param a
 	 *            the {@code AimEnum} used for position of the shooter based on which goal we are shooting in
 	 * @param dE
@@ -59,7 +60,7 @@ public class StrongholdAuton {
 	 * @param r
 	 *            the robot            
 	 */
-	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, Intake i, AnalogGyro g, int p,
+	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, Intake i, AnalogGyro g, PosEnum p,
 							AimEnum a, DefenseEnum dE, MercAccelerometer ac, Robot r) {
 		drive = d;
 		camera = c;

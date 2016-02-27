@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import org.usfirst.frc.team1089.auton.AimEnum;
 import org.usfirst.frc.team1089.auton.DefenseEnum;
+import org.usfirst.frc.team1089.auton.PosEnum;
 import org.usfirst.frc.team1089.auton.StrongholdAuton;
 import org.usfirst.frc.team1089.robot.ControllerBase.Joysticks;
 
@@ -86,11 +87,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Defense: ", defenseChooser);
 
 		posChooser = new SendableChooser();
-		posChooser.addDefault("1", 1);
-		posChooser.addObject("2", 2);
-		posChooser.addObject("3", 3);
-		posChooser.addObject("4", 4);
-		posChooser.addObject("5", 5);
+		posChooser.addDefault("1", PosEnum.POS1);
+		posChooser.addObject("2", PosEnum.POS2);
+		posChooser.addObject("3", PosEnum.POS3);
+		posChooser.addObject("4", PosEnum.POS4);
+		posChooser.addObject("5", PosEnum.POS5);
 		SmartDashboard.putData("Position: ", posChooser);
 
 		shootChooser = new SendableChooser();
@@ -99,7 +100,7 @@ public class Robot extends IterativeRobot {
 		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (int) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
+		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
 		
 		SmartDashboard.putNumber("Speed Rotate Method", 0.25);
