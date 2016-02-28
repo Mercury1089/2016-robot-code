@@ -16,7 +16,10 @@ import edu.wpi.first.wpilibj.Timer;
  * and shooting in the high/low goal during auton
  */
 public class StrongholdAuton {
-	private static final int START = 0, BREACH = 1, CENTER = 2, ROTATE1 = 3, CALCULATE = 4, MOVE = 5, ROTATE2 = 6, AIM = 7, SHOOT = 8, DONE = 9;
+	private static final int START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
+								CALCULATE = 5, MOVE2 = 6, ROTATE2 = 7, AIM = 8, SHOOT = 9, 
+								DONE = 10;
+	
 	private static final double TURN_SPEED = 0.5, DISTANCE_TO_HIGH_GOAL_FEET = 9.0, LENGTH_OF_BATTER_FEET = 4.0, 
 								DISTANCE_TO_GET_TO_LOW_GOAL_FEET = DISTANCE_TO_HIGH_GOAL_FEET - LENGTH_OF_BATTER_FEET, 
 								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 10.0, 
@@ -84,24 +87,26 @@ public class StrongholdAuton {
 	 */
 	public void move() {
 		switch (state) {
-			case START: {
+			case START: {// Adjust shooter/intake
 				shooter.raise(Shooter.MEDIUM);
 				intake.lower(true);
 				state++;
+				break;
 			}
 			case BREACH: {//Breaching Phase
 				if (breachAttempts == 0) {
 					defense.breach();
 					breachAttempts++; //Breach only once
 				}
-				if (accel.isFlat()) {
+				if (accel.isFlat()) { // loops until flat - TODO should we do anything to help if not?
 					shooter.raise(Shooter.MEDIUM);
 					state++;
 				}
 				  
 				break;
 			}
-			case CENTER: {//Center with goal
+			case STRAIGHTEN: {//Straighten
+				//TODO for P1/low bar we probably do not need to straighten, but for P2 to P5 we should consider it
 				/*if (aim == AimEnum.NONE) {
 					state = DONE;
 				}
@@ -113,17 +118,26 @@ public class StrongholdAuton {
 				state++;
 				break;
 			}
-			case ROTATE1: {
+			case MOVE1: {//Move to rotation point if needed
+				// TODO consider moving at high speed after passing defense
+				state++;
+				break;
+			}
+			case ROTATE1: {//Rotate towards goal without relying on camera
+				// TODO take initial position into account, and even for P1 consider increasing angle
 				drive.degreeRotateVoltage(35);// will need to eventually take position into account
 				drive.waitDegreeRotateVoltage();
 				intake.lower(false);
 				state++;
 				break;
 			}
-			case CALCULATE: {
+			case CALCULATE: { //Use camera to figure out how far we really are from the goal
 				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 				camera.getNTInfo();
 				//If the distance from goal is unrealistic, then abort
+				// TODO MAX_DISTANCE_TO_GOAL_FEET and MIN_DISTANCE_TO_GOAL_FEET should be position-specific (or at least not the same for all positions)
+				// TODO also we might need to consider if aiming high or low
+				// TOOD It might simplify things to always aim high for P1, P3 & P4; and always low for P2 and P5
 				if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 					state = DONE;
 				}
@@ -131,6 +145,7 @@ public class StrongholdAuton {
 					//Assume we are looking at the correct goal
 					//angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / DISTANCE_TO_HIGH_GOAL_FEET));
 					//supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
+					// TODO we might not always want to shoot 11 feet from the goal - this needs to take initial position into account
 					centeredMoveDistance = camera.getHorizontalDist() - 11;
 							//(DISTANCE_TO_HIGH_GOAL_FEET * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
 					// If distance to center is not unrealistic, continue
@@ -143,11 +158,12 @@ public class StrongholdAuton {
 				}
 				break;
 			}
-			case MOVE: {//Move so that distance from goal is 9 feet
+			case MOVE2: {//Move so that distance from goal is 9 feet (or generally speaking an acceptable distance)
 				drive.moveDistanceAuton(centeredMoveDistance, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 				camera.getNTInfo();
+				// TODO why do we rotate here and not in the next step?
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				drive.waitDegreeRotateVoltage();
 				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
@@ -161,7 +177,7 @@ public class StrongholdAuton {
 				}
 				break;
 			}
-			case ROTATE2: {//Rotate again using camera
+			case ROTATE2: {//Rotate again using camera - we could skip if we will aim later
 				/*// auto-rotate?
 				camera.getNTInfo();
 				if (camera.isInTurnAngle()) {
@@ -173,7 +189,7 @@ public class StrongholdAuton {
 				state++;
 				break;
 			}
-			case AIM: {
+			case AIM: {// Aim
 				if (aim == AimEnum.HIGH) {
 					robot.aimProc();
 				}
