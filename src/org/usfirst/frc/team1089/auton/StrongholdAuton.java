@@ -268,7 +268,7 @@ public class StrongholdAuton {
 					recenteredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - LENGTH_OF_BATTER_FEET); 
 					
 					// If distance to center is not unrealistic, continue
-					if (centeredMoveDistance < MAX_RECENTER_DISTANCE_FEET) {					
+					if (recenteredMoveDistance < MAX_RECENTER_DISTANCE_FEET) {					
 						drive.moveDistanceAuton(recenteredMoveDistance, 0.4, 0, 0, 4.5);
 						drive.waitMove();
 						shooter.raise(Shooter.DOWN);
