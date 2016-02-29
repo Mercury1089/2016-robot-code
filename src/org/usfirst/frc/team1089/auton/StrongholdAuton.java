@@ -16,19 +16,43 @@ import edu.wpi.first.wpilibj.Timer;
  * and shooting in the high/low goal during auton
  */
 public class StrongholdAuton {
+	// states of auton
 	private static final int START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
 								CALCULATE = 5, MOVE2 = 6, ROTATE2 = 7, AIM = 8, SHOOT = 9, 
 								DONE = 10;
 	
-	private static final double TURN_SPEED = 0.5, DISTANCE_TO_HIGH_GOAL_FEET = 9.0, LENGTH_OF_BATTER_FEET = 4.0, 
-								DISTANCE_TO_GET_TO_LOW_GOAL_FEET = DISTANCE_TO_HIGH_GOAL_FEET - LENGTH_OF_BATTER_FEET, 
-								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 10.0, 
-								MAX_CENTER_DISTANCE_FEET = 7.0, MIN_CENTER_DISTANCE_FEET = 0.0;
+	// various safety checks
+	private static final double LENGTH_OF_BATTER_FEET = 4.0, 
+								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 7.0, 
+								MAX_CLOSE_DISTANCE_TO_GOAL_FEET = 11.0, MIN_CLOSE_DISTANCE_TO_GOAL_FEET = 4.0,
+								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_RECENTER_DISTANCE_FEET = 10.0;
+	
+	// distances for MOVE1
+	private static int MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6,
+						MOVE_DISTANCE_POST_DEFENSE_P2_FEET = 9,
+						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,
+						MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 3, 
+						MOVE_DISTANCE_POST_DEFENSE_P5_FEET = 10;
+	
+	// angles for ROTATE1
+	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 60,
+						ROTATE_POST_DEFENSE_P2_DEGREES = 60,
+						/*ROTATE_POST_DEFENSE_P3_DEGREES = 0,*/
+						/*ROTATE_POST_DEFENSE_P4_DEGREES = 0,*/ 
+						ROTATE_POST_DEFENSE_P5_DEGREES = -60;
+	
+	// maximum optimal shooting distances
+	private static int SHOOT_DISTANCE_P1_P3_P4_FEET = 11,
+					SHOOT_DISTANCE_P2_P5_FEET = 5;
+					/*SHOOT_DISTANCE_P3_FEET = 11,
+					SHOOT_DISTANCE_P4_FEET = 11,*/ 
+					/*SHOOT_DISTANCE_P5_FEET = 5;*/
+	
 	private Defense defense;
 	private Camera camera;
 	private int state = 0, breachAttempts = 0;
 	private PosEnum pos;
-	private double centeredMoveDistance, angleToTurn, supportAngle;
+	private double centeredMoveDistance, recenteredMoveDistance;
 	private AimEnum aim;
 	private MercAccelerometer accel;
 	private Shooter shooter;
@@ -101,32 +125,61 @@ public class StrongholdAuton {
 				if (accel.isFlat()) { // loops until flat - TODO should we do anything to help if not?
 					shooter.raise(Shooter.MEDIUM);
 					state++;
-				}
-				  
+				}				  
 				break;
 			}
 			case STRAIGHTEN: {//Straighten
-				//TODO for P1/low bar we probably do not need to straighten, but for P2 to P5 we should consider it
-				/*if (aim == AimEnum.NONE) {
+				if (aim == AimEnum.NONE) {
 					state = DONE;
 				}
 				else {
-					drive.degreeRotateVoltage(-gyro.getAngle()); // Assume gyro has been reset to zero before breaching
-					drive.waitDegreeRotateVoltage();
+					if (pos != PosEnum.POS1) { // we only skip correction in POS1
+						drive.degreeRotateVoltage(-gyro.getAngle()); // Assume gyro has been reset to zero before breaching
+						drive.waitDegreeRotateVoltage();
+					}
 					state++;
-				}*/
-				state++;
+				}
 				break;
 			}
 			case MOVE1: {//Move to rotation point if needed
-				// TODO consider moving at high speed after passing defense
+				if (pos == PosEnum.POS1) {
+					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+				} else if (pos == PosEnum.POS2) {
+					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P2_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+				} else if (pos == PosEnum.POS3) {
+					drive.degreeRotateVoltage(60);
+					drive.waitDegreeRotateVoltage();
+					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+					drive.degreeRotateVoltage(-60);
+					drive.waitDegreeRotateVoltage();
+				} else if (pos == PosEnum.POS4) {
+					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+				} else if (pos == PosEnum.POS5) {
+					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P5_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+				}				
 				state++;
 				break;
 			}
-			case ROTATE1: {//Rotate towards goal without relying on camera
-				// TODO take initial position into account, and even for P1 consider increasing angle
-				drive.degreeRotateVoltage(35);// will need to eventually take position into account
-				drive.waitDegreeRotateVoltage();
+			case ROTATE1: {//Rotate towards goal without relying on camera (as we might not see the goal yet)
+				if (pos == PosEnum.POS1) {
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);// 35
+					drive.waitDegreeRotateVoltage();
+				} else if (pos == PosEnum.POS2) {
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES);
+					drive.waitDegreeRotateVoltage();
+				} else if (pos == PosEnum.POS3) {
+					// do nothing
+				} else if (pos == PosEnum.POS4) {
+					// do nothing
+				} else if (pos == PosEnum.POS5) {
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES);
+					drive.waitDegreeRotateVoltage();
+				}						
 				intake.lower(false);
 				state++;
 				break;
@@ -134,59 +187,66 @@ public class StrongholdAuton {
 			case CALCULATE: { //Use camera to figure out how far we really are from the goal
 				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 				camera.getNTInfo();
-				//If the distance from goal is unrealistic, then abort
-				// TODO MAX_DISTANCE_TO_GOAL_FEET and MIN_DISTANCE_TO_GOAL_FEET should be position-specific (or at least not the same for all positions)
-				// TODO also we might need to consider if aiming high or low
-				// TOOD It might simplify things to always aim high for P1, P3 & P4; and always low for P2 and P5
-				if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-					state = DONE;
+				
+				if (pos == PosEnum.POS1 || pos == PosEnum.POS3 || pos == PosEnum.POS4) { // in cases where we expect to be far
+					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+						state = DONE;
+					}
+					else {
+						//Assume we are looking at the correct goal
+						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
+						// If distance to center is not unrealistic, continue
+						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+							state++;
+						}
+						else {
+							state = DONE;
+						}
+					}
+				} else if (pos == PosEnum.POS2 || pos == PosEnum.POS5) { // in cases where we expect to be close
+					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
+						state = DONE;
+					}
+					else {
+						//Assume we are looking at the correct goal
+						centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P2_P5_FEET);
+						// If distance to center is not unrealistic, continue
+						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+							state++;
+						}
+						else {
+							state = DONE;
+						}
+					}
 				}
-				else {
-					//Assume we are looking at the correct goal
-					//angleToTurn = Math.asin(Math.sin((camera.getTurnAngle() * camera.getHorizontalDist()) / DISTANCE_TO_HIGH_GOAL_FEET));
-					//supportAngle = 180 - camera.getTurnAngle() - angleToTurn;
-					// TODO we might not always want to shoot 11 feet from the goal - this needs to take initial position into account
-					centeredMoveDistance = camera.getHorizontalDist() - 11;
-							//(DISTANCE_TO_HIGH_GOAL_FEET * Math.sin(supportAngle)) / Math.sin(camera.getTurnAngle());
-					// If distance to center is not unrealistic, continue
-					if (centeredMoveDistance > MIN_CENTER_DISTANCE_FEET && centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+				break;
+			}
+			case MOVE2: {//Move forward so that distance from goal is an acceptable distance
+				drive.moveDistanceAuton(centeredMoveDistance, 0.4, 0, 0, 4.5);
+				drive.waitMove();
+				state++;
+				break;
+			}
+			case ROTATE2: {//Rotate again, this time using camera
+				if (aim == AimEnum.LOW) { // we only do this if aiming low
+					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+					camera.getNTInfo();
+					drive.degreeRotateVoltage(camera.getTurnAngle());
+					drive.waitDegreeRotateVoltage();
+					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+					camera.getNTInfo();
+					// check we are within shooting range (as intermediate step)
+					if (camera.isInDistance() && camera.isInLineWithGoal()) {
 						state++;
 					}
 					else {
 						state = DONE;
 					}
-				}
-				break;
-			}
-			case MOVE2: {//Move so that distance from goal is 9 feet (or generally speaking an acceptable distance)
-				drive.moveDistanceAuton(centeredMoveDistance, 0.4, 0, 0, 4.5);
-				drive.waitMove();
-				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-				camera.getNTInfo();
-				// TODO why do we rotate here and not in the next step?
-				drive.degreeRotateVoltage(camera.getTurnAngle());
-				drive.waitDegreeRotateVoltage();
-				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-				camera.getNTInfo();
-				// check we are within shooting range
-				if (camera.isInDistance() && camera.isInLineWithGoal()) {
+				} else { // we are aiming high so we do not need to check all this yet
+					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+					camera.getNTInfo();
 					state++;
 				}
-				else {
-					state = DONE;
-				}
-				break;
-			}
-			case ROTATE2: {//Rotate again using camera - we could skip if we will aim later
-				/*// auto-rotate?
-				camera.getNTInfo();
-				if (camera.isInTurnAngle()) {
-					state++;
-				}
-				else {
-					state = DONE;
-				}*/
-				state++;
 				break;
 			}
 			case AIM: {// Aim
@@ -202,14 +262,22 @@ public class StrongholdAuton {
 					if (!robot.isShooting()) {
 						state++;
 					}
-					//shooter.shootProcedure();
 				}
 				else if (aim == AimEnum.LOW) {
-					drive.moveDistanceAuton(DISTANCE_TO_GET_TO_LOW_GOAL_FEET, 0.4, 0, 0, 4.5);
-					drive.waitMove();
-					shooter.raise(Shooter.DOWN);
-					shooter.shoot();
-					state++;
+					// calculates how far the batter is from where we are now
+					recenteredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - LENGTH_OF_BATTER_FEET); 
+					
+					// If distance to center is not unrealistic, continue
+					if (centeredMoveDistance < MAX_RECENTER_DISTANCE_FEET) {					
+						drive.moveDistanceAuton(recenteredMoveDistance, 0.4, 0, 0, 4.5);
+						drive.waitMove();
+						shooter.raise(Shooter.DOWN);
+						shooter.shoot();
+						state++;
+					}
+					else {
+						state = DONE;
+					}
 				}
 				break;
 			}
