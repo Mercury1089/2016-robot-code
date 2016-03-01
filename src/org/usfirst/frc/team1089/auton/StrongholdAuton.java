@@ -35,7 +35,8 @@ public class StrongholdAuton {
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET = 10;
 	
 	// angles for ROTATE1
-	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 60,
+	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 60, //TODO From our testing that we had done on the last day of build 
+															//45 degrees was too much so I'm not sure why we are going to 60.
 						ROTATE_POST_DEFENSE_P2_DEGREES = 60,
 						/*ROTATE_POST_DEFENSE_P3_DEGREES = 0,*/
 						/*ROTATE_POST_DEFENSE_P4_DEGREES = 0,*/ 
@@ -144,23 +145,23 @@ public class StrongholdAuton {
 			case MOVE1: {//Move to rotation point if needed
 				if (pos == PosEnum.POS1) {
 					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+					drive.waitMove();
 				} else if (pos == PosEnum.POS2) {
 					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P2_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+					drive.waitMove();
 				} else if (pos == PosEnum.POS3) {
 					drive.degreeRotateVoltage(60);
 					drive.waitDegreeRotateVoltage();
 					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+					drive.waitMove();
 					drive.degreeRotateVoltage(-60);
 					drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS4) {
 					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+					drive.waitMove();
 				} else if (pos == PosEnum.POS5) {
 					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P5_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+					drive.waitMove();
 				}				
 				state++;
 				break;
@@ -228,6 +229,8 @@ public class StrongholdAuton {
 				break;
 			}
 			case ROTATE2: {//Rotate again, this time using camera
+				//TODO I don't really see the point of this case. 
+				//Why not just take the if statement out of the aim case and always call robot.aimProc()
 				if (aim == AimEnum.LOW) { // we only do this if aiming low
 					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 					camera.getNTInfo();

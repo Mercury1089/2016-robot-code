@@ -10,7 +10,8 @@ public class Defense{
 	
 	private static final int MOVE_DEFENSE_DISTANCE_FEET = 7,
 					  APPROACH_CHEVAL_DE_FRISE_DISTANCE_FEET = 3, REMAINING_CHEVAL_DE_FRISE_DISTANCE_FEET = 4,
-					  CLEAR_DEFENSE_FEET =3 ;
+					  CLEAR_DEFENSE_FEET = 3 ;// TODO is the CLEAR_DEFENSE_FEET constant really necessary. 
+												//why not just add this amount to MOVE_DEFENSE_DISTANCE_FEET
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
 		drive = d;
@@ -22,14 +23,28 @@ public class Defense{
 		switch (defenseEnum) {
 			case LOW_BAR: {
 				shooter.raise(Shooter.DOWN);
-				// then same as other defenses, so no break
+				drive.moveDistanceAuton(MOVE_DEFENSE_DISTANCE_FEET + CLEAR_DEFENSE_FEET, 0.4, 0, 0, 4.5);
+				drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+				break;
 			}
-			case MOAT:
-			case ROUGH_TERRAIN:
-			case RAMPARTS:
+			case MOAT: {
+				drive.moveDistanceAuton(MOVE_DEFENSE_DISTANCE_FEET + CLEAR_DEFENSE_FEET, 0.4, 0, 0, 4.5); //TODO test and change these values
+				drive.waitMove();
+				break;
+			}
+			case ROUGH_TERRAIN: {
+				drive.moveDistanceAuton(MOVE_DEFENSE_DISTANCE_FEET + CLEAR_DEFENSE_FEET, 0.4, 0, 0, 4.5); //TODO test and change these values
+				drive.waitMove();
+				break;
+			}
+			case RAMPARTS: {
+				drive.moveDistanceAuton(MOVE_DEFENSE_DISTANCE_FEET + CLEAR_DEFENSE_FEET, 0.4, 0, 0, 4.5); //TODO test and change these values
+				drive.waitMove();
+				break;
+			}
 			case ROCK_WALL: {
 				drive.moveDistanceAuton(MOVE_DEFENSE_DISTANCE_FEET + CLEAR_DEFENSE_FEET, 0.4, 0, 0, 4.5); //TODO test and change these values
-				drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+				drive.waitMove();
 				break;
 			}
 			case CHEVAL_DE_FRISE: {
