@@ -186,11 +186,6 @@ public class Robot extends IterativeRobot {
 
 		// end asynchronous moves
 
-		/*
-		 * if (button(ControllerBase.Joysticks.GAMEPAD,
-		 * ControllerBase.GamepadButtons.BACK)) { drive.degreeRotate(10, 0.4); }
-		 */
-
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
 			shooter.shoot(); // shoot ball
 		}
@@ -238,11 +233,6 @@ public class Robot extends IterativeRobot {
 		} else {
 			cBase.rumble(false);
 		}
-		/*
-		 * if (gamepad.getRawButton(ControllerBase.GamepadButtons.RB)) {
-		 * shooter.raise(false); //intake.moveBall(-1.0); } else {
-		 * shooter.raise(true); //intake.moveBall(0.0); }
-		 */
 
 		debug();
 	}
