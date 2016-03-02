@@ -274,11 +274,11 @@ public class Robot extends IterativeRobot {
 		intake.lower(false);
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
+			boolean initialPancake = shooter.isElevatorUp();
 			shooter.raiseShootingHeight(camera);
-			Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for
-																	// shooter
-																	// to get in
-																	// position
+			if (shooter.isElevatorUp() != initialPancake){
+				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); 
+			}				// waits for shooter to get in position
 			isShooting = true;
 			drive.degreeRotateVoltage(camera.getTurnAngle());
 		}
