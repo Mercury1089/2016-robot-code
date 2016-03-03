@@ -37,6 +37,7 @@ public class Robot extends IterativeRobot {
 
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
+	private AimEnum aim;
 	private DriverStation driverStation;
 	private Config config;
 
@@ -100,7 +101,8 @@ public class Robot extends IterativeRobot {
 		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), (AimEnum) shootChooser.getSelected(),
+		aim = (AimEnum) shootChooser.getSelected();
+		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
 		
 		SmartDashboard.putNumber("Speed Rotate Method", 0.25);
@@ -171,7 +173,7 @@ public class Robot extends IterativeRobot {
 			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
 
-		shootProc(); // completes shooting sequence once aiming is successful (if initiated) 
+		shootProc(aim); // completes shooting sequence once aiming is successful (if initiated) 
 
 		if (gamepad.getRawButton(ControllerBase.GamepadButtons.START)) {
 			// drive.encoderAngleRotate(360); // this is an asynchronous move
@@ -290,13 +292,25 @@ public class Robot extends IterativeRobot {
 	 * </pre>
 	 * Goes through the shooting procedure (requires prior call to aimProc()).
 	 */
-	public void shootProc() {
+	public void shootProc(AimEnum aim) {
+		double recenteredMoveDistance;
 		if (!drive.checkDegreeRotateVoltage() && isShooting) { 
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
 
 			if (camera.isInTurnAngle()) {
 				isShooting = false;
+				if (aim == AimEnum.LOW) {
+					// calculates how far the batter is from where we are now
+					recenteredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - StrongholdAuton.LENGTH_OF_BATTER_FEET); 
+					
+					// If distance to center is not unrealistic, continue
+					if (recenteredMoveDistance < StrongholdAuton.MAX_RECENTER_DISTANCE_FEET) {					
+						drive.moveDistanceAuton(recenteredMoveDistance, 0.4, 0, 0, 4.5);
+						drive.waitMove();
+						shooter.raise(Shooter.DOWN);
+					}
+				}
 				shooter.shoot();
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
 				drive.degreeRotateVoltage(camera.getTurnAngle());

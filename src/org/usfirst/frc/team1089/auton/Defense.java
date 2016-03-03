@@ -28,26 +28,31 @@ public class Defense{
 				break;
 			}
 			case MOAT: {
+				shooter.raise(Shooter.LOW);
 				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6.0); //TODO test and change ALL these values
 				drive.waitMove();		//need moderate PID voltage - to be changed
 				break;
 			}
 			case ROUGH_TERRAIN: {
+				shooter.raise(Shooter.LOW);
 				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
 				drive.waitMove();		//need fast PID voltage - to be changed
 				break;
 			}
 			case RAMPARTS: {
+				shooter.raise(Shooter.LOW);
 				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
 				drive.waitMove();
 				break;
 			}
 			case ROCK_WALL: {
+				shooter.raise(Shooter.LOW);
 				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 10.0); 
 				drive.waitMove();		//need fast PID voltage - to be changed
 				break;
 			}
 			case CHEVAL_DE_FRISE: {
+				shooter.raise(Shooter.MEDIUM);
 				drive.moveDistance(INITIAL_CDF_FEET);
 				drive.waitMove();
 				shooter.raise(Shooter.DOWN);
@@ -56,6 +61,7 @@ public class Defense{
 				break;
 			}
 			case PORTCULLIS: {
+				shooter.raise(Shooter.DOWN);
 				drive.moveDistance(INITIAL_CDF_FEET);
 				drive.waitMove();
 				//OPEN PORTCULLIS DOOR code

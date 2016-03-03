@@ -18,11 +18,11 @@ import edu.wpi.first.wpilibj.Timer;
 public class StrongholdAuton {
 	// states of auton
 	private static final int START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
-								CALCULATE = 5, MOVE2 = 6, ROTATE2 = 7, AIM = 8, SHOOT = 9, 
-								DONE = 10;
+								CALCULATE = 5, MOVE2 = 6, AIM = 7, SHOOT = 8, 
+								DONE = 9;
 	
 	// various safety checks
-	private static final double LENGTH_OF_BATTER_FEET = 4.0, 
+	public static final double LENGTH_OF_BATTER_FEET = 4.0, 
 								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 7.0, 
 								MAX_CLOSE_DISTANCE_TO_GOAL_FEET = 11.0, MIN_CLOSE_DISTANCE_TO_GOAL_FEET = 4.0,
 								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_RECENTER_DISTANCE_FEET = 10.0;
@@ -51,7 +51,7 @@ public class StrongholdAuton {
 	
 	private Defense defense;
 	private Camera camera;
-	private int state = 0, breachAttempts = 0;
+	private int state = 0, breachAttempts = 0, centerAttempts = 0;
 	private PosEnum pos;
 	private double centeredMoveDistance, recenteredMoveDistance;
 	private AimEnum aim;
@@ -113,7 +113,6 @@ public class StrongholdAuton {
 	public void move() {
 		switch (state) {
 			case START: {// Adjust shooter/intake
-				shooter.raise(Shooter.MEDIUM);
 				intake.lower(true);
 				state++;
 				break;
@@ -228,59 +227,30 @@ public class StrongholdAuton {
 				state++;
 				break;
 			}
-			case ROTATE2: {//Rotate again, this time using camera
-				//TODO I don't really see the point of this case. 
-				//Why not just take the if statement out of the aim case and always call robot.aimProc()
-				if (aim == AimEnum.LOW) { // we only do this if aiming low
-					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-					camera.getNTInfo();
-					drive.degreeRotateVoltage(camera.getTurnAngle());
-					drive.waitDegreeRotateVoltage();
-					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-					camera.getNTInfo();
-					// check we are within shooting range (as intermediate step)
-					if (camera.isInDistance() && camera.isInLineWithGoal()) {
-						state++;
-					}
-					else {
-						state = DONE;
-					}
-				} else { // we are aiming high so we do not need to check all this yet
-					Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-					camera.getNTInfo();
+			case AIM: {// Aim
+				if (centerAttempts == 0) {
+					robot.aimProc();
+					centerAttempts++;
+				}
+				
+				if(!drive.checkDegreeRotateVoltage()) {
 					state++;
 				}
 				break;
 			}
-			case AIM: {// Aim
-				if (aim == AimEnum.HIGH) {
-					robot.aimProc();
-				}
-				state++;
-				break;
-			}
 			case SHOOT: {//Shoot into high or low goal
 				if (aim == AimEnum.HIGH) {
-					robot.shootProc();
+					robot.shootProc(aim);
 					if (!robot.isShooting()) {
 						state++;
 					}
 				}
-				else if (aim == AimEnum.LOW) {
-					// calculates how far the batter is from where we are now
-					recenteredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - LENGTH_OF_BATTER_FEET); 
-					
-					// If distance to center is not unrealistic, continue
-					if (recenteredMoveDistance < MAX_RECENTER_DISTANCE_FEET) {					
-						drive.moveDistanceAuton(recenteredMoveDistance, 0.4, 0, 0, 4.5);
-						drive.waitMove();
-						shooter.raise(Shooter.DOWN);
-						shooter.shoot();
-						state++;
-					}
-					else {
-						state = DONE;
-					}
+				else if (aim == AimEnum.LOW && (pos != PosEnum.POS3 || pos != PosEnum.POS4)) {
+					robot.shootProc(aim);
+					state++;
+				}
+				else {
+					state = DONE;
 				}
 				break;
 			}
