@@ -102,6 +102,36 @@ public class StrongholdAuton {
 		defense = new Defense(drive, shooter, dE);
 	}
 
+	// START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
+	// CALCULATE = 5, MOVE2 = 6, AIM = 7, SHOOT = 8, 
+	// DONE = 9;
+	public String getState() {
+		switch(state) {
+		case START:
+			return "START";
+		case BREACH:
+			return "BREACH";
+		case MOVE1:
+			return "MOVE1";
+		case STRAIGHTEN:
+			return "STRAIGHTEN";
+		case ROTATE1:
+			return "ROTATE1";
+		case CALCULATE:
+			return "CALCULATE";
+		case MOVE2:
+			return "MOVE2";
+		case AIM:
+			return "AIM";
+		case SHOOT:
+			return "SHOOT";
+		case DONE:
+			return "DONE";
+		default:
+				return "UNKNOWN";
+		}
+	}
+	
 	/**
 	 * <pre>
 	 * public void move()

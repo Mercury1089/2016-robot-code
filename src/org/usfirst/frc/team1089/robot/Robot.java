@@ -121,6 +121,8 @@ public class Robot extends IterativeRobot {
 		
 		camera.getNTInfo(); // in case not already called in move()
 		debug();
+		
+		
 	}
 
 	@Override
@@ -335,5 +337,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
 		SmartDashboard.putBoolean("Is flat", accel.isFlat());
+		
+		// Auton
+		SmartDashboard.putString("Auton State", auton.getState());
 	}
 }
