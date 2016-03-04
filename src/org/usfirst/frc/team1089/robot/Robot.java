@@ -104,8 +104,6 @@ public class Robot extends IterativeRobot {
 		aim = (AimEnum) shootChooser.getSelected();
 		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
-		
-		SmartDashboard.putNumber("Speed Rotate Method", 0.25);
 	}
 		
 
