@@ -163,15 +163,15 @@ public class Robot extends IterativeRobot {
 		}
 
 		// raising and lowering shooter elevator
-		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			shooter.raise(Shooter.LOW); // pancake
+		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			shooter.raise(Shooter.DOWN);
 			intake.lower(true);
+			// intake.moveBall(0.0);
+		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
+			shooter.raise(Shooter.LOW); // pancake
 			// intake.moveBall(0.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(Shooter.MEDIUM); // shooting height
-			// intake.moveBall(0.0);
-		} else if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			shooter.raise(Shooter.DOWN);
 			intake.lower(true);
 			// intake.moveBall(1.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
@@ -179,6 +179,7 @@ public class Robot extends IterativeRobot {
 			// intake.moveBall(0.0);
 		}
 
+		//raising, lowering, and powering intake
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
 			intake.lower(false); // up
 		}
@@ -196,7 +197,7 @@ public class Robot extends IterativeRobot {
 			intake.moveBall(1.0); // push ball out
 		}
 
-
+		//makes controller rumble when the robot is able to take a shot
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			cBase.rumble(true);
 		} else {

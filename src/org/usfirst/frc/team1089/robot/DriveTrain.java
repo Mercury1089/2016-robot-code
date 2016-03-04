@@ -94,177 +94,6 @@ public class DriveTrain {
 
 	/**
 	 * <pre>
-	 * public void tankDrive(Joystick leftStick,
-	 *                       Joystick rightStick)
-	 * </pre>
-	 *
-	 * Drives the base using a {@code Joystick} for the left set of wheels, and
-	 * another {@code Joystick} for the right set of wheels.
-	 *
-	 * @param leftStick
-	 *            the {@code Joystick} to control the left set of wheels
-	 * @param rightStick
-	 *            the {@code Joystick} to control the right set of wheels
-	 */
-	public void tankDrive(Joystick leftStick, Joystick rightStick) {
-		if (!isMoving && !isDegreeRotating) {
-			if (isOutOfDeadzone(leftStick, 1)) {
-				double rawValue = leftStick.getRawAxis(1);
-				leftFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
-						* config.LEFT_DRIVE_SIGN);
-			} else {
-				leftFrontTalon.set(0);
-			}
-
-			if (isOutOfDeadzone(rightStick, 1)) {
-				double rawValue = rightStick.getRawAxis(1);
-				rightFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
-						* config.RIGHT_DRIVE_SIGN);
-			} else {
-				rightFrontTalon.set(0);
-			}
-		}
-	}
-
-	/**
-	 * <pre>
-	 * public void moveDistance(double changePos)
-	 * </pre>
-	 *
-	 * Moves the base based on encoder measurements by the specified distance in
-	 * feet.
-	 * <p>
-	 * This is an asynchronous operation. Use waitMove() to wait for completion.
-	 * </p>
-	 *
-	 * @param changePos
-	 *            the distance to move in feet
-	 */
-
-	// this is a custom version of moveDistance for Auton
-	// moveDistance could probably just call this method
-	public void moveDistance(double changePos, double p, double i, double d, double maxV) {
-		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
-		startPosL = leftFrontTalon.getEncPosition();
-		startPosR = rightFrontTalon.getEncPosition();
-		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
-		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(p, i, d);
-		rightFrontTalon.setPID(p, i, d);
-		leftFrontTalon.configPeakOutputVoltage(maxV, -maxV);
-		leftFrontTalon.configNominalOutputVoltage(0, 0);
-		rightFrontTalon.configPeakOutputVoltage(maxV, -maxV);
-		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
-		setToAuto();
-		leftFrontTalon.enableControl();
-		rightFrontTalon.enableControl();
-		leftFrontTalon.set(endPosL);
-		rightFrontTalon.set(endPosR);
-	}
-
-	/**
-	 * <pre>
-	 * public boolean checkMove()
-	 * </pre>
-	 *
-	 * Checks to see if the robot is moving.
-	 *
-	 * @return true if the encoder speeds are 0, the {@code CANTalon} positions
-	 *         read within a certain threshold, and the robot is moving, false
-	 *         if otherwise.
-	 */
-	public boolean checkMove() {
-		double leftPos = leftFrontTalon.getEncPosition();
-		double rightPos = rightFrontTalon.getEncPosition();
-		double leftVel = leftFrontTalon.getEncVelocity();
-		double rightVel = rightFrontTalon.getEncVelocity();
-
-		if (isMoving) {
-			/*SmartDashboard.putNumber("left velocity", leftVel);
-			SmartDashboard.putNumber("right velocity", rightVel);
-			SmartDashboard.putNumber("left pos", leftPos);
-			SmartDashboard.putNumber("right pos", rightPos);*/
-
-			if ((leftPos > endPosL - MOVE_THRESH_TICKS && leftPos < endPosL + MOVE_THRESH_TICKS)
-					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
-					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
-
-				setToManual();
-			}
-		}
-		return isMoving;
-	}
-
-	/**
-	 * <pre>
-	 * public void waitMove()
-	 * </pre>
-	 *
-	 * Hangs the process until the robot is not moving.
-	 */
-	public void waitMove() {
-		while (checkMove());
-	}
-
-	/**
-	 * <pre>
-	 * public void speedRotate(double s)
-	 * </pre>
-	 *
-	 * Rotates the robot at a specified speed.
-	 *
-	 * @param s
-	 *            speed value to rotate; positive values are clockwise, negative
-	 *            values are counterclockwise
-	 */
-
-	public void speedRotate(double s) {
-		if (isMoving) {
-			setToManual();
-		}
-		leftFrontTalon.set(s);
-		rightFrontTalon.set(s);
-	}
-	
-	/**
-	 * <pre>
-	 * public void stop()
-	 * </pre>
-	 *
-	 * Sets both {@code CANTalon} speeds to 0.
-	 */
-	public void stop() {
-		setToManual();
-		isDegreeRotating = false;
-		leftFrontTalon.set(0);
-		rightFrontTalon.set(0);
-	}
-
-	/**
-	 * <pre>
-	 * public void degreeRotateVoltage(double heading)
-	 * </pre>
-	 *
-	 * Turns the base based to the specified heading
-	 * <p>
-	 * This is an asynchronous operation. Use waitDegreeRotateVoltage() to wait
-	 * for completion.
-	 * </p>
-	 *
-	 * @param heading
-	 *            the heading in degree
-	 */
-	public void degreeRotateVoltage(double heading) {				//THE RAJ METHOD
-		isDegreeRotating = true; // we flag that we are rotating asynchronously
-		gyro.reset(); // we start at zero since heading is relative to where we
-						// are
-						// (but we could also save the start angle and subtract
-						// in check method)
-		_heading = heading; // we save where we want to go
-	}
-
-	/**
-	 * <pre>
 	 * public boolean checkDegreeRotateVoltage()
 	 * </pre>
 	 *
@@ -303,43 +132,7 @@ public class DriveTrain {
 		}
 		return isDegreeRotating;
 	}
-
-	/**
-	 * <pre>
-	 * public void waitDegreeRotateVoltage()
-	 * </pre>
-	 *
-	 * Hangs the process until the robot is not rotating.
-	 */
-	public void waitDegreeRotateVoltage() {
-		while (checkDegreeRotateVoltage());
-	}
-
-	/**
-	 * <pre>
-	 * public void degreeRotateVoltageNew(double heading)
-	 * </pre>
-	 *
-	 * Turns the base based to the specified heading
-	 * <p>
-	 * This is an asynchronous operation. Use waitDegreeRotateVoltageNew() to wait
-	 * for completion.
-	 * </p>
-	 *
-	 * @param heading
-	 *            the heading in degree
-	 */
-	public void degreeRotateVoltageNew(double heading) {
-		isDegreeRotating = true; // we flag that we are rotating asynchronously
-		gyro.reset(); // we start at zero since heading is relative to where we
-						// are
-						// (but we could also save the start angle and subtract
-						// in check method)
-		_heading = heading; // we save where we want to go
-
-		//insert initial kick here if needed
-	}
-
+	
 	/**
 	 * <pre>
 	 * public boolean checkDegreeRotateVoltageNew()
@@ -380,20 +173,88 @@ public class DriveTrain {
 		}
 		return isDegreeRotating;
 	}
-
+	
 	/**
 	 * <pre>
-	 * public void waitDegreeRotateVoltageNew()
+	 * public boolean checkMove()
 	 * </pre>
 	 *
-	 * Hangs the process until the robot is not rotating.
+	 * Checks to see if the robot is moving.
+	 *
+	 * @return true if the encoder speeds are 0, the {@code CANTalon} positions
+	 *         read within a certain threshold, and the robot is moving, false
+	 *         if otherwise.
 	 */
-	public void waitDegreeRotateVoltageNew() {
-		while (checkDegreeRotateVoltageNew()) {
-			// do nothing
-		}
-	}
+	public boolean checkMove() {
+		double leftPos = leftFrontTalon.getEncPosition();
+		double rightPos = rightFrontTalon.getEncPosition();
+		double leftVel = leftFrontTalon.getEncVelocity();
+		double rightVel = rightFrontTalon.getEncVelocity();
 
+		if (isMoving) {
+			/*SmartDashboard.putNumber("left velocity", leftVel);
+			SmartDashboard.putNumber("right velocity", rightVel);
+			SmartDashboard.putNumber("left pos", leftPos);
+			SmartDashboard.putNumber("right pos", rightPos);*/
+
+			if ((leftPos > endPosL - MOVE_THRESH_TICKS && leftPos < endPosL + MOVE_THRESH_TICKS)
+					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
+					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
+
+				setToManual();
+			}
+		}
+		return isMoving;
+	}
+	
+	/**
+	 * <pre>
+	 * public void degreeRotateVoltage(double heading)
+	 * </pre>
+	 *
+	 * Turns the base based to the specified heading
+	 * <p>
+	 * This is an asynchronous operation. Use waitDegreeRotateVoltage() to wait
+	 * for completion.
+	 * </p>
+	 *
+	 * @param heading
+	 *            the heading in degree
+	 */
+	public void degreeRotateVoltage(double heading) {				//THE RAJ METHOD
+		isDegreeRotating = true; // we flag that we are rotating asynchronously
+		gyro.reset(); // we start at zero since heading is relative to where we
+						// are
+						// (but we could also save the start angle and subtract
+						// in check method)
+		_heading = heading; // we save where we want to go
+	}
+	
+	/**
+	 * <pre>
+	 * public void degreeRotateVoltageNew(double heading)
+	 * </pre>
+	 *
+	 * Turns the base based to the specified heading
+	 * <p>
+	 * This is an asynchronous operation. Use waitDegreeRotateVoltageNew() to wait
+	 * for completion.
+	 * </p>
+	 *
+	 * @param heading
+	 *            the heading in degree
+	 */
+	public void degreeRotateVoltageNew(double heading) {
+		isDegreeRotating = true; // we flag that we are rotating asynchronously
+		gyro.reset(); // we start at zero since heading is relative to where we
+						// are
+						// (but we could also save the start angle and subtract
+						// in check method)
+		_heading = heading; // we save where we want to go
+
+		//insert initial kick here if needed
+	}
+	
 	/**
 	 * <pre>
 	 * public boolean isOutOfDeadzone(Joystick j,
@@ -413,20 +274,41 @@ public class DriveTrain {
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
 	}
-
+	
 	/**
 	 * <pre>
-	 * private void setToManual()
+	 * public void moveDistance(double changePos)
 	 * </pre>
 	 *
-	 * Sets the control modes of the front {@code CANTalons} to PercentVbus.
+	 * Moves the base based on encoder measurements by the specified distance in
+	 * feet.
+	 * <p>
+	 * This is an asynchronous operation. Use waitMove() to wait for completion.
+	 * </p>
+	 *
+	 * @param changePos
+	 *            the distance to move in feet
 	 */
-	private void setToManual() {
-		isMoving = false;
-		leftFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
-		rightFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
-	}
 
+	public void moveDistance(double changePos, double p, double i, double d, double maxV) {
+		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		startPosL = leftFrontTalon.getEncPosition();
+		startPosR = rightFrontTalon.getEncPosition();
+		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
+		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
+		leftFrontTalon.setPID(p, i, d);
+		rightFrontTalon.setPID(p, i, d);
+		leftFrontTalon.configPeakOutputVoltage(maxV, -maxV);
+		leftFrontTalon.configNominalOutputVoltage(0, 0);
+		rightFrontTalon.configPeakOutputVoltage(maxV, -maxV);
+		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
+		setToAuto();
+		leftFrontTalon.enableControl();
+		rightFrontTalon.enableControl();
+		leftFrontTalon.set(endPosL);
+		rightFrontTalon.set(endPosR);
+	}
+	
 	/**
 	 * <pre>
 	 * private void setToAuto()
@@ -439,5 +321,120 @@ public class DriveTrain {
 		leftFrontTalon.changeControlMode(CANTalon.TalonControlMode.Position);
 		rightFrontTalon.changeControlMode(CANTalon.TalonControlMode.Position);
 	}
+	
+	/**
+	 * <pre>
+	 * private void setToManual()
+	 * </pre>
+	 *
+	 * Sets the control modes of the front {@code CANTalons} to PercentVbus.
+	 */
+	private void setToManual() {
+		isMoving = false;
+		leftFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
+		rightFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
+	}
+	
+	/**
+	 * <pre>
+	 * public void speedRotate(double s)
+	 * </pre>
+	 *
+	 * Rotates the robot at a specified speed.
+	 *
+	 * @param s
+	 *            speed value to rotate; positive values are clockwise, negative
+	 *            values are counterclockwise
+	 */
 
+	public void speedRotate(double s) {
+		if (isMoving) {
+			setToManual();
+		}
+		leftFrontTalon.set(s);
+		rightFrontTalon.set(s);
+	}
+	
+	/**
+	 * <pre>
+	 * public void stop()
+	 * </pre>
+	 *
+	 * Sets both {@code CANTalon} speeds to 0.
+	 */
+	public void stop() {
+		setToManual();
+		isDegreeRotating = false;
+		leftFrontTalon.set(0);
+		rightFrontTalon.set(0);
+	}
+	
+	/**
+	 * <pre>
+	 * public void tankDrive(Joystick leftStick,
+	 *                       Joystick rightStick)
+	 * </pre>
+	 *
+	 * Drives the base using a {@code Joystick} for the left set of wheels, and
+	 * another {@code Joystick} for the right set of wheels.
+	 *
+	 * @param leftStick
+	 *            the {@code Joystick} to control the left set of wheels
+	 * @param rightStick
+	 *            the {@code Joystick} to control the right set of wheels
+	 */
+	public void tankDrive(Joystick leftStick, Joystick rightStick) {
+		if (!isMoving && !isDegreeRotating) {
+			if (isOutOfDeadzone(leftStick, 1)) {
+				double rawValue = leftStick.getRawAxis(1);
+				leftFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+						* config.LEFT_DRIVE_SIGN);
+			} else {
+				leftFrontTalon.set(0);
+			}
+
+			if (isOutOfDeadzone(rightStick, 1)) {
+				double rawValue = rightStick.getRawAxis(1);
+				rightFrontTalon.set((rawValue - Math.signum(rawValue) * DEADZONE_LIMIT) / (1.0 - DEADZONE_LIMIT)
+						* config.RIGHT_DRIVE_SIGN);
+			} else {
+				rightFrontTalon.set(0);
+			}
+		}
+	}
+
+	/**
+	 * <pre>
+	 * public void waitDegreeRotateVoltage()
+	 * </pre>
+	 *
+	 * Hangs the process until the robot is not rotating.
+	 */
+	public void waitDegreeRotateVoltage() {
+		while (checkDegreeRotateVoltage());
+	}
+
+	/**
+	 * <pre>
+	 * public void waitDegreeRotateVoltageNew()
+	 * </pre>
+	 *
+	 * Hangs the process until the robot is not rotating.
+	 */
+	public void waitDegreeRotateVoltageNew() {
+		while (checkDegreeRotateVoltageNew()) {
+			// do nothing
+		}
+	}
+
+	/**
+	 * <pre>
+	 * public void waitMove()
+	 * </pre>
+	 *
+	 * Hangs the process until the robot is not moving.
+	 */
+	public void waitMove() {
+		while (checkMove());
+	}
 }
