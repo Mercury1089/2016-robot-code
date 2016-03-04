@@ -150,18 +150,12 @@ public class Robot extends IterativeRobot {
 			drive.stop();
 		}
 
-		// begin asynchronous moves
-
 		// Aims at target / initiates asynchronous shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
 
 		shootProc(aim); // completes shooting sequence once aiming is successful (if initiated) 
-
-		drive.checkMove(); // completes asynchronous move if started
-
-		// end asynchronous moves
 
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
 			shooter.shoot(); // shoot ball
