@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSourceType;
+//import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.PIDController;
+//import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * The {@code DriveTrain} class handles movement with the drive base of the
@@ -35,16 +35,16 @@ public class DriveTrain {
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12; //15;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
 	private static final double TIER_4_DEGREES_FROM_TARGET = 1;
-	private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.0;
-	private static final int AUTOROTATE_MAX_ATTEMPTS = 5;
+	//private static final double AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES = 1.0;
+	//private static final int AUTOROTATE_MAX_ATTEMPTS = 5;
 	private static final double AUTOROTATE_SPEED = 0.77;
 	public static final double AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS = 0.500;
-	private static final double TURN_TIMEOUT_MILLIS = 4000;
+	//private static final double TURN_TIMEOUT_MILLIS = 4000;
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 500;
 	private static final double TURN_THRESH_VELOCITY = 10;
 
-	private int autoRotCounter = 0;
+	//private int autoRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
 

@@ -53,7 +53,7 @@ public class StrongholdAuton {
 	private Camera camera;
 	private int state = 0, breachAttempts = 0, centerAttempts = 0;
 	private PosEnum pos;
-	private double centeredMoveDistance, recenteredMoveDistance;
+	private double centeredMoveDistance;
 	private AimEnum aim;
 	private MercAccelerometer accel;
 	private Shooter shooter;
