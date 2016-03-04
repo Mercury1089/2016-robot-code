@@ -23,49 +23,49 @@ public class Defense{
 		switch (defenseEnum) {
 			case LOW_BAR: {
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
 				break;
 			}
 			case MOAT: {
 				shooter.raise(Shooter.LOW);
-				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6.0); //TODO test and change ALL these values
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6.0); //TODO test and change ALL these values
 				drive.waitMove();		//need moderate PID voltage - to be changed
 				break;
 			}
 			case ROUGH_TERRAIN: {
 				shooter.raise(Shooter.LOW);
-				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
 				drive.waitMove();		//need fast PID voltage - to be changed
 				break;
 			}
 			case RAMPARTS: {
 				shooter.raise(Shooter.LOW);
-				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
 				drive.waitMove();
 				break;
 			}
 			case ROCK_WALL: {
 				shooter.raise(Shooter.LOW);
-				drive.moveDistanceAuton(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 10.0); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 10.0); 
 				drive.waitMove();		//need fast PID voltage - to be changed
 				break;
 			}
 			case CHEVAL_DE_FRISE: {
 				shooter.raise(Shooter.MEDIUM);
-				drive.moveDistance(INITIAL_CDF_FEET);
+				drive.moveDistance(INITIAL_CDF_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistanceAuton(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
+				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
 				drive.waitMove();
 				break;
 			}
 			case PORTCULLIS: {
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistance(INITIAL_CDF_FEET);
+				drive.moveDistance(INITIAL_CDF_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				//OPEN PORTCULLIS DOOR code
-				drive.moveDistanceAuton(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);	//change constants 
+				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);	//change constants 
 				drive.waitMove();
 				break;
 			}

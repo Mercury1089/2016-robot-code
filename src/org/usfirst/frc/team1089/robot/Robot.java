@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 	private Config config;
 
 	private int shootingAttemptCounter = 0;
-	private boolean isShooting = false; 
+	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
 	@Override
@@ -116,6 +116,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
+		isInAuton = true;
 		auton.move();
 		
 		camera.getNTInfo(); // in case not already called in move()
@@ -133,6 +134,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	// Handle global manipulation of robot here
 	public void teleopPeriodic() {
+		isInAuton = false;
 		// Get initial info
 		camera.getNTInfo();
 
@@ -141,24 +143,6 @@ public class Robot extends IterativeRobot {
 
 		// Teleop Tank with DriveTrain
 		drive.tankDrive(leftStick, rightStick);
-
-		// Reset gyro with the A button on the gamepad
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
-			gyro.reset();
-		}
-
-		// Gets turnAngle if there is one target
-		// Turn yourself towards the target
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
-			drive.autoRotate(camera);
-			// drive.turnDistance(1);
-		}
-
-		// reset encoders
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
-			leftFront.setEncPosition(0);
-			rightFront.setEncPosition(0);
-		}
 		
 		// Aborts shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
@@ -169,20 +153,11 @@ public class Robot extends IterativeRobot {
 		// begin asynchronous moves
 
 		// Aims at target / initiates asynchronous shooting sequence
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
 
 		shootProc(aim); // completes shooting sequence once aiming is successful (if initiated) 
-
-		if (gamepad.getRawButton(ControllerBase.GamepadButtons.START)) {
-			// drive.encoderAngleRotate(360); // this is an asynchronous move
-			// drive.encoderAngleRotate(camera.getTurnAngle());
-			drive.speedRotate(0.35);
-		} else if (cBase.getReleased(ControllerBase.Joysticks.GAMEPAD,
-				ControllerBase.GamepadButtons.START)) {
-			drive.stop();
-		}
 
 		drive.checkMove(); // completes asynchronous move if started
 
@@ -226,9 +201,6 @@ public class Robot extends IterativeRobot {
 			intake.moveBall(1.0); // push ball out
 		}
 
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
-			aimAndShootProcedure();
-		}
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			cBase.rumble(true);
@@ -241,29 +213,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void testPeriodic() {
-	}
-
-	/**
-	 * <pre>
-	 * public void aimAndShootProcedure()
-	 * </pre>
-	 * Goes through the shoot procedure
-	 * @deprecated As of 1.0, use aimProc() and shootProc() 
-	 */
-	@Deprecated
-	public void aimAndShootProcedure() {
-		intake.lower(false);
-
-		if (camera.isInDistance() && camera.isInLineWithGoal()) {
-			shooter.raiseShootingHeight(camera);
-			Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); // waits for shooter to get in position
-			drive.autoRotate/* New */(camera);
-			
-			if (camera.isInTurnAngle()) { // assumes NT info is up to date
-											// coming out of rotation routine
-				shooter.shoot();
-			}
-		}
 	}
 	
 	/**
@@ -300,13 +249,13 @@ public class Robot extends IterativeRobot {
 
 			if (camera.isInTurnAngle()) {
 				isShooting = false;
-				if (aim == AimEnum.LOW) {
+				if (aim == AimEnum.LOW && isInAuton) {
 					// calculates how far the batter is from where we are now
 					recenteredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - StrongholdAuton.LENGTH_OF_BATTER_FEET); 
 					
 					// If distance to center is not unrealistic, continue
 					if (recenteredMoveDistance < StrongholdAuton.MAX_RECENTER_DISTANCE_FEET) {					
-						drive.moveDistanceAuton(recenteredMoveDistance, 0.4, 0, 0, 4.5);
+						drive.moveDistance(recenteredMoveDistance, 0.4, 0, 0, 4.5);
 						drive.waitMove();
 						shooter.raise(Shooter.DOWN);
 					}

@@ -143,23 +143,23 @@ public class StrongholdAuton {
 			}
 			case MOVE1: {//Move to rotation point if needed
 				if (pos == PosEnum.POS1) {
-					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 				} else if (pos == PosEnum.POS2) {
-					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P2_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 				} else if (pos == PosEnum.POS3) {
 					drive.degreeRotateVoltage(60);
 					drive.waitDegreeRotateVoltage();
-					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					drive.degreeRotateVoltage(-60);
 					drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS4) {
-					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 				} else if (pos == PosEnum.POS5) {
-					drive.moveDistanceAuton(MOVE_DISTANCE_POST_DEFENSE_P5_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 				}				
 				state++;
@@ -222,7 +222,7 @@ public class StrongholdAuton {
 				break;
 			}
 			case MOVE2: {//Move forward so that distance from goal is an acceptable distance
-				drive.moveDistanceAuton(centeredMoveDistance, 0.4, 0, 0, 4.5);
+				drive.moveDistance(centeredMoveDistance, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				state++;
 				break;
@@ -247,7 +247,9 @@ public class StrongholdAuton {
 				}
 				else if (aim == AimEnum.LOW && (pos != PosEnum.POS3 || pos != PosEnum.POS4)) {
 					robot.shootProc(aim);
-					state++;
+					if (!robot.isShooting()) {
+						state++;
+					}
 				}
 				else {
 					state = DONE;

@@ -140,28 +140,10 @@ public class DriveTrain {
 	 * @param changePos
 	 *            the distance to move in feet
 	 */
-	public void moveDistance(double changePos) {
-		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
-		startPosL = leftFrontTalon.getEncPosition();
-		startPosR = rightFrontTalon.getEncPosition();
-		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
-		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(0.4, 0.0005, -0.001);
-		rightFrontTalon.setPID(0.4, 0.0005, -0.001);
-		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
-		leftFrontTalon.configNominalOutputVoltage(0, 0);
-		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
-		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
-		setToAuto();
-		leftFrontTalon.enableControl();
-		rightFrontTalon.enableControl();
-		leftFrontTalon.set(endPosL);
-		rightFrontTalon.set(endPosR);
-	}
 
 	// this is a custom version of moveDistance for Auton
 	// moveDistance could probably just call this method
-	public void moveDistanceAuton(double changePos, double p, double i, double d, double maxV) {
+	public void moveDistance(double changePos, double p, double i, double d, double maxV) {
 		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
 		startPosL = leftFrontTalon.getEncPosition();
 		startPosR = rightFrontTalon.getEncPosition();
@@ -173,41 +155,6 @@ public class DriveTrain {
 		leftFrontTalon.configNominalOutputVoltage(0, 0);
 		rightFrontTalon.configPeakOutputVoltage(maxV, -maxV);
 		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
-		setToAuto();
-		leftFrontTalon.enableControl();
-		rightFrontTalon.enableControl();
-		leftFrontTalon.set(endPosL);
-		rightFrontTalon.set(endPosR);
-	}
-
-	/**
-	 * <pre>
-	 * public void turnDistance(double changePos)
-	 * </pre>
-	 *
-	 * Turns the base based on encoders by the specified distance in feet
-	 * alongside the arc created by the axle track.
-	 * <p>
-	 * This is an asynchronous operation. Use waitMove() to wait for completion.
-	 * </p>
-	 *
-	 * @param changePos
-	 *            the distance to turn in feet
-	 */
-	public void turnDistance(double changePos) {
-		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
-		startPosL = leftFrontTalon.getEncPosition();
-		startPosR = rightFrontTalon.getEncPosition();
-		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
-		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(0.3, 0.000, -0.000);
-		rightFrontTalon.setPID(0.3, 0.000, -0.000);
-		leftFrontTalon.configPeakOutputVoltage(12.0, -12.0);
-		leftFrontTalon.configNominalOutputVoltage(6, -6);
-		rightFrontTalon.configPeakOutputVoltage(12.0, -12.0);
-		rightFrontTalon.configNominalOutputVoltage(6, -6);
-		leftFrontTalon.setCloseLoopRampRate(.01);
-		rightFrontTalon.setCloseLoopRampRate(.01);
 		setToAuto();
 		leftFrontTalon.enableControl();
 		rightFrontTalon.enableControl();
@@ -278,21 +225,7 @@ public class DriveTrain {
 		leftFrontTalon.set(s);
 		rightFrontTalon.set(s);
 	}
-
-	// rotates the robot a the specified speed around an undetermined center of rotation
-	public void speedRotateNew(double s) {
-		if (isMoving) {
-			setToManual();
-		}
-
-		if (s > 0) {
-			leftFrontTalon.set(s);
-		}
-		else {
-			rightFrontTalon.set(s);
-		}
-	}
-
+	
 	/**
 	 * <pre>
 	 * public void stop()
@@ -305,157 +238,6 @@ public class DriveTrain {
 		isDegreeRotating = false;
 		leftFrontTalon.set(0);
 		rightFrontTalon.set(0);
-	}
-
-	/**
-	 * <pre>
-	 * public void degreeRotate(double deg,
-	 *                          double s)
-	 * </pre>
-	 *
-	 * Rotates the robot to a specified amount of degrees at a certain speed.
-	 *
-	 * @param deg
-	 *            amount of degrees to rotate
-	 * @param s
-	 *            speed to rotate at
-	 */
-	public void degreeRotate(double deg, double s) {
-		degreeRotate(deg,s,1);
-	}
-
-	/**
-	 * <pre>
-	 * public void degreeRotate(double deg,
-	 *                          double s)
-	 * </pre>
-	 *
-	 * Rotates the robot to a specified amount of degrees at a certain speed.
-	 *
-	 * @param deg
-	 *            amount of degrees to rotate
-	 * @param s
-	 *            speed to rotate at
-	 * @param c
-	 *            a custom counter
-	 */
-	public void degreeRotate(double deg, double s, int c) {
-		double startAngle = gyro.getAngle();
-		double startTime = System.currentTimeMillis();
-		//isMoving = true;
-		if (deg < 0) {
-			s *= -1; // speed sign same as desired angle
-		}
-
-		// we probably would want to take sign into account here
-		/*speedRotate(0.65 + (.05 * c));
-		Timer.delay(.020);*/
-		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
-				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s);
-			//speedRotate(Math.signum(deg) * 0.65);
-		}
-		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_2_DEGREES_FROM_TARGET)
-				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 1.75);
-			//speedRotate(Math.signum(deg) * 0.55);
-		}
-		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_3_DEGREES_FROM_TARGET)
-				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 1.90);
-			//speedRotate(Math.signum(deg) * 0.4);
-		}
-		while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_4_DEGREES_FROM_TARGET)
-				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-			speedRotate(s / 2.0);
-			//speedRotate(Math.signum(deg) * 0.35);
-		}
-		stop();
-		//isMoving = false;
-	}
-
-	/**
-	 * Calls degreeRotate() if angle reported by camera is not acceptable.
-	 *
-	 * Camera angle is checked at each attempt
-	 * Network Table info is fetched prior to returning
-	 *
-	 * @param c the camera to get the angle from
-	 */
-	public void autoRotate(Camera c) {
-		autoRotCounter = 0;
-		double deg = 0;
-		double startTime = System.currentTimeMillis();
-		do {
-			c.getNTInfo();
-			deg = c.getTurnAngle();
-			degreeRotate(deg, AUTOROTATE_SPEED, autoRotCounter);
-			Timer.delay(AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-			autoRotCounter++;
-		} while ((Math.abs(deg) > AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES)
-				&& (autoRotCounter <= AUTOROTATE_MAX_ATTEMPTS)
-				&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS * 2));
-
-		// finally we we refresh the network table info
-		// in case this routine is called directly from shootProcedure
-		c.getNTInfo();
-	}
-
-	/**
-	 * Calls degreeRotate() if if angle reported by camera is not acceptable.
-	 *
-	 * Camera angle is checked only once to set setpoint
-	 * Network Table info is fetched prior to returning
-	 *
-	 * @param c the camera to get the angle from
-	 */
-	public void autoRotateNew(Camera c) {
-		autoRotCounter = 0;
-		double earliestStartTime = System.currentTimeMillis();
-		c.getNTInfo();
-		double deg = c.getTurnAngle(); // delta from initial position
-		double setpoint = deg + gyro.getAngle(); // setpoint
-		double s;
-
-		do {
-			double startTime = System.currentTimeMillis();
-			double startAngle = gyro.getAngle();
-			if (deg > 0) {
-				s = AUTOROTATE_SPEED; // speed sign same as desired angle
-			} else {
-				s = -AUTOROTATE_SPEED; // speed sign same as desired angle
-			}
-
-			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_1_DEGREES_FROM_TARGET)
-					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-				speedRotate(s);
-			}
-			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_2_DEGREES_FROM_TARGET)
-					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-				speedRotate(s / 1.75);
-			}
-			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_3_DEGREES_FROM_TARGET)
-					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-				speedRotate(s / 1.90);
-			}
-			while ((Math.abs(gyro.getAngle() - startAngle) < Math.abs(deg) - TIER_4_DEGREES_FROM_TARGET)
-					&& (System.currentTimeMillis() - startTime <= TURN_TIMEOUT_MILLIS)) {
-				speedRotate(s / 2.0);
-			}
-			stop(); // we stop so that startAngle and deg are in sync if we loop again
-
-			// calculates new delta based on setpoint and current position
-			deg = setpoint - gyro.getAngle();
-
-			autoRotCounter++;
-		} while ((Math.abs(deg) > AUTOROTATE_MAX_ACCEPTABLE_ANGLE_DEGREES)
-				&& (autoRotCounter <= AUTOROTATE_MAX_ATTEMPTS)
-				&& (System.currentTimeMillis() - earliestStartTime <= TURN_TIMEOUT_MILLIS * 2));
-
-		// finally we force a delay and we refresh the network table info
-		// in case this routine is called directly from shootProcedure
-		Timer.delay(AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-		c.getNTInfo();
 	}
 
 	/**
@@ -611,27 +393,6 @@ public class DriveTrain {
 			// do nothing
 		}
 	}
-/*
- *  This caused the robot code to die....
-	private PIDController rotater = new PIDController(0.02, 0.001, 0, gyro, leftFrontTalon);
-	
-	public void degreeRotatePID(double heading) {
-        gyro.setPIDSourceType(PIDSourceType.kDisplacement);
-        leftFrontTalon.setPIDSourceType(PIDSourceType.kDisplacement);
-        rotater.setAbsoluteTolerance(config.IN_LINE_MIN);
-        rotater.enable();
-	}
-
-    public void checkDegreeRotatePID() {
-        if(rotater.onTarget()) {
-            rotater.disable();
-        }
-    }
-*/
-	// like turnDistance, but input is in degrees
-	public void encoderAngleRotate(double rotDegrees) {
-		turnDistance(arcLength(rotDegrees));
-	}
 
 	/**
 	 * <pre>
@@ -651,22 +412,6 @@ public class DriveTrain {
 	 */
 	public boolean isOutOfDeadzone(Joystick j, int axis) {
 		return (Math.abs(j.getRawAxis(axis)) > DEADZONE_LIMIT);
-	}
-
-	/**
-	 * <pre>
-	 * public double arcLength(double angle)
-	 * </pre>
-	 *
-	 * Gets the arc length of an angle based on the axle track.
-	 *
-	 * @param angle
-	 *            the angle in degrees to convert to an arc length
-	 * @return the arc length, in feet, of an angle based on the robot's axle
-	 *         track, in inches
-	 */
-	public double arcLength(double angle) {
-		return -Math.toRadians(angle) * (config.AXLE_TRACK_INCHES / 2) / 12;
 	}
 
 	/**
