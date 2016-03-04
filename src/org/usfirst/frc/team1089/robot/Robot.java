@@ -156,6 +156,7 @@ public class Robot extends IterativeRobot {
 			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
 
+		// TODO maybe here we should always use AimEnum.HIGH because using a Auton setting in teleop is dangerous 
 		shootProc(aim); // completes shooting sequence once aiming is successful (if initiated) 
 
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {

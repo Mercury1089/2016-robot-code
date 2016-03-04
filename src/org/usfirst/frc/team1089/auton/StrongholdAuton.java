@@ -104,6 +104,8 @@ public class StrongholdAuton {
 
 	public void resetState() {
 		state = START;
+		breachAttempts = 0;
+		centerAttempts = 0;
 	}
 	
 	// START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
@@ -279,7 +281,7 @@ public class StrongholdAuton {
 						state++;
 					}
 				}
-				else if (aim == AimEnum.LOW && (pos != PosEnum.POS3 || pos != PosEnum.POS4)) {
+				else if (aim == AimEnum.LOW && (pos != PosEnum.POS3 && pos != PosEnum.POS4)) {
 					robot.shootProc(aim);
 					if (!robot.isShooting()) {
 						state++;
