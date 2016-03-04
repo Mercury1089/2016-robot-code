@@ -102,6 +102,10 @@ public class StrongholdAuton {
 		defense = new Defense(drive, shooter, dE);
 	}
 
+	public void resetState() {
+		state = START;
+	}
+	
 	// START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
 	// CALCULATE = 5, MOVE2 = 6, AIM = 7, SHOOT = 8, 
 	// DONE = 9;

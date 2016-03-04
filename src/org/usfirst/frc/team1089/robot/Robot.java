@@ -112,6 +112,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		gyro.reset();
+		auton.resetState();
 	}
 
 	@Override
