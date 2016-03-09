@@ -45,11 +45,14 @@ public class Robot extends IterativeRobot {
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
+	private boolean closeStream = false;
+	
 	@Override
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-
+		Logger.init();
+		
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new Shooter();
@@ -111,6 +114,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		gyro.reset();
 		auton.resetState();
+		closeStream = true;
+		
+		Logger.log("ENTERING AUTONOMOUS", "CLOSE STREAM: " + closeStream);
 	}
 
 	@Override
@@ -125,12 +131,29 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
+	public void disabledInit() {
+		if (closeStream) {
+			// When the game ends, close the Logger stream
+			// This ends the stream, writes the data to the file,
+			// and that's that.
+			Logger.close();
+			System.out.println("Closed stream!");
+		}
+	}
+	
+	@Override
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
 		
 		cBase.rumble(false);
 	}
+	
+	@Override
+	public void teleopInit() {
+		closeStream = true;
+	}
+	
 
 	@Override
 	// Handle global manipulation of robot here
@@ -204,7 +227,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			cBase.rumble(false);
 		}
-
+		Logger.log("WOW DOES THIS WORK????", "IF THIS IS BEING READ, YEET");
 		debug();
 	}
 

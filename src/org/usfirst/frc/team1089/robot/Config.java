@@ -25,8 +25,6 @@ public class Config {
 	public final double GEAR_RATIO;
 	
 	public final double TILT_THRESH_DEGREES;
-	
-	public final String LOG_PATH;
 
 	/**
 	 * The {@code ConfigType} is an enum for two possible uses of the code:
@@ -83,8 +81,6 @@ public class Config {
 			GEAR_RATIO = 1.0;
 			
 			TILT_THRESH_DEGREES = 15.0;	
-			
-			LOG_PATH = "logs\\";
 			break;
 		default: // COMPETITION
 			// calibrated value for Axis M1013 
@@ -112,8 +108,6 @@ public class Config {
 			GEAR_RATIO = 4.0 / 3.0; // defined as speed in / speed out
 			
 			TILT_THRESH_DEGREES = 15.0;
-			
-			LOG_PATH = "home\\lvuser\\log\\";
 			break;
 		}
 	}
