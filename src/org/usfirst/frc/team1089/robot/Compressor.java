@@ -3,6 +3,7 @@ package org.usfirst.frc.team1089.robot;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
 
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj.Relay;
  */
 public class Compressor {
 	private DigitalInput checkPressure;
+	// private AnalogInput pressureSwitch;
 	private Relay relay;
 	private static final long CHECK_TIME_MS = 20;
 	private Timer timer = new Timer();
@@ -23,6 +25,7 @@ public class Compressor {
 	 */
 	public Compressor() {
 		checkPressure = new DigitalInput(Ports.Digital.CHECK_PRESSURE);
+		// pressureSwitch = new AnalogInput(0); // TODO: Change port for this
 		relay = new Relay(Ports.Relay.COMPRESSOR_RELAY);
 	}
 
@@ -34,6 +37,7 @@ public class Compressor {
 	 */
 	public void checkCompressor() {
 		timer.schedule(new CheckCompressorTask(checkPressure, relay), CHECK_TIME_MS, CHECK_TIME_MS);
+		// timer.schedule(new CheckCompressorTask(pressureSwitch, relay), CHECK_TIME_MS, CHECK_TIME_MS);
 	}
 
 	/**
@@ -41,6 +45,7 @@ public class Compressor {
 	 */
 	private class CheckCompressorTask extends TimerTask {
 		private DigitalInput _checkPressure;
+		// private AnalogInput inputSwitch;
 		private Relay _relay;
 
 		/**
@@ -54,11 +59,21 @@ public class Compressor {
 		 * @param r the {@code Relay} to use to manipulate the compressor
 		 */
 		public CheckCompressorTask(DigitalInput dI, Relay r) {
+		// public CheckCompressorTask(AnalogInput iS, Relay r) {
+			// inputSwitch = iS;
 			_checkPressure = dI;
 			_relay = r;
 		}
 
-		@Override
+/*		@Override
+		public void run() {
+			if (inputSwitch.pidGet() > 0) {
+				_relay.set(Relay.Value.kOff);
+			} else {
+				_relay.set(Relay.Value.kForward);
+			}
+		}*/
+		
 		public void run() {
 			if (_checkPressure.get()) {
 				_relay.set(Relay.Value.kOff);

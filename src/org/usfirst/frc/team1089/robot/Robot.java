@@ -49,7 +49,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-
+		Logger.init(); // No idea if we want to use this yet
+		Logger.log("Testing", "1", "2", "3");
+		
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new Shooter();

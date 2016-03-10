@@ -35,19 +35,28 @@ public class Logger {
 	 * @param location the location to store the log file. Note that it is only the path;
 	 *        the filename itself is handled inside the method.
 	 */
-	public synchronized static void init(String location) {
+	public synchronized static void init() {
+		String location;
 		if (log == null) {
 			try {
-				location += "log_" + DAY.format(CALENDAR.getTime());
+				File dir;
+				location = "home\\lvuser\\log\\log_" + DAY.format(CALENDAR.getTime()) + ".txt";
 				
-				log = new File(location + ".txt");
+				log = new File(location);
 				
-				log.getParentFile().mkdirs();
-				log.createNewFile();
+				dir = log.getParentFile();
+
+				if (!dir.exists())
+					dir.mkdirs();
+				
+				if (!log.exists())
+					log.createNewFile();
 				
 				out = new FileWriter(log.getAbsolutePath());
 				writer = new PrintWriter(out);
-			} catch (Exception e) { }
+			} catch (Exception e) { 
+				e.printStackTrace(System.out);
+			}
 			
 			ds = DriverStation.getInstance();
 		}
