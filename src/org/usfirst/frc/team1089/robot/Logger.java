@@ -36,29 +36,24 @@ public class Logger {
 	 *        the filename itself is handled inside the method.
 	 */
 	public synchronized static void init() {
-		String location;
 		if (log == null) {
 			try {
-				File dir;
-				location = "home\\lvuser\\log\\log_" + DAY.format(CALENDAR.getTime()) + ".txt";
+				File path;
+				log = new File("home/lvuser/log/log_" + DAY.format(CALENDAR.getTime()) + ".txt");
+				path = log.getParentFile();
 				
-				log = new File(location);
-				
-				dir = log.getParentFile();
-
-				if (!dir.exists())
-					dir.mkdirs();
+				if (!path.exists())
+					path.mkdirs();
 				
 				if (!log.exists())
 					log.createNewFile();
 				
 				out = new FileWriter(log.getAbsolutePath());
 				writer = new PrintWriter(out);
+				ds = DriverStation.getInstance();
 			} catch (Exception e) { 
 				e.printStackTrace(System.out);
 			}
-			
-			ds = DriverStation.getInstance();
 		}
 	}
 	
@@ -75,7 +70,9 @@ public class Logger {
 			for (Object o : input)
 				out += o.toString() + '\t';
 			writer.println("[" + ds.getMatchTime() + "]: " + out);
-		} catch (Exception e) { }
+		} catch (Exception e) { 
+			e.printStackTrace(System.out);
+		}
 	}
 	
 	/**
@@ -117,16 +114,16 @@ public class Logger {
 	
 	/**
 	 * <pre>
-	 * public void close()
+	 * public static synchronized void close()
 	 * </pre>
 	 * Closes all the writers and releases the resources related to them.
 	 */
-	public void close() {
+	public static synchronized void close() {
 		try {
 			writer.close();
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(System.out);
 		}
 	}
 }

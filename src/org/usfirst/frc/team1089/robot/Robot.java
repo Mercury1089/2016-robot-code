@@ -49,8 +49,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-		Logger.init(); // No idea if we want to use this yet
-		Logger.log("Testing", "1", "2", "3");
+		Logger.init();
 		
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
@@ -127,12 +126,29 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
+	public void disabledInit() {
+		if (closeStream) {
+			// When the game ends, close the Logger stream
+			// This ends the stream, writes the data to the file,
+			// and that's that.
+			Logger.close();
+			System.out.println("Closed stream!");
+		}
+	}
+	
+	@Override
 	public void disabledPeriodic() {
 		camera.getNTInfo();
 		debug();
 		
 		cBase.rumble(false);
 	}
+	
+	@Override
+	public void teleopInit() {
+		closeStream = true;
+	}
+	
 
 	@Override
 	// Handle global manipulation of robot here
@@ -206,7 +222,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			cBase.rumble(false);
 		}
-
+		Logger.log("WOW DOES THIS WORK????", "IF THIS IS BEING READ, YEET");
 		debug();
 	}
 
