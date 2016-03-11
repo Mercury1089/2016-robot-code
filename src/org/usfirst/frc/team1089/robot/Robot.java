@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 	private Config config;
 
 	private int shootingAttemptCounter = 0;
-	private boolean isShooting = false, isInAuton = false; 
+	private boolean isShooting = false, isInAuton = false, closeStream = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
 	@Override
@@ -112,6 +112,8 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		gyro.reset();
 		auton.resetState();
+		
+		closeStream = true;
 	}
 
 	@Override
