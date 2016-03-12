@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
 public class NTListener implements ITableListener{
 
 	private NetworkTable t = NetworkTable.getTable("GRIP/myContoursReport");
+	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	
 	public static void main(String[] args){
 		new NTListener().run();
@@ -20,7 +21,6 @@ public class NTListener implements ITableListener{
 		NetworkTable.setIPAddress("roborio-1089-frc.local");*/
 		
 		t.addTableListener(this);
-		
 		Logger.log("Area: " + Arrays.toString(t.getNumberArray("area", def)), " Width: " + Arrays.toString(t.getNumberArray("width", def)), 
 				   " Height: " + Arrays.toString(t.getNumberArray("height", def)), " CenterX: " + Arrays.toString(t.getNumberArray("centerX", def)), 
 				   "CenterY: " + Arrays.toString(t.getNumberArray("centerY", def)));
@@ -30,6 +30,31 @@ public class NTListener implements ITableListener{
 	@Override
 	public void valueChanged(ITable source, String string , Object o, boolean bln){
 		Logger.log("String: " + string + " Value: " + Arrays.toString((double[])o) + " new: " + bln);
+		switch (string) {
+		case "area": {
+			rectArea = (double[]) o;
+			break;
+		}
+		case "width": {
+			rectWidth = (double[]) o;
+			break;
+		}
+		case "height": {
+			rectHeight = (double[]) o;
+			break;
+		}
+		case "centerX": {
+			rectCenterX = (double[]) o;
+			break;
+		}
+		case "centerY": {
+			rectCenterY = (double[]) o;
+			break;
+		}
+	    default:{
+			break;
+		}
+		}
 	}
 
 	public void stop() {

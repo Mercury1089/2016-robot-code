@@ -19,12 +19,11 @@ public class Logger {
 	private static PrintWriter writer;
 	private static DriverStation ds;
 	
-	private static final Calendar CALENDAR;
-	private static final SimpleDateFormat DAY;
+	
+	private static final SimpleDateFormat ISO8601;
 	
 	static {
-		CALENDAR = Calendar.getInstance();
-		DAY = new SimpleDateFormat("yyyy-MM-dd_HH,mm,ss");
+		ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 	}
 	
 	/**
@@ -39,7 +38,7 @@ public class Logger {
 		if (log == null) {
 			try {
 				File path;
-				log = new File("home/lvuser/log/log_" + DAY.format(CALENDAR.getTime()) + ".txt");
+				log = new File("home/lvuser/log/log_" + ISO8601.format(Calendar.getInstance().getTime()) + ".txt");
 				path = log.getParentFile();
 				
 				if (!path.exists())
@@ -69,7 +68,7 @@ public class Logger {
 			String out = "";
 			for (Object o : input)
 				out += o.toString() + '\t';
-			writer.println("[" + ds.getMatchTime() + "]: " + out);
+			writer.println("[" + ds.getMatchTime() + "]:" + "[" + ISO8601.format(Calendar.getInstance().getTime()) + "]: " + out);
 		} catch (Exception e) { 
 			e.printStackTrace(System.out);
 		}

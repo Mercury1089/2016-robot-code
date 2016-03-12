@@ -112,7 +112,7 @@ public class Camera {
 				.sqrt(diagTargetDistance * diagTargetDistance - (TARGET_ELEVATION_FEET - config.CAM_ELEVATION_FEET)
 						* (TARGET_ELEVATION_FEET - config.CAM_ELEVATION_FEET));
 	}
-
+	
 	/**
 	 * <pre>
 	 * public double getTurnAngle()
