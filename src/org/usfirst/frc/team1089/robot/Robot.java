@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import sun.util.logging.resources.logging;
 
 public class Robot extends IterativeRobot {
 
@@ -42,14 +43,14 @@ public class Robot extends IterativeRobot {
 	private Config config;
 
 	private int shootingAttemptCounter = 0;
-	private boolean isShooting = false, isInAuton = false, closeStream = false; 
+	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
 	@Override
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-		Logger.init();
+		
 		
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
@@ -116,8 +117,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		gyro.reset();
 		auton.resetState();
-		
-		closeStream = true;
+		Logger.init();
 	}
 
 	@Override
@@ -133,13 +133,12 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-		if (closeStream) {
+		
 			// When the game ends, close the Logger stream
 			// This ends the stream, writes the data to the file,
 			// and that's that.
 			Logger.close();
 			System.out.println("Closed stream!");
-		}
 	}
 	
 	@Override
@@ -152,7 +151,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopInit() {
-		closeStream = true;
+		Logger.init();
 	}
 	
 
@@ -171,12 +170,14 @@ public class Robot extends IterativeRobot {
 		
 		// Aborts shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
+			Logger.log("Abort button pressed");
 			isShooting = false;
 			drive.stop();
 		}
 
 		// Aims at target / initiates asynchronous shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
+			Logger.log("Aim and shoot");
 			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
 
@@ -184,59 +185,70 @@ public class Robot extends IterativeRobot {
 		shootProc(aim); // completes shooting sequence once aiming is successful (if initiated) 
 
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
+			Logger.log("Shoot without aiming");
 			shooter.shoot(); // shoot ball
 		}
 		
 		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)){
+			Logger.log("Raise portcullis lifter");
 			portLifter.raise();
 		}
 		
 		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)){
+			Logger.log("Lower portcullis lifter");
 			portLifter.lower();
 		}
 		
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			Logger.log("Put shooter arm in lowest position");
 			shooter.raise(Shooter.DOWN);
 			intake.lower(true);
 			// intake.moveBall(0.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
+			Logger.log("Put shooter arm in low pancake position");
 			shooter.raise(Shooter.LOW); // pancake
 			// intake.moveBall(0.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
+			Logger.log("Put shooter in medium shooting position");
 			shooter.raise(Shooter.MEDIUM); // shooting height
 			intake.lower(true);
 			// intake.moveBall(1.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+			Logger.log("Put shooter in highest position");
 			shooter.raise(Shooter.HIGH); // close shooting height
 			// intake.moveBall(0.0);
 		}
 
 		//raising, lowering, and powering intake
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+			Logger.log("Raise intake door");
 			intake.lower(false); // up
 		}
 
 		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
+			Logger.log("Turn intake motor on in forward direction");
 			intake.moveBall(-1.0); // pull ball in
 			intake.lower(true); // down
 		}
 		
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
+			Logger.log("Turn intake motor off");
 			intake.moveBall(0); // stop intake
 		}
 		
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
+			Logger.log("Reverse intake");
 			intake.moveBall(1.0); // push ball out
 		}
 
 		//makes controller rumble when the robot is able to take a shot
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
+			Logger.log("In range to shoot! Press the button!");
 			cBase.rumble(true);
 		} else {
 			cBase.rumble(false);
 		}
-		Logger.log("WOW DOES THIS WORK????", "IF THIS IS BEING READ, YEET");
 		debug();
 	}
 
@@ -289,6 +301,10 @@ public class Robot extends IterativeRobot {
 						shooter.raise(Shooter.DOWN);
 					}
 				}
+				Logger.log("Camera Diagonal Distance: " + camera.getDiagonalDist());
+				Logger.log("Camera Horizontal Distance: " + camera.getHorizontalDist());
+				Logger.log("Camera Opening Width: " + camera.getOpeningWidth());
+				Logger.log("Camera Turn Angle: " + camera.getTurnAngle());
 				shooter.shoot();
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
