@@ -26,10 +26,10 @@ public class Robot extends IterativeRobot {
 	private Shooter shooter;
 	private Intake intake;
 	private Compressor compressor;
-	private PortcullisLifter portLifter;
+
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, scalerMotor, pLifter;
+	private CANTalon leftFront, rightFront, leftBack, rightBack;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
 	private ControllerBase cBase;
@@ -40,6 +40,7 @@ public class Robot extends IterativeRobot {
 	private AimEnum aim;
 	private DriverStation driverStation;
 	private Config config;
+	private NTListener ntListener;
 
 	private int shootingAttemptCounter = 0;
 	private boolean isShooting = false, isInAuton = false, closeStream = false; 
@@ -50,12 +51,14 @@ public class Robot extends IterativeRobot {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
 		Logger.init();
+		ntListener = new NTListener();
 		
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new Shooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
+		intake = new Intake();
 
 		mercEncoder = new MercEncoder();
 
@@ -68,13 +71,8 @@ public class Robot extends IterativeRobot {
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
-		intakeMotor = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
-		scalerMotor = new CANTalon(Ports.CAN.SCALER_TALON_ID);
-		pLifter = new CANTalon(Ports.CAN.PORTCULLIS_LIFT_TALON_ID);
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
-		intake = new Intake(intakeMotor);
-		portLifter = new PortcullisLifter(pLifter);
 
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
@@ -186,15 +184,7 @@ public class Robot extends IterativeRobot {
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
 			shooter.shoot(); // shoot ball
 		}
-		
-		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)){
-			portLifter.raise();
-		}
-		
-		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)){
-			portLifter.lower();
-		}
-		
+
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(Shooter.DOWN);
