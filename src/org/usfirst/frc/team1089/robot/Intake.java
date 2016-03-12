@@ -18,8 +18,8 @@ public class Intake {
 	 * Constructs a new {@code Intake} with a specified {@code CANTalon} for operating the wheels 
 	 * and a {@code DoubleSolenoid} that operates the elevator. 
 	 */
-	public Intake() {
-		intake = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
+	public Intake(CANTalon intakeMotor) {
+		intake = intakeMotor;
 		elevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.INTAKE_ELEVATOR_FORWARD, Ports.PCM.INTAKE_ELEVATOR_REVERSE);
 		intake.changeControlMode(TalonControlMode.PercentVbus);
 		intake.enableBrakeMode(true);

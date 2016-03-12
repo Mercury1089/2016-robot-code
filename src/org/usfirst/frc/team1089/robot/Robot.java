@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	private CANTalon leftFront, rightFront, leftBack, rightBack;
+	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, scalerMotor;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
 	private ControllerBase cBase;
@@ -56,7 +56,6 @@ public class Robot extends IterativeRobot {
 		shooter = new Shooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
-		intake = new Intake();
 
 		mercEncoder = new MercEncoder();
 
@@ -69,8 +68,11 @@ public class Robot extends IterativeRobot {
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
+		intakeMotor = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
+		scalerMotor = new CANTalon(Ports.CAN.SCALER_TALON_ID);
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
+		intake = new Intake(intakeMotor);
 
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
