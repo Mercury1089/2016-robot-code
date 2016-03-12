@@ -53,8 +53,7 @@ public class Robot extends IterativeRobot {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
 		ntListener = new NTListener();
-		
-		
+				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new Shooter();
@@ -123,6 +122,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		gyro.reset();
 		auton.resetState();
+		
 		Logger.init();
 		ntListener.run();
 	}
@@ -133,14 +133,11 @@ public class Robot extends IterativeRobot {
 		auton.move();
 		
 		camera.getNTInfo(); // in case not already called in move()
-		debug();
-		
-		
+		debug();		
 	}
 
 	@Override
 	public void disabledInit() {
-		
 			// When the game ends, close the Logger stream
 			// This ends the stream, writes the data to the file,
 			// and that's that.
@@ -314,6 +311,8 @@ public class Robot extends IterativeRobot {
 				Logger.log("Camera Horizontal Distance: " + camera.getHorizontalDist());
 				Logger.log("Camera Opening Width: " + camera.getOpeningWidth());
 				Logger.log("Camera Turn Angle: " + camera.getTurnAngle());
+				Logger.log("Is flat: " + accel.isFlat());
+				
 				shooter.shoot();
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
@@ -382,7 +381,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX()) + " px.");
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
 
-		SmartDashboard.putString("Perceived Opening Width", Utilities.round(camera.getOpeningWidth(), 3) + " in.");
 		SmartDashboard.putString("Diagonal Distance", "" + Utilities.round(camera.getDiagonalDist(), 3) + " ft.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
