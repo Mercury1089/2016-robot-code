@@ -25,11 +25,12 @@ public class Robot extends IterativeRobot {
 
 	private Shooter shooter;
 	private Intake intake;
+	private Scaler scaler;
 	private Compressor compressor;
 
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	private CANTalon leftFront, rightFront, leftBack, rightBack;
+	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, lifterMotor, deployerMotor, pLifter;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
 	private ControllerBase cBase;
@@ -58,7 +59,6 @@ public class Robot extends IterativeRobot {
 		shooter = new Shooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
-		intake = new Intake();
 
 		mercEncoder = new MercEncoder();
 
@@ -72,8 +72,16 @@ public class Robot extends IterativeRobot {
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 
-		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
+		intakeMotor = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
+		lifterMotor = new CANTalon(Ports.CAN.LIFTER_TALON_ID);
+		deployerMotor = new CANTalon(Ports.CAN.ENGAGER_TALON_ID);
+		pLifter = new CANTalon(Ports.CAN.PORTCULLIS_LIFT_TALON_ID);
 
+		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
+		intake = new Intake(intakeMotor);
+		portLifter = new PortcullisLifter(pLifter);
+		scaler = new Scaler(lifterMotor, deployerMotor);
+		
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
@@ -183,6 +191,14 @@ public class Robot extends IterativeRobot {
 
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
 			shooter.shoot(); // shoot ball
+		}
+		
+		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)){
+			portLifter.raise();
+		}
+		
+		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)){
+			portLifter.lower();
 		}
 
 		// raising and lowering shooter elevator
