@@ -26,10 +26,10 @@ public class Robot extends IterativeRobot {
 	private Shooter shooter;
 	private Intake intake;
 	private Compressor compressor;
-
+	private PortcullisLifter portLifter;
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, scalerMotor;
+	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, scalerMotor, pLifter;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
 	private ControllerBase cBase;
@@ -70,9 +70,11 @@ public class Robot extends IterativeRobot {
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 		intakeMotor = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
 		scalerMotor = new CANTalon(Ports.CAN.SCALER_TALON_ID);
+		pLifter = new CANTalon(Ports.CAN.PORTCULLIS_LIFT_TALON_ID);
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 		intake = new Intake(intakeMotor);
+		portLifter = new PortcullisLifter(pLifter);
 
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
@@ -184,7 +186,15 @@ public class Robot extends IterativeRobot {
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
 			shooter.shoot(); // shoot ball
 		}
-
+		
+		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)){
+			portLifter.raise();
+		}
+		
+		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)){
+			portLifter.lower();
+		}
+		
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			shooter.raise(Shooter.DOWN);
