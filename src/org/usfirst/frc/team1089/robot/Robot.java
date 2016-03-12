@@ -312,6 +312,7 @@ public class Robot extends IterativeRobot {
 				Logger.log("Camera Opening Width: " + camera.getOpeningWidth());
 				Logger.log("Camera Turn Angle: " + camera.getTurnAngle());
 				Logger.log("Is flat: " + accel.isFlat());
+				Logger.log("Pressure: " + compressor.getPressurePSI());
 				
 				shooter.shoot();
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
@@ -393,6 +394,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
 		SmartDashboard.putBoolean("Is flat", accel.isFlat());
+		SmartDashboard.putString("Pressure", "" + Utilities.round(compressor.getPressurePSI(), 2) + "PSI");
+		SmartDashboard.putBoolean("Is enough pressure", compressor.isInShotPressure());
 		
 		// Auton
 		SmartDashboard.putString("Auton State", auton.getState());

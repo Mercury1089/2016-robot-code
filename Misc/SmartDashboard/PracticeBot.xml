@@ -1,5 +1,16 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Pressure" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="935" y="157"/>
+	</widget>
+	<widget field="Is enough pressure" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="937" y="94"/>
+		<width>161</width>
+		<height>57</height>
+	</widget>
+	<widget field="Auton State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="726" y="24"/>
+	</widget>
 	<widget field="Is flat" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="1104" y="53"/>
 		<width>77</width>
@@ -18,10 +29,10 @@
 		<height>37</height>
 	</widget>
 	<widget field="Accel Tilt" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1164" y="195"/>
+		<location x="1187" y="79"/>
 	</widget>
 	<widget field="Accel Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1041" y="197"/>
+		<location x="1196" y="54"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
 		<location x="632" y="443"/>
@@ -62,7 +73,7 @@
 		<height>20</height>
 	</widget>
 	<widget field="Perceived Opening Width" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1052" y="236"/>
+		<location x="1073" y="163"/>
 		<width>272</width>
 		<height>20</height>
 	</widget>
@@ -86,7 +97,7 @@
 		<location x="992" y="337"/>
 	</widget>
 	<widget field="Gyro" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1183" y="165"/>
+		<location x="1172" y="192"/>
 	</widget>
 	<widget field="Horizontal Distance: " type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1107" y="108"/>
@@ -123,7 +134,7 @@
 		<location x="639" y="409"/>
 	</static-widget>
 	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
-		<location x="8" y="6"/>
+		<location x="6" y="3"/>
 		<width>615</width>
 		<height>444</height>
 	</static-widget>
