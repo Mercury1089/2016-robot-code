@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
 	private Intake intake;
 	private Scaler scaler;
 	private Compressor compressor;
+	private PortcullisLifter portLifter;
 
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
