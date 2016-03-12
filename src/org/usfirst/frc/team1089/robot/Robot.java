@@ -26,11 +26,13 @@ public class Robot extends IterativeRobot {
 
 	private Shooter shooter;
 	private Intake intake;
+	private Scaler scaler;
 	private Compressor compressor;
 	private PortcullisLifter portLifter;
+
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, scalerMotor, pLifter;
+	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, lifterMotor, deployerMotor, pLifter;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
 	private ControllerBase cBase;
@@ -41,15 +43,17 @@ public class Robot extends IterativeRobot {
 	private AimEnum aim;
 	private DriverStation driverStation;
 	private Config config;
+	private NTListener ntListener;
 
 	private int shootingAttemptCounter = 0;
-	private boolean isShooting = false, isInAuton = false; 
+	private boolean isShooting = false, isInAuton = false, closeStream = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
 	@Override
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
+		ntListener = new NTListener();
 		
 		
 		driverStation = DriverStation.getInstance();
@@ -69,14 +73,17 @@ public class Robot extends IterativeRobot {
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
 		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
+
 		intakeMotor = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
-		scalerMotor = new CANTalon(Ports.CAN.SCALER_TALON_ID);
+		lifterMotor = new CANTalon(Ports.CAN.LIFTER_TALON_ID);
+		deployerMotor = new CANTalon(Ports.CAN.ENGAGER_TALON_ID);
 		pLifter = new CANTalon(Ports.CAN.PORTCULLIS_LIFT_TALON_ID);
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 		intake = new Intake(intakeMotor);
 		portLifter = new PortcullisLifter(pLifter);
-
+		scaler = new Scaler(lifterMotor, deployerMotor);
+		
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
@@ -198,7 +205,7 @@ public class Robot extends IterativeRobot {
 			Logger.log("Lower portcullis lifter");
 			portLifter.lower();
 		}
-		
+
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			Logger.log("Put shooter arm in lowest position");
