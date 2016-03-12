@@ -4,6 +4,7 @@ package org.usfirst.frc.team1089.auton;
 import org.usfirst.frc.team1089.robot.Camera;
 import org.usfirst.frc.team1089.robot.DriveTrain;
 import org.usfirst.frc.team1089.robot.Intake;
+import org.usfirst.frc.team1089.robot.Logger;
 import org.usfirst.frc.team1089.robot.MercAccelerometer;
 import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.Shooter;
@@ -103,6 +104,7 @@ public class StrongholdAuton {
 	}
 
 	public void resetState() {
+		Logger.log("Reset auton state");
 		state = START;
 		breachAttempts = 0;
 		centerAttempts = 0;
@@ -151,6 +153,7 @@ public class StrongholdAuton {
 			case START: {// Adjust shooter/intake
 				intake.lower(true);
 				state++;
+				Logger.log("Auton finish case: START");
 				break;
 			}
 			case BREACH: {//Breaching Phase
@@ -161,7 +164,8 @@ public class StrongholdAuton {
 				if (accel.isFlat()) { // loops until flat - TODO should we do anything to help if not?
 					shooter.raise(Shooter.MEDIUM);
 					state++;
-				}				  
+					Logger.log("Auton finish case: BREACH");
+				}	
 				break;
 			}
 			case STRAIGHTEN: {//Straighten
@@ -174,6 +178,7 @@ public class StrongholdAuton {
 						drive.waitDegreeRotateVoltage();
 					}
 					state++;
+					Logger.log("Auton finish case: STRAIGHTEN");
 				}
 				break;
 			}
@@ -199,6 +204,7 @@ public class StrongholdAuton {
 					drive.waitMove();
 				}				
 				state++;
+				Logger.log("Auton finish case: MOVE1");
 				break;
 			}
 			case ROTATE1: {//Rotate towards goal without relying on camera (as we might not see the goal yet)
@@ -218,6 +224,7 @@ public class StrongholdAuton {
 				}						
 				intake.lower(false);
 				state++;
+				Logger.log("Auton finish case: ROTATE1");
 				break;
 			}
 			case CALCULATE: { //Use camera to figure out how far we really are from the goal
@@ -234,6 +241,7 @@ public class StrongholdAuton {
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
+							Logger.log("Auton finish case: CALCULATE");
 						}
 						else {
 							state = DONE;
@@ -249,6 +257,7 @@ public class StrongholdAuton {
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
+							Logger.log("Auton finish case: CALCULATE");
 						}
 						else {
 							state = DONE;
@@ -261,6 +270,7 @@ public class StrongholdAuton {
 				drive.moveDistance(centeredMoveDistance, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				state++;
+				Logger.log("Auton finish case: MOVE2");
 				break;
 			}
 			case AIM: {// Aim
@@ -271,6 +281,7 @@ public class StrongholdAuton {
 				
 				if(!drive.checkDegreeRotateVoltage()) {
 					state++;
+					Logger.log("Auton finish case: AIM");
 				}
 				break;
 			}
@@ -279,12 +290,14 @@ public class StrongholdAuton {
 					robot.shootProc(aim);
 					if (!robot.isShooting()) {
 						state++;
+						Logger.log("Auton finish case: SHOOT");
 					}
 				}
 				else if (aim == AimEnum.LOW && (pos != PosEnum.POS3 && pos != PosEnum.POS4)) {
 					robot.shootProc(aim);
 					if (!robot.isShooting()) {
 						state++;
+						Logger.log("Auton finish case: SHOOT");
 					}
 				}
 				else {
