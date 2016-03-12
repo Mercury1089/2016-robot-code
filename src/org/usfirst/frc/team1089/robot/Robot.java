@@ -125,6 +125,7 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 		auton.resetState();
 		Logger.init();
+		ntListener.run();
 	}
 
 	@Override
@@ -144,6 +145,7 @@ public class Robot extends IterativeRobot {
 			// When the game ends, close the Logger stream
 			// This ends the stream, writes the data to the file,
 			// and that's that.
+			ntListener.stop();
 			Logger.close();
 			System.out.println("Closed stream!");
 	}
@@ -159,6 +161,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		Logger.init();
+		ntListener.run();
 	}
 	
 
