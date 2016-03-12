@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import sun.util.logging.resources.logging;
 
 public class Robot extends IterativeRobot {
 
@@ -46,7 +45,7 @@ public class Robot extends IterativeRobot {
 	private NTListener ntListener;
 
 	private int shootingAttemptCounter = 0;
-	private boolean isShooting = false, isInAuton = false, closeStream = false; 
+	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
 	@Override

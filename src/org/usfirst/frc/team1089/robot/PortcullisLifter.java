@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
+//import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CANTalon;
 
 public class PortcullisLifter {
@@ -14,12 +14,15 @@ public class PortcullisLifter {
 		lift.setFeedbackDevice(CANTalon.FeedbackDevice.AnalogPot);
 		lift.changeControlMode(CANTalon.TalonControlMode.Position);
 	}
+	
 	public double getPosition(){
 		return lift.get();
 	}
+	
 	public void raise(){
 		lift.set(POTENTIOMETER_MAX_TICKS);
 	}
+	
 	public void lower(){
 		lift.set(POTENTIOMETER_MIN_TICKS);
 	}
