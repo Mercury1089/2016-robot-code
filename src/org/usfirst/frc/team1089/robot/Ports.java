@@ -12,6 +12,7 @@ public class Ports {
 	 */
 	public static class Analog {
 		public static final int GYRO = 0;
+		public static final int CHECK_PRESSURE = 1;
 	}
 
 	/**
