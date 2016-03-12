@@ -36,6 +36,7 @@ public class Ports {
 		public static final int RIGHT_BACK_TALON_ID = 1;
 		public static final int INTAKE_TALON_ID = 7;
 		public static final int PCM_ID = 6;
+		public static final int PORTCULLIS_LIFT_TALON_ID = 10;
 	}
 
 	/**
