@@ -19,8 +19,9 @@ public class NTListener implements ITableListener{
 		
 		t.addTableListener(this);
 		
-		Logger.log(t.getNumberArray("area", def), t.getNumberArray("width", def), t.getNumberArray("height", def),
-				   t.getNumberArray("centerX", def), t.getNumberArray("centerY", def));
+		Logger.log("Area: " + t.getNumberArray("area", def), " Width: " + t.getNumberArray("width", def), 
+				   " Height: " + t.getNumberArray("height", def), " CenterX: " + t.getNumberArray("centerX", def), 
+				   "CenterY: " + t.getNumberArray("centerY", def));
 		
 	}
 	
