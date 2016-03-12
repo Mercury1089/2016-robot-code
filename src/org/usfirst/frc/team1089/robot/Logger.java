@@ -122,7 +122,7 @@ public class Logger {
 		try {
 			writer.close();
 			out.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
 	}
