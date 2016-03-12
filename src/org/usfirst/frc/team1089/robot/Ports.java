@@ -34,8 +34,9 @@ public class Ports {
 		public static final int RIGHT_FRONT_TALON_ID = 2;
 		public static final int LEFT_BACK_TALON_ID = 3;
 		public static final int RIGHT_BACK_TALON_ID = 1;
-		public static final int SCALER_TALON_ID = 8;
+		public static final int LIFTER_TALON_ID = 8;
 		public static final int INTAKE_TALON_ID = 7;
+		public static final int ENGAGER_TALON_ID = 9;
 		public static final int PCM_ID = 6;
 		public static final int PORTCULLIS_LIFT_TALON_ID = 10;
 	}
