@@ -43,7 +43,7 @@ public class Compressor {
 		//timer.schedule(new CheckCompressorTask(pressureSwitch, relay), CHECK_TIME_MS, CHECK_TIME_MS);
 	}
 	public double getPressurePSI(){
-		return (analogPressureSwitch.getVoltage() - 0.5) * 50.0; // 5 volts corresponds to 200 PSI
+		return (analogPressureSwitch.getVoltage() * 250.0) / 4.786 - 25.0; // 5 volts corresponds to 200 PSI
 	}
 	
 	public boolean isInShotPressure(){
