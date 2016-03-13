@@ -306,7 +306,7 @@ public class Robot extends IterativeRobot {
 						drive.waitMove();
 						shooter.raise(Shooter.DOWN);
 					}
-				}
+				} 
 				Logger.log("Camera Diagonal Distance: " + camera.getDiagonalDist());
 				Logger.log("Camera Horizontal Distance: " + camera.getHorizontalDist());
 				Logger.log("Camera Opening Width: " + camera.getOpeningWidth());
@@ -319,7 +319,7 @@ public class Robot extends IterativeRobot {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				shootingAttemptCounter++;
 			} else {
-				isShooting = false;
+				isShooting = false; 
 			}
 		}
 	}
