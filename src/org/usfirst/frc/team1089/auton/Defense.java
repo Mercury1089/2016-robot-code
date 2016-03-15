@@ -24,13 +24,13 @@ public class Defense{
 			case LOW_BAR: {
 				shooter.raise(Shooter.DOWN);
 				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);
-				drive.waitMove(); // moveDistance is an asynchronous operation - we need to wait until it is done
+				drive.waitMove(); 		//moveDistance is an asynchronous operation - we need to wait until it is done
 				break;
 			}
 			case MOAT: {
 				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6.0); //TODO test and change ALL these values
-				drive.waitMove();		//need moderate PID voltage - to be changed
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 12.0); //TODO test and change ALL these values
+				drive.waitMove();		//full speed
 				break;
 			}
 			case ROUGH_TERRAIN: {
@@ -41,14 +41,14 @@ public class Defense{
 			}
 			case RAMPARTS: {
 				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
-				drive.waitMove();
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6); 
+				drive.waitMove();		//human speed
 				break;
 			}
 			case ROCK_WALL: {
 				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 10.0); 
-				drive.waitMove();		//need fast PID voltage - to be changed
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 12.0); 
+				drive.waitMove();		// full speed
 				break;
 			}
 			case CHEVAL_DE_FRISE: {

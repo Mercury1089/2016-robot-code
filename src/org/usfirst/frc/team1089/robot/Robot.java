@@ -122,7 +122,6 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		gyro.reset();
 		auton.resetState();
-		
 		Logger.init();
 		ntListener.run();
 	}
@@ -156,7 +155,6 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopInit() {
-		Logger.init();
 		ntListener.run();
 	}
 	
