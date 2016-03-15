@@ -132,7 +132,83 @@ public class DriveTrain {
 		}
 		return isDegreeRotating;
 	}
+
+	public void turnDistance(double changePos) {
+		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
+		startPosL = leftFrontTalon.getEncPosition();
+		startPosR = rightFrontTalon.getEncPosition();
+		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
+		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
+		leftFrontTalon.setPID(0.2, 0.000, -0.000);
+		rightFrontTalon.setPID(0.2, 0.000, -0.000);
+		leftFrontTalon.configPeakOutputVoltage(9.0, -9.0);
+		leftFrontTalon.configNominalOutputVoltage(4, -4);
+		rightFrontTalon.configPeakOutputVoltage(9.0, -9.0);
+		rightFrontTalon.configNominalOutputVoltage(4, -4);
+		leftFrontTalon.setCloseLoopRampRate(.01);
+		rightFrontTalon.setCloseLoopRampRate(.01);
+		setToAuto();
+		leftFrontTalon.enableControl();
+		rightFrontTalon.enableControl();
+		leftFrontTalon.set(endPosL);
+		rightFrontTalon.set(endPosR);
+	}
+
+	public boolean checkMove2() {
+		double leftPos = leftFrontTalon.getEncPosition();
+		double rightPos = rightFrontTalon.getEncPosition();
+		double leftVel = leftFrontTalon.getEncVelocity();
+		double rightVel = rightFrontTalon.getEncVelocity();
+
+		if (isMoving) {
+			/*
+			 * SmartDashboard.putNumber("left velocity", leftVel);
+			 * SmartDashboard.putNumber("right velocity", rightVel);
+			 * SmartDashboard.putNumber("left pos", leftPos);
+			 * SmartDashboard.putNumber("right pos", rightPos);
+			 */
+
+			if ((leftPos > endPosL - MOVE_THRESH_TICKS && leftPos < endPosL + MOVE_THRESH_TICKS)
+					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
+					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
+
+				setToManual();
+			}
+		}
+		return isMoving;
+	}
 	
+	
+	public boolean checkDegreeRotateVoltagePractice() {					//DMAX = 60 is best!
+		if (isDegreeRotating) { // only if we have been told to rotate
+			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
+			double vmax = Math.pow(0.7, 1.0/BOOST); // 0.75
+			double vmin = Math.pow(0.27, 1.0/BOOST); // 0.35
+			double dmax = 60.0; // 25.0; // 20.0; // TODO ALSO TRY 60.0
+			double dmin = 0.0; // 5.0;
+			double error = _heading - gyro.getAngle();
+			double kp = (vmax - vmin) / (dmax - dmin);
+			// speed sign same as desired angle
+			double vout = 0;
+			double offset = 0; // 5
+
+			if (error > config.TURN_ANGLE_MAX_DEGREES) {
+				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error-offset))));
+				vout = Math.pow(vout, BOOST);
+				speedRotate(vout); // we rotate until we are told otherwise
+			}
+			else if (error < config.TURN_ANGLE_MIN_DEGREES) {
+				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+offset))));
+				vout = Math.pow(vout, BOOST);
+				speedRotate(vout); // we rotate until we are told otherwise
+			}
+			else {
+				isDegreeRotating = false; // we take the flag down
+				stop(); // we stop the motors
+			}
+		}
+		return isDegreeRotating;
+	}
 	/**
 	 * <pre>
 	 * public boolean checkDegreeRotateVoltageNew()

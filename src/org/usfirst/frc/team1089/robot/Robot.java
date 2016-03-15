@@ -205,6 +205,11 @@ public class Robot extends IterativeRobot {
 			portLifter.lower();
 		}
 
+		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.R3)){
+			gyro.reset();
+		}
+
+		
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			Logger.log("Put shooter arm in lowest position");
@@ -255,6 +260,15 @@ public class Robot extends IterativeRobot {
 		} else {
 			cBase.rumble(false);
 		}
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)){
+				gyro.reset();
+		}
+		/*
+		while(drive.checkDegreeRotateVoltage()) {
+			Timer.delay(0.1);
+		}*/
+		
+		
 		debug();
 	}
 
@@ -269,6 +283,7 @@ public class Robot extends IterativeRobot {
 	 * Goes through the aiming procedure to get ready to shoot.
 	 */
 	public void aimProc() {
+		shootingAttemptCounter = 0;
 		intake.lower(false);
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
@@ -290,7 +305,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void shootProc(AimEnum aim) {
 		double recenteredMoveDistance;
-		if (!drive.checkDegreeRotateVoltage() && isShooting) { 
+		if (!drive.checkDegreeRotateVoltagePractice() && isShooting) { 
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
 			camera.getNTInfo();
 
