@@ -1,19 +1,32 @@
 package org.usfirst.frc.team1089.robot;
 
 import java.util.Arrays;
+import java.util.Calendar;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
 
 public class CameraNTListenner implements ITableListener{
+	public class Rectangles {
+		public double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
+		public Rectangles(double[] rectWidth, double[] rectHeight, double[] rectCenterX,  double[] rectCenterY,  double[] rectArea) {
+			this.rectWidth = rectWidth;
+			this.rectHeight = rectHeight;
+			this.rectCenterX = rectCenterX;
+			this.rectCenterY = rectCenterY;
+			this.rectArea = rectArea;
+		}
+	}
 
 	private NetworkTable nt;
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
-	
+	private Calendar tsRectWidth, tsRectHeight, tsRectCenterX, tsRectCenterY, tsRectArea;
 
 	public CameraNTListenner(NetworkTable nt){
 		this.nt = nt;
+		rectWidth = rectHeight = rectCenterX = rectCenterY = rectArea = null;
+		tsRectWidth = tsRectHeight = tsRectCenterX = tsRectCenterY = tsRectArea = Calendar.getInstance();
 	}
 	/**
 	 * <pre>
@@ -24,9 +37,6 @@ public class CameraNTListenner implements ITableListener{
 	
 	public void run(){
 		double[] def = {}; // Return an empty array by default.
-		
-		/*NetworkTable.setClientMode();
-		NetworkTable.setIPAddress("roborio-1089-frc.local");*/
 		
 		nt.addTableListener(this);
 		Logger.log("Area: " + Arrays.toString(nt.getNumberArray("area", def)), " Width: " + Arrays.toString(nt.getNumberArray("width", def)), 
@@ -50,31 +60,39 @@ public class CameraNTListenner implements ITableListener{
 	 */
 	@Override
 	public void valueChanged(ITable source, String string , Object o, boolean bln){
+		Calendar ts = Calendar.getInstance();
 		Logger.log("String: " + string + " Value: " + Arrays.toString((double[])o) + " new: " + bln);
-		switch (string) {
-		case "area": {
-			rectArea = (double[]) o;
-			break;
-		}
-		case "width": {
-			rectWidth = (double[]) o;
-			break;
-		}
-		case "height": {
-			rectHeight = (double[]) o;
-			break;
-		}
-		case "centerX": {
-			rectCenterX = (double[]) o;
-			break;
-		}
-		case "centerY": {
-			rectCenterY = (double[]) o;
-			break;
-		}
-	    default:{
-			break;
-		}
+		synchronized(this) {
+			switch (string) {
+				case "area": {
+					rectArea = (double[]) o;
+					tsRectArea = ts;
+					break;
+				}
+				case "width": {
+					rectWidth = (double[]) o;
+					tsRectWidth = ts;
+					break;
+				}
+				case "height": {
+					rectHeight = (double[]) o;
+					tsRectHeight = ts;
+					break;
+				}
+				case "centerX": {
+					rectCenterX = (double[]) o;
+					tsRectCenterX = ts;
+					break;
+				}
+				case "centerY": {
+					rectCenterY = (double[]) o;
+					tsRectCenterY = ts;
+					break;
+				}
+			    default:{
+					break;
+				}
+			}
 		}
 	}
 
@@ -83,9 +101,24 @@ public class CameraNTListenner implements ITableListener{
 	}
 	
 	public boolean isCoherent() {
-		return (rectArea != null && rectWidth != null && rectHeight != null && rectCenterX != null
-				&& rectCenterY != null && rectArea.length == rectWidth.length
-				&& rectArea.length == rectHeight.length && rectArea.length == rectCenterX.length
-				&& rectArea.length == rectCenterY.length);
+		synchronized(this) {
+			return (rectArea != null && rectWidth != null && rectHeight != null && rectCenterX != null
+					&& rectCenterY != null && rectArea.length == rectWidth.length
+					&& rectArea.length == rectHeight.length && rectArea.length == rectCenterX.length
+					&& rectArea.length == rectCenterY.length);
+		}
 	}
+	
+	public Calendar getTimeStamp() {
+		synchronized(this) {
+			Calendar ts = tsRectArea.before(tsRectWidth) ? tsRectArea : tsRectWidth;
+			ts = ts.before(tsRectHeight) ? ts : tsRectHeight;
+			ts = ts.before(tsRectCenterX) ? ts : tsRectCenterX;
+			ts = ts.before(tsRectCenterY) ? ts : tsRectCenterY;
+			return ts;
+		}
+	}
+	public Rectangles getRectangles(Camera camera) {
+		return new Rectangles(rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea);
+	}	
 }
