@@ -26,7 +26,7 @@ public class StrongholdAuton {
 	public static final double LENGTH_OF_BATTER_FEET = 4.0, 
 								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 7.0, 
 								MAX_CLOSE_DISTANCE_TO_GOAL_FEET = 11.0, MIN_CLOSE_DISTANCE_TO_GOAL_FEET = 4.0,
-								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_RECENTER_DISTANCE_FEET = 10.0;
+								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_RECENTER_DISTANCE_FEET = 10.0, SPYBOT_DRIVE_DISTANCE_FEET = 4.0;
 	
 	// distances for MOVE1
 	private static int MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6,
@@ -149,6 +149,10 @@ public class StrongholdAuton {
 	 * 
 	 */
 	public void move() {
+		if (pos == PosEnum.SPYBOT){
+			drive.moveDistance(SPYBOT_DRIVE_DISTANCE_FEET, 0.4, 0, 0, 6.0);
+			state = AIM;
+		}
 		switch (state) {
 			case START: {// Adjust shooter/intake
 				intake.lower(true);
