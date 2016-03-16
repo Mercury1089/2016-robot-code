@@ -31,8 +31,6 @@ public class Logger {
 	 * public synchronized static void init(String location)
 	 * </pre>
 	 * Initializes the current {@code Logger} with the file at the specified location.
-	 * @param location the location to store the log file. Note that it is only the path;
-	 *        the filename itself is handled inside the method.
 	 */
 	public static synchronized void init() {
 		if (log == null) {
@@ -84,8 +82,8 @@ public class Logger {
 	 * Logs the specified warning into the log file, and timestamps it with the current time of the match.
 	 * @param warning the warning to put into the log.
 	 */
-	public static void logWarning(String warn) {
-		log("WARN: " + warn);
+	public static void logWarning(String warning) {
+		log("WARNING: " + warning);
 	}
 	
 	/**

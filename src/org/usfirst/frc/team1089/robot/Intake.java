@@ -17,6 +17,8 @@ public class Intake {
 	 * </pre>
 	 * Constructs a new {@code Intake} with a specified {@code CANTalon} for operating the wheels 
 	 * and a {@code DoubleSolenoid} that operates the elevator. 
+	 * 
+	 * @param intakeMotor intake motor
 	 */
 	public Intake(CANTalon intakeMotor) {
 		intake = intakeMotor;

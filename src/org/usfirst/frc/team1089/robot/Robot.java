@@ -292,6 +292,8 @@ public class Robot extends IterativeRobot {
 	 * public void shootProc()
 	 * </pre>
 	 * Goes through the shooting procedure (requires prior call to aimProc()).
+	 * 
+	 * @param aim aim action
 	 */
 	public void shootProc(AimEnum aim) {
 		double recenteredMoveDistance;

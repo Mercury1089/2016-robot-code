@@ -364,6 +364,14 @@ public class DriveTrain {
 	 *
 	 * @param changePos
 	 *            the distance to move in feet
+	 * @param p
+	 * 			proportional coefficient
+	 * @param i
+	 * 			integral coefficient
+	 * @param d
+	 * 			derivative coefficient
+	 * @param maxV
+	 * 			maximum voltage           
 	 */
 
 	public void moveDistance(double changePos, double p, double i, double d, double maxV) {
