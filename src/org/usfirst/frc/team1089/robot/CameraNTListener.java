@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
 
-public class CameraNTListenner implements ITableListener{
+public class CameraNTListener implements ITableListener{
 
 	private NetworkTable nt;
 	private boolean isListening = false;
@@ -15,7 +15,7 @@ public class CameraNTListenner implements ITableListener{
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	private Calendar tsRectWidth, tsRectHeight, tsRectCenterX, tsRectCenterY, tsRectArea;
 
-	public CameraNTListenner(NetworkTable nt){
+	public CameraNTListener(NetworkTable nt){
 		this.nt = nt;
 		rectWidth = rectHeight = rectCenterX = rectCenterY = rectArea = null;
 		tsRectWidth = tsRectHeight = tsRectCenterX = tsRectCenterY = tsRectArea = Calendar.getInstance();
