@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
 public class CameraNTListenner implements ITableListener{
 
 	private NetworkTable nt;
+	private boolean isListening = false;
+	
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	private Calendar tsRectWidth, tsRectHeight, tsRectCenterX, tsRectCenterY, tsRectArea;
 
@@ -25,11 +27,13 @@ public class CameraNTListenner implements ITableListener{
 	 * Has the Listener input information into the logger
 	 */
 	
-	public void run(){
+	public synchronized void run(){
+		if (!isListening) {
+			nt.addTableListener(this);
+			isListening = true;
+		}
 		double[] def = {}; // Return an empty array by default.
-		
-		nt.addTableListener(this);
-		Logger.log("Area: " + Arrays.toString(nt.getNumberArray("area", def)), " Width: " + Arrays.toString(nt.getNumberArray("width", def)), 
+		Logger.log("Listening started. Area: " + Arrays.toString(nt.getNumberArray("area", def)), " Width: " + Arrays.toString(nt.getNumberArray("width", def)), 
 			   " Height: " + Arrays.toString(nt.getNumberArray("height", def)), " CenterX: " + Arrays.toString(nt.getNumberArray("centerX", def)), 
 			   "CenterY: " + Arrays.toString(nt.getNumberArray("centerY", def)));
 	}
@@ -50,7 +54,7 @@ public class CameraNTListenner implements ITableListener{
 	 */
 	@Override
 	public void valueChanged(ITable source, String key , Object value, boolean isNew){
-		Calendar ts = Calendar.getInstance();
+		Calendar ts = Calendar.getInstance(); // Get the time before synchronized so time is accurate as possible
 		Logger.log("String: " + key + " Value: " + Arrays.toString((double[])value) + " new: " + isNew);
 		synchronized(this) {
 			switch (key) {
@@ -93,8 +97,11 @@ public class CameraNTListenner implements ITableListener{
 	 * 
 	 * Stop listening for updates.
 	 */
-	public void stop() {
-		nt.removeTableListener(this);
+	public synchronized void stop() {
+		if (isListening) {
+			nt.removeTableListener(this);
+			isListening = false;
+		}
 	}
 
 	/**
@@ -106,14 +113,12 @@ public class CameraNTListenner implements ITableListener{
 	 * 
 	 * @return The modification time of the <em>oldest</em> rectangle.
 	 */
-	public Calendar getModificationTime() {
-		synchronized(this) {
-			Calendar ts = tsRectArea.before(tsRectWidth) ? tsRectArea : tsRectWidth;
-			ts = ts.before(tsRectHeight) ? ts : tsRectHeight;
-			ts = ts.before(tsRectCenterX) ? ts : tsRectCenterX;
-			ts = ts.before(tsRectCenterY) ? ts : tsRectCenterY;
-			return ts;
-		}
+	public synchronized Calendar getModificationTime() {
+		Calendar ts = tsRectArea.before(tsRectWidth) ? tsRectArea : tsRectWidth;
+		ts = ts.before(tsRectHeight) ? ts : tsRectHeight;
+		ts = ts.before(tsRectCenterX) ? ts : tsRectCenterX;
+		ts = ts.before(tsRectCenterY) ? ts : tsRectCenterY;
+		return ts;
 	}
 	
 	/**
@@ -126,10 +131,8 @@ public class CameraNTListenner implements ITableListener{
 	 * 
 	 * @param camera the Camera instance to update the data of.
 	 */
-	public void getRectangles(Camera camera) {
-		synchronized(this) {
-			// Copy the current rectangles to the camera instance
-			camera.setRectangles(rectArea, rectWidth, rectHeight, rectCenterX, rectCenterY);
-		}
+	public synchronized void getRectangles(Camera camera) {
+		// Copy the current rectangles to the camera instance
+		camera.setRectangles(rectArea, rectWidth, rectHeight, rectCenterX, rectCenterY);
 	}	
 }

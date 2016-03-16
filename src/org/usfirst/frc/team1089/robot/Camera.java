@@ -41,11 +41,33 @@ public class Camera {
 	 *            GRIP
 	 */
 	public Camera(String tableLoc) {
+		config = Config.getInstance();
 		nt = NetworkTable.getTable(tableLoc);
 		ntListener = new CameraNTListenner(nt);
-		config = Config.getInstance();
 	}
 
+	/**
+	 * <pre>
+	 * public void runListener()
+	 * </pre>
+	 * 
+	 * Start listening for updates to the GRIP network table.
+	 */
+	public void runListener() {
+		ntListener.run();
+	}
+	
+	/**
+	 * <pre>
+	 * public void stopListener()
+	 * </pre>
+	 * 
+	 * Stop listening for updates to the GRIP network table.
+	 */
+	public void stopListener() {
+		ntListener.stop();
+	}
+	
 	/**
 	 * <pre>
 	 * public boolean isCoherent()
