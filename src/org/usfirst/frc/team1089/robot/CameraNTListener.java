@@ -53,37 +53,39 @@ public class CameraNTListener implements ITableListener{
 	 * 		  true if the key did not previously exist in the table, otherwise it is false
 	 */
 	@Override
-	public synchronized void valueChanged(ITable source, String key , Object value, boolean isNew){
+	public void valueChanged(ITable source, String key , Object value, boolean isNew){
 		Calendar ts = Calendar.getInstance(); // Get the time before synchronized so time is accurate as possible
 		Logger.log("String: " + key + " Value: " + Arrays.toString((double[])value) + " new: " + isNew);
-		switch (key) {
-			case "area": {
-				rectArea = (double[]) value;
-				tsRectArea = ts;
-				break;
-			}
-			case "width": {
-				rectWidth = (double[]) value;
-				tsRectWidth = ts;
-				break;
-			}
-			case "height": {
-				rectHeight = (double[]) value;
-				tsRectHeight = ts;
-				break;
-			}
-			case "centerX": {
-				rectCenterX = (double[]) value;
-				tsRectCenterX = ts;
-				break;
-			}
-			case "centerY": {
-				rectCenterY = (double[]) value;
-				tsRectCenterY = ts;
-				break;
-			}
-		    default:{
-				break;
+		synchronized(this) {
+			switch (key) {
+				case "area": {
+					rectArea = (double[]) value;
+					tsRectArea = ts;
+					break;
+				}
+				case "width": {
+					rectWidth = (double[]) value;
+					tsRectWidth = ts;
+					break;
+				}
+				case "height": {
+					rectHeight = (double[]) value;
+					tsRectHeight = ts;
+					break;
+				}
+				case "centerX": {
+					rectCenterX = (double[]) value;
+					tsRectCenterX = ts;
+					break;
+				}
+				case "centerY": {
+					rectCenterY = (double[]) value;
+					tsRectCenterY = ts;
+					break;
+				}
+			    default:{
+					break;
+				}
 			}
 		}
 	}
