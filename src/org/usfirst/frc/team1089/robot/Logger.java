@@ -31,30 +31,26 @@ public class Logger {
 	 * public synchronized static void init(String location)
 	 * </pre>
 	 * Initializes the current {@code Logger} with the file at the specified location.
-	 * @param location the location to store the log file. Note that it is only the path;
-	 *        the filename itself is handled inside the method.
 	 */
-	public static void init() {
-		synchronized(Logger.class) {
-			if (log == null) {
-				try {
-					File path;
-					log = new File("home/lvuser/log/log_" + ISO8601.format(Calendar.getInstance().getTime()) + ".txt");
-					path = log.getParentFile();
-					
-					if (!path.exists())
-						path.mkdirs();
-					
-					if (!log.exists())
-						log.createNewFile();
-					
-					out = new FileWriter(log.getAbsolutePath());
-					writer = new PrintWriter(out);
-					ds = DriverStation.getInstance();
-					is_logging = true;
-				} catch (Exception e) { 
-					e.printStackTrace(System.out);
-				}
+	public static synchronized void init() {
+		if (log == null) {
+			try {
+				File path;
+				log = new File("home/lvuser/log/log_" + ISO8601.format(Calendar.getInstance().getTime()) + ".txt");
+				path = log.getParentFile();
+				
+				if (!path.exists())
+					path.mkdirs();
+				
+				if (!log.exists())
+					log.createNewFile();
+				
+				out = new FileWriter(log.getAbsolutePath());
+				writer = new PrintWriter(out);
+				ds = DriverStation.getInstance();
+				is_logging = true;
+			} catch (Exception e) { 
+				e.printStackTrace(System.out);
 			}
 		}
 	}
@@ -63,19 +59,27 @@ public class Logger {
 	 * <pre>
 	 * public static synchronized void log(Object... input)
 	 * </pre>
-	 * Logs the specified input into the log file, separating elements by tabs, and timestamps it with the current time of the match.
+	 * Logs the specified input into the log file, separating elements by tabs.
+	 * Log entries are prefixed with the current match time and current system time.
+	 * 
 	 * @param input the text to put into the log.
 	 */
 	public static void log(Object... input){
-		synchronized(Logger.class) {
-			if (is_logging) {
-				try {
-					String out = "";
-					for (Object o : input)
-						out += o.toString() + '\t';
-					writer.println("[" + ds.getMatchTime() + "]:" + "[" + ISO8601.format(Calendar.getInstance().getTime()) + "]: " + out);
-				} catch (Exception e) { 
-					e.printStackTrace(System.out);
+		if (is_logging) {
+			// Get the time outside of synchronized code so it captures most accurately the time when log() is invoked
+			String time_prefix = "[" + ds.getMatchTime() + "]:" + "[" + ISO8601.format(Calendar.getInstance().getTime()) + "]: ";
+			
+			synchronized(Logger.class) {
+				// Check is_logging again in case it changed since the lock was acquired
+				if (is_logging) {
+					try {
+						String out = "";
+						for (Object o : input)
+							out += o.toString() + '\t';
+						writer.println(time_prefix + out);
+					} catch (Exception e) { 
+						e.printStackTrace(System.out);
+					}
 				}
 			}
 		}
@@ -88,8 +92,8 @@ public class Logger {
 	 * Logs the specified warning into the log file, and timestamps it with the current time of the match.
 	 * @param warning the warning to put into the log.
 	 */
-	public static void logWarning(String warn) {
-		log("WARN: " + warn);
+	public static void logWarning(String warning) {
+		log("WARNING: " + warning);
 	}
 	
 	/**
@@ -124,15 +128,13 @@ public class Logger {
 	 * </pre>
 	 * Closes all the writers and releases the resources related to them.
 	 */
-	public static void close() {
-		synchronized(Logger.class) {
-			try {
-				is_logging = false;
-				writer.close();
-				out.close();
-			} catch (Exception e) {
-				e.printStackTrace(System.out);
-			}
+	public static synchronized void close() {
+		try {
+			is_logging = false;
+			writer.close();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
 		}
 	}
 }

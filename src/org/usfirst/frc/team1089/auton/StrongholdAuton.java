@@ -75,6 +75,8 @@ public class StrongholdAuton {
 	 *            the {@code Camera} for seeing the goal
 	 * @param s
 	 *            the {@code Shooter} for shooting the ball into either goal
+	 * @param i
+	 *            the {@code Intake} for getting the ball            
 	 * @param g
 	 *            the {@code AnalogGyro} for centering the robot after coming off of a defense
 	 * @param p		
