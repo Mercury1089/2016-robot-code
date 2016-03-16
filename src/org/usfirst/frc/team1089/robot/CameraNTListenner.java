@@ -10,7 +10,7 @@ public class CameraNTListenner implements ITableListener{
 
 	private NetworkTable nt;
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
-	
+
 
 	public CameraNTListenner(NetworkTable nt){
 		this.nt = nt;
