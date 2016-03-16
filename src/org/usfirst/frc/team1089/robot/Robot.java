@@ -131,7 +131,7 @@ public class Robot extends IterativeRobot {
 		isInAuton = true;
 		auton.move();
 		
-		camera.getNTInfo(); // in case not already called in move()
+		camera.getNTInfo(false); // in case not already called in move()
 		debug();		
 	}
 
@@ -147,7 +147,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void disabledPeriodic() {
-		camera.getNTInfo();
+		camera.getNTInfo(false);
 		debug();
 		
 		cBase.rumble(false);
@@ -164,7 +164,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		isInAuton = false;
 		// Get initial info
-		camera.getNTInfo();
+		camera.getNTInfo(false);
 
 		// Dealing with buttons on the different joysticks
 		cBase.update();
@@ -303,8 +303,7 @@ public class Robot extends IterativeRobot {
 	public void shootProc(AimEnum aim) {
 		double recenteredMoveDistance;
 		if (!drive.checkDegreeRotateVoltagePractice() && isShooting) { 
-			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-			camera.getNTInfo();
+			camera.getNTInfo(true);
 
 			if (camera.isInTurnAngle()) {
 				isShooting = false;

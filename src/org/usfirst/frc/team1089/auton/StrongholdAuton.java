@@ -228,8 +228,7 @@ public class StrongholdAuton {
 				break;
 			}
 			case CALCULATE: { //Use camera to figure out how far we really are from the goal
-				Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
-				camera.getNTInfo();
+				camera.getNTInfo(true);
 				
 				if (pos == PosEnum.POS1 || pos == PosEnum.POS3 || pos == PosEnum.POS4) { // in cases where we expect to be far
 					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){

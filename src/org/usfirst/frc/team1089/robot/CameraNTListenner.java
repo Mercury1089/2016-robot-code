@@ -82,4 +82,11 @@ public class CameraNTListenner implements ITableListener{
 	public void stop() {
 		t.removeTableListener(this);
 	}
+	
+	public boolean isCoherent() {
+		return (rectArea != null && rectWidth != null && rectHeight != null && rectCenterX != null
+				&& rectCenterY != null && rectArea.length == rectWidth.length
+				&& rectArea.length == rectHeight.length && rectArea.length == rectCenterX.length
+				&& rectArea.length == rectCenterY.length);
+	}
 }

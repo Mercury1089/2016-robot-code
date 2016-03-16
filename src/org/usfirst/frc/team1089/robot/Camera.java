@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
@@ -48,8 +49,11 @@ public class Camera {
 	 * 
 	 * Gets data from the NetworkTable, then calculates distance based on the
 	 * rectangle and camera's horizontal FOV.
+	 * 
+	 * @param waitForNewInfo
+	 * 		Wait for a new copy of the NT info
 	 */
-	public void getNTInfo() {
+	public void getNTInfo(boolean waitForNewInfo) {
 		double[] def = {}; // Return an empty array by default.
 		boolean is_coherent = false; // Did we get coherent arrays from the NT?
 		int retry_count = 0;
@@ -59,6 +63,10 @@ public class Camera {
 		rectHeight = null;
 		rectCenterX = null;
 		rectCenterY = null;
+		
+		if (waitForNewInfo) {
+			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
+		}
 
 		// We cannot get arrays atomically but at least we can make sure they
 		// have the same size
