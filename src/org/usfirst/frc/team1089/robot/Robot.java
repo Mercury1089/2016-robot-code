@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 	private AimEnum aim;
 	private DriverStation driverStation;
 	private Config config;
-	private NTListener ntListener;
+	private CameraNTListenner ntListener;
 
 	private int shootingAttemptCounter = 0;
 	private boolean isShooting = false, isInAuton = false; 
@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-		ntListener = new NTListener();
+		ntListener = new CameraNTListenner();
 				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
@@ -206,7 +206,6 @@ public class Robot extends IterativeRobot {
 		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.R3)){
 			gyro.reset();
 		}
-
 		
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {

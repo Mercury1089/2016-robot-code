@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
 
-public class NTListener implements ITableListener{
+public class CameraNTListenner implements ITableListener{
 
 	private NetworkTable t = NetworkTable.getTable("GRIP/myContoursReport");
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	
 	public static void main(String[] args){
-		new NTListener().run();
+		new CameraNTListenner().run();
 	}
 	
 	/**
