@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1089.robot;
 
+import java.util.Calendar;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
@@ -24,7 +26,6 @@ public class Camera {
 	private static final double TARGET_ELEVATION_FEET = 6.5;
 
 	private static final int MAX_NT_RETRY = 5;
-
 	private Config config;
 
 	/**
@@ -45,6 +46,33 @@ public class Camera {
 	}
 
 	/**
+	 * 
+	 * @param rectWidth
+	 * @param rectHeight
+	 * @param rectCenterX
+	 * @param rectCenterY
+	 * @param rectArea
+	 */
+	public void setRectangles(double[] rectArea, double[] rectWidth, double[] rectHeight, double[] rectCenterX,  double[] rectCenterY) {
+		this.rectArea = rectArea;
+		this.rectWidth = rectWidth;
+		this.rectHeight = rectHeight;
+		this.rectCenterX = rectCenterX;
+		this.rectCenterY = rectCenterY;
+	}
+
+	/**
+	 * Are the arrays consistently sized? (i.e. did we get matching arrays from the NT?)
+	 * @return true if all arrays are the same length, false otherwise
+	 */
+	public boolean isCoherent() {
+		return (rectArea != null && rectWidth != null && rectHeight != null && rectCenterX != null
+				&& rectCenterY != null && rectArea.length == rectWidth.length
+				&& rectArea.length == rectHeight.length && rectArea.length == rectCenterX.length
+				&& rectArea.length == rectCenterY.length);
+	}
+	
+	/**
 	 * <pre>
 	 * private void getNTInfo()
 	 * </pre>
@@ -57,14 +85,9 @@ public class Camera {
 	 */
 	public void getNTInfo(boolean waitForNewInfo) {
 		double[] def = {}; // Return an empty array by default.
-		boolean is_coherent = false; // Did we get coherent arrays from the NT?
 		int retry_count = 0;
 
-		rectArea = null;
-		rectWidth = null;
-		rectHeight = null;
-		rectCenterX = null;
-		rectCenterY = null;
+		setRectangles(null, null, null, null, null);
 		
 		if (waitForNewInfo) {
 			Timer.delay(DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS);
@@ -74,20 +97,17 @@ public class Camera {
 		// have the same size
 		do {
 			// Get data from NetworkTable
-			rectArea = nt.getNumberArray("area", def);
-			rectWidth = nt.getNumberArray("width", def);
-			rectHeight = nt.getNumberArray("height", def);
-			rectCenterX = nt.getNumberArray("centerX", def);
-			rectCenterY = nt.getNumberArray("centerY", def);
+			setRectangles(
+					nt.getNumberArray("area", def),
+					nt.getNumberArray("width", def),
+					nt.getNumberArray("height", def),
+					nt.getNumberArray("centerX", def),
+					nt.getNumberArray("centerY", def));
 
-			is_coherent = (rectArea != null && rectWidth != null && rectHeight != null && rectCenterX != null
-					&& rectCenterY != null && rectArea.length == rectWidth.length
-					&& rectArea.length == rectHeight.length && rectArea.length == rectCenterX.length
-					&& rectArea.length == rectCenterY.length);
 			retry_count++;
-		} while (!is_coherent && retry_count < MAX_NT_RETRY);
+		} while (!isCoherent() && retry_count < MAX_NT_RETRY);
 
-		if (is_coherent && rectArea.length > 0) { // searches array for largest
+		if (isCoherent() && rectArea.length > 0) { // searches array for largest
 													// target
 			largestRectArea = rectArea[0];
 			largestRectNum = 0;
