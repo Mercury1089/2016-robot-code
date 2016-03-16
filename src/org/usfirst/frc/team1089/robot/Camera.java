@@ -16,6 +16,7 @@ public class Camera {
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	private double diagTargetDistance, horizTargetDistance;
 	private double diff;
+	private CameraNTListenner ntListener;
 
 	private static final double TARGET_WIDTH_INCHES = 20;
 	private static final double TARGET_HEIGHT_INCHES = 12;
@@ -39,6 +40,7 @@ public class Camera {
 	 */
 	public Camera(String tableLoc) {
 		nt = NetworkTable.getTable(tableLoc);
+		ntListener = new CameraNTListenner(nt);
 		config = Config.getInstance();
 	}
 
@@ -177,6 +179,9 @@ public class Camera {
 		return perceivedOpeningWidth;
 	}
 
+	public CameraNTListenner getNTListenner() {
+		return this.ntListener;
+	}
 	/**
 	 * <pre>
 	 * public boolean isTargetFound()

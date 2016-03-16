@@ -42,7 +42,6 @@ public class Robot extends IterativeRobot {
 	private AimEnum aim;
 	private DriverStation driverStation;
 	private Config config;
-	private CameraNTListenner ntListener;
 
 	private int shootingAttemptCounter = 0;
 	private boolean isShooting = false, isInAuton = false; 
@@ -52,7 +51,6 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-		ntListener = new CameraNTListenner();
 				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
@@ -123,7 +121,6 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 		auton.resetState();
 		Logger.init();
-		ntListener.run();
 	}
 
 	@Override
@@ -137,10 +134,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-			// When the game ends, close the Logger stream
-			// This ends the stream, writes the data to the file,
-			// and that's that.
-			ntListener.stop();
 			Logger.close();
 			System.out.println("Closed stream!");
 	}
@@ -155,7 +148,6 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopInit() {
-		ntListener.run();
 	}
 	
 

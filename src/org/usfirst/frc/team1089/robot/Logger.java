@@ -18,7 +18,7 @@ public class Logger {
 	private static FileWriter out;
 	private static PrintWriter writer;
 	private static DriverStation ds;
-	
+	private static boolean is_logging = false;
 	
 	private static final SimpleDateFormat ISO8601;
 	
@@ -34,24 +34,27 @@ public class Logger {
 	 * @param location the location to store the log file. Note that it is only the path;
 	 *        the filename itself is handled inside the method.
 	 */
-	public synchronized static void init() {
-		if (log == null) {
-			try {
-				File path;
-				log = new File("home/lvuser/log/log_" + ISO8601.format(Calendar.getInstance().getTime()) + ".txt");
-				path = log.getParentFile();
-				
-				if (!path.exists())
-					path.mkdirs();
-				
-				if (!log.exists())
-					log.createNewFile();
-				
-				out = new FileWriter(log.getAbsolutePath());
-				writer = new PrintWriter(out);
-				ds = DriverStation.getInstance();
-			} catch (Exception e) { 
-				e.printStackTrace(System.out);
+	public static void init() {
+		synchronized(Logger.class) {
+			if (log == null) {
+				try {
+					File path;
+					log = new File("home/lvuser/log/log_" + ISO8601.format(Calendar.getInstance().getTime()) + ".txt");
+					path = log.getParentFile();
+					
+					if (!path.exists())
+						path.mkdirs();
+					
+					if (!log.exists())
+						log.createNewFile();
+					
+					out = new FileWriter(log.getAbsolutePath());
+					writer = new PrintWriter(out);
+					ds = DriverStation.getInstance();
+					is_logging = true;
+				} catch (Exception e) { 
+					e.printStackTrace(System.out);
+				}
 			}
 		}
 	}
@@ -63,14 +66,18 @@ public class Logger {
 	 * Logs the specified input into the log file, separating elements by tabs, and timestamps it with the current time of the match.
 	 * @param input the text to put into the log.
 	 */
-	public static synchronized void log(Object... input){
-		try {
-			String out = "";
-			for (Object o : input)
-				out += o.toString() + '\t';
-			writer.println("[" + ds.getMatchTime() + "]:" + "[" + ISO8601.format(Calendar.getInstance().getTime()) + "]: " + out);
-		} catch (Exception e) { 
-			e.printStackTrace(System.out);
+	public static void log(Object... input){
+		synchronized(Logger.class) {
+			if (is_logging) {
+				try {
+					String out = "";
+					for (Object o : input)
+						out += o.toString() + '\t';
+					writer.println("[" + ds.getMatchTime() + "]:" + "[" + ISO8601.format(Calendar.getInstance().getTime()) + "]: " + out);
+				} catch (Exception e) { 
+					e.printStackTrace(System.out);
+				}
+			}
 		}
 	}
 	
@@ -81,7 +88,7 @@ public class Logger {
 	 * Logs the specified warning into the log file, and timestamps it with the current time of the match.
 	 * @param warning the warning to put into the log.
 	 */
-	public static synchronized void logWarning(String warn) {
+	public static void logWarning(String warn) {
 		log("WARN: " + warn);
 	}
 	
@@ -92,7 +99,7 @@ public class Logger {
 	 * Logs the specified error into the log file, and timestamps it with the current time of the match.
 	 * @param error the error to put into the log.
 	 */
-	public static synchronized void logError(String error) {
+	public static void logError(String error) {
 		log("ERROR: " + error);
 	}
 	
@@ -103,12 +110,12 @@ public class Logger {
 	 * Logs the specified exception and trace into the log file, and timestamps it with the current time of the match.
 	 * @param e the exception to trace into the log.
 	 */
-	public static synchronized void logTrace(Exception e) {
+	public static void logTrace(Exception e) {
 		StackTraceElement[] stack = e.getStackTrace();
-		
-		logError(e.toString());
+		String msg = e.toString();
 		for (StackTraceElement s : stack)
-			log("			at " + s.toString());
+			msg += "			at " + s.toString();
+		logError(msg);
 	}
 	
 	/**
@@ -117,12 +124,15 @@ public class Logger {
 	 * </pre>
 	 * Closes all the writers and releases the resources related to them.
 	 */
-	public static synchronized void close() {
-		try {
-			writer.close();
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
+	public static void close() {
+		synchronized(Logger.class) {
+			try {
+				is_logging = false;
+				writer.close();
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace(System.out);
+			}
 		}
 	}
 }

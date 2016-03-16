@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
 
 public class CameraNTListenner implements ITableListener{
 
-	private NetworkTable t = NetworkTable.getTable("GRIP/myContoursReport");
+	private NetworkTable nt;
 	private double[] rectWidth, rectHeight, rectCenterX, rectCenterY, rectArea;
 	
-	public static void main(String[] args){
-		new CameraNTListenner().run();
+
+	public CameraNTListenner(NetworkTable nt){
+		this.nt = nt;
 	}
-	
 	/**
 	 * <pre>
 	 * public void run()
@@ -28,11 +28,10 @@ public class CameraNTListenner implements ITableListener{
 		/*NetworkTable.setClientMode();
 		NetworkTable.setIPAddress("roborio-1089-frc.local");*/
 		
-		t.addTableListener(this);
-		Logger.log("Area: " + Arrays.toString(t.getNumberArray("area", def)), " Width: " + Arrays.toString(t.getNumberArray("width", def)), 
-				   " Height: " + Arrays.toString(t.getNumberArray("height", def)), " CenterX: " + Arrays.toString(t.getNumberArray("centerX", def)), 
-				   "CenterY: " + Arrays.toString(t.getNumberArray("centerY", def)));
-		
+		nt.addTableListener(this);
+		Logger.log("Area: " + Arrays.toString(nt.getNumberArray("area", def)), " Width: " + Arrays.toString(nt.getNumberArray("width", def)), 
+			   " Height: " + Arrays.toString(nt.getNumberArray("height", def)), " CenterX: " + Arrays.toString(nt.getNumberArray("centerX", def)), 
+			   "CenterY: " + Arrays.toString(nt.getNumberArray("centerY", def)));
 	}
 	
 	/**
@@ -51,7 +50,7 @@ public class CameraNTListenner implements ITableListener{
 	 */
 	@Override
 	public void valueChanged(ITable source, String string , Object o, boolean bln){
-		Logger.log("String: " + string + " Value: " + Arrays.toString((double[])o) + " new: " + bln); 
+		Logger.log("String: " + string + " Value: " + Arrays.toString((double[])o) + " new: " + bln);
 		switch (string) {
 		case "area": {
 			rectArea = (double[]) o;
@@ -80,7 +79,7 @@ public class CameraNTListenner implements ITableListener{
 	}
 
 	public void stop() {
-		t.removeTableListener(this);
+		nt.removeTableListener(this);
 	}
 	
 	public boolean isCoherent() {
