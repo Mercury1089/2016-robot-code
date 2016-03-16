@@ -59,18 +59,28 @@ public class Logger {
 	 * <pre>
 	 * public static synchronized void log(Object... input)
 	 * </pre>
-	 * Logs the specified input into the log file, separating elements by tabs, and timestamps it with the current time of the match.
+	 * Logs the specified input into the log file, separating elements by tabs.
+	 * Log entries are prefixed with the current match time and current system time.
+	 * 
 	 * @param input the text to put into the log.
 	 */
-	public static synchronized void log(Object... input){
+	public static void log(Object... input){
 		if (is_logging) {
-			try {
-				String out = "";
-				for (Object o : input)
-					out += o.toString() + '\t';
-				writer.println("[" + ds.getMatchTime() + "]:" + "[" + ISO8601.format(Calendar.getInstance().getTime()) + "]: " + out);
-			} catch (Exception e) { 
-				e.printStackTrace(System.out);
+			// Get the time outside of synchronized code so it captures most accurately the time when log() is invoked
+			String time_prefix = "[" + ds.getMatchTime() + "]:" + "[" + ISO8601.format(Calendar.getInstance().getTime()) + "]: ";
+			
+			synchronized(Logger.class) {
+				// Check is_logging again in case it changed since the lock was acquired
+				if (is_logging) {
+					try {
+						String out = "";
+						for (Object o : input)
+							out += o.toString() + '\t';
+						writer.println(time_prefix + out);
+					} catch (Exception e) { 
+						e.printStackTrace(System.out);
+					}
+				}
 			}
 		}
 	}
