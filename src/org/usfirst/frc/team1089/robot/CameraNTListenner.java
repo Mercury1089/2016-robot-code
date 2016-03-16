@@ -87,13 +87,26 @@ public class CameraNTListenner implements ITableListener{
 	}
 
 	/**
+	 * <pre>
+	 * public void stop()
+	 * </pre>
+	 * 
 	 * Stop listening for updates.
 	 */
 	public void stop() {
 		nt.removeTableListener(this);
 	}
-		
-	public Calendar getTimeStamp() {
+
+	/**
+	 * <pre>
+	 * public Calendar getModificationTime()
+	 * </pre>
+	 * 
+	 * Get the last modification time of the rectangle data.
+	 * 
+	 * @return The modification time of the <em>oldest</em> rectangle.
+	 */
+	public Calendar getModificationTime() {
 		synchronized(this) {
 			Calendar ts = tsRectArea.before(tsRectWidth) ? tsRectArea : tsRectWidth;
 			ts = ts.before(tsRectHeight) ? ts : tsRectHeight;
@@ -102,6 +115,17 @@ public class CameraNTListenner implements ITableListener{
 			return ts;
 		}
 	}
+	
+	/**
+	 * <pre>
+	 * public void getRectangles(Camera camera)
+	 * </pre>
+	 * 
+	 * Copy the current rectangle data into the supplied Camera instance.
+	 * Relies on the Camera.setRectangles() method.
+	 * 
+	 * @param camera the Camera instance to update the data of.
+	 */
 	public void getRectangles(Camera camera) {
 		synchronized(this) {
 			// Copy the current rectangles to the camera instance

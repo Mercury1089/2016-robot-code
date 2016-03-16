@@ -26,6 +26,7 @@ public class Camera {
 	private static final double TARGET_ELEVATION_FEET = 6.5;
 
 	private static final int MAX_NT_RETRY = 5;
+	private static final double NT_LISTENER_RETRY_DELAY = 0.05; // Time in seconds to wait before re-checking the NT listenner
 	private Config config;
 
 	/**
@@ -46,23 +47,12 @@ public class Camera {
 	}
 
 	/**
+	 * <pre>
+	 * public boolean isCoherent()
+	 * </pre>
 	 * 
-	 * @param rectWidth
-	 * @param rectHeight
-	 * @param rectCenterX
-	 * @param rectCenterY
-	 * @param rectArea
-	 */
-	public void setRectangles(double[] rectArea, double[] rectWidth, double[] rectHeight, double[] rectCenterX,  double[] rectCenterY) {
-		this.rectArea = rectArea;
-		this.rectWidth = rectWidth;
-		this.rectHeight = rectHeight;
-		this.rectCenterX = rectCenterX;
-		this.rectCenterY = rectCenterY;
-	}
-
-	/**
-	 * Are the arrays consistently sized? (i.e. did we get matching arrays from the NT?)
+	 * Are the current arrays consistently sized? (i.e. did we get matching arrays from the NT?)
+	 * 
 	 * @return true if all arrays are the same length, false otherwise
 	 */
 	public boolean isCoherent() {
@@ -71,22 +61,42 @@ public class Camera {
 				&& rectArea.length == rectHeight.length && rectArea.length == rectCenterX.length
 				&& rectArea.length == rectCenterY.length);
 	}
-	
+
 	/**
 	 * <pre>
-	 * private void getNTInfo()
+	 * public void setRectangles(double[] rectArea, double[] rectWidth, double[] rectHeight, double[] rectCenterX,  double[] rectCenterY)
 	 * </pre>
 	 * 
-	 * Gets data from the NetworkTable, then calculates distance based on the
-	 * rectangle and camera's horizontal FOV.
+	 * Assign new rectangle values to the Camera instance
 	 * 
-	 * @param waitForNewInfo
-	 * 		Wait for a new copy of the NT info
+	 * @param rectArea Array of rectangle areas
+	 * @param rectWidth Array of rectangle widths
+	 * @param rectHeight Array of rectangle heights
+	 * @param rectCenterX Array of rectangle center Xs
+	 * @param rectCenterY Array of rectangle center Ys
 	 */
-	public void getNTInfo(boolean waitForNewInfo) {
+	public void setRectangles(double[] rectArea, double[] rectWidth, double[] rectHeight, double[] rectCenterX,  double[] rectCenterY) {
+		this.rectArea = rectArea;
+		this.rectWidth = rectWidth;
+		this.rectHeight = rectHeight;
+		this.rectCenterX = rectCenterX;
+		this.rectCenterY = rectCenterY;
+	}
+	
+	/**
+	 * 
+	 * <pre>
+	 * private void updateFromNT(boolean waitForNewInfo)
+	 * </pre>
+	 * 
+	 * Updates rectangles directly from the network table.
+	 * Retries until they all rectangles are coherent
+	 * 
+	 * @param waitForNewInfo  true if the camera should wait for updated data, false otherwise.
+	 */
+	private void updateFromNT(boolean waitForNewInfo) {
 		double[] def = {}; // Return an empty array by default.
 		int retry_count = 0;
-
 		setRectangles(null, null, null, null, null);
 		
 		if (waitForNewInfo) {
@@ -106,6 +116,55 @@ public class Camera {
 
 			retry_count++;
 		} while (!isCoherent() && retry_count < MAX_NT_RETRY);
+		
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * private void updateFromNT(boolean waitForNewInfo)
+	 * </pre>
+	 * 
+	 * Updates rectangles from the network table listener. Waits for new data (if not already present).
+	 * Retries until they all rectangles are coherent
+	 * 
+	 * @param waitForNewInfo  true if the camera should wait for updated data, false otherwise.
+	 */
+	private void updateFromListener(boolean waitForNewInfo) {
+		Calendar time_stamp = Calendar.getInstance();
+		double wait_secs = 0;
+		int retry_count = 0;
+		setRectangles(null, null, null, null, null);
+		
+		// Wait up to AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS for new data in the listener, or take what it has
+		while(wait_secs < DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS && ntListener.getModificationTime().before(time_stamp)) {
+			wait_secs += NT_LISTENER_RETRY_DELAY;
+			Timer.delay(NT_LISTENER_RETRY_DELAY);
+		}
+
+		do {
+			ntListener.getRectangles(this);
+			retry_count++;
+		} while (!isCoherent() && retry_count < MAX_NT_RETRY);
+	}
+
+	
+	/**
+	 * <pre>
+	 * public void getNTInfo(boolean waitForNewInfo)
+	 * </pre>
+	 * 
+	 * Gets data from the NetworkTable, then calculates distance based on the
+	 * rectangle and camera's horizontal FOV.
+	 * 
+	 * @param waitForNewInfo
+	 * 		Wait for a new copy of the NT info
+	 */
+	public void getNTInfo(boolean waitForNewInfo) {
+
+		// Comment/uncomment one of the following to directly use the NT or use the listener
+		updateFromNT(waitForNewInfo);
+		//updateFromListener(waitForNewInfo);
 
 		if (isCoherent() && rectArea.length > 0) { // searches array for largest
 													// target
