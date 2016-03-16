@@ -151,6 +151,9 @@ public class StrongholdAuton {
 	 * 
 	 */
 	public void move() {
+		if (pos == PosEnum.NOTHING){
+			state = DONE;
+		}
 		if (pos == PosEnum.SPYBOT){
 			drive.moveDistance(SPYBOT_DRIVE_DISTANCE_FEET, 0.4, 0, 0, 6.0);
 			state = AIM;
