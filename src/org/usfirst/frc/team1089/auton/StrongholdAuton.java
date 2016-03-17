@@ -11,6 +11,7 @@ import org.usfirst.frc.team1089.robot.Shooter;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The {@code StrongholdAuton} class contains fields and methods for crossing a defense
@@ -151,6 +152,7 @@ public class StrongholdAuton {
 	 * 
 	 */
 	public void move() {
+		
 		if (pos == PosEnum.NOTHING){
 			state = DONE;
 		}
@@ -160,8 +162,14 @@ public class StrongholdAuton {
 		}
 		switch (state) {
 			case START: {// Adjust shooter/intake
-				intake.lower(true);
+
+				breachAttempts = 0;
+				if(pos == PosEnum.POS1) {
+					intake.lower(true);
+				}
+				
 				state++;
+				breachAttempts = 0;
 				Logger.log("Auton finish case: START");
 				break;
 			}
@@ -178,6 +186,7 @@ public class StrongholdAuton {
 				break;
 			}
 			case STRAIGHTEN: {//Straighten
+				intake.lower(false);
 				if (aim == AimEnum.NONE) {
 					state = DONE;
 				}
@@ -193,18 +202,18 @@ public class StrongholdAuton {
 			}
 			case MOVE1: {//Move to rotation point if needed
 				if (pos == PosEnum.POS1) {
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.42, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 				} else if (pos == PosEnum.POS2) {
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 				} else if (pos == PosEnum.POS3) {
-					drive.degreeRotateVoltage(60);
-					drive.waitDegreeRotateVoltage();
+					//drive.degreeRotateVoltage(60);
+					//drive.waitDegreeRotateVoltage();
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
-					drive.degreeRotateVoltage(-60);
-					drive.waitDegreeRotateVoltage();
+					//drive.degreeRotateVoltage(-60);
+					//drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS4) {
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
@@ -218,18 +227,18 @@ public class StrongholdAuton {
 			}
 			case ROTATE1: {//Rotate towards goal without relying on camera (as we might not see the goal yet)
 				if (pos == PosEnum.POS1) {
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);// 35
-					drive.waitDegreeRotateVoltage();
+					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);// 35
+					//drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS2) {
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES);
-					drive.waitDegreeRotateVoltage();
+					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES);
+					//drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS3) {
 					// do nothing
 				} else if (pos == PosEnum.POS4) {
 					// do nothing
 				} else if (pos == PosEnum.POS5) {
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES);
-					drive.waitDegreeRotateVoltage();
+					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES);
+					//drive.waitDegreeRotateVoltage();
 				}						
 				intake.lower(false);
 				state++;

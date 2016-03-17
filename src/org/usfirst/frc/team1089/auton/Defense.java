@@ -46,8 +46,8 @@ public class Defense{
 				break;
 			}
 			case ROCK_WALL: {
-				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 12.0); 
+				shooter.raise(Shooter.MEDIUM);
+				drive.moveDistance(BEFORE_DEFENSE_FEET + 3 + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
 				drive.waitMove();		// full speed
 				break;
 			}

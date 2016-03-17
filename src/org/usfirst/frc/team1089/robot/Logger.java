@@ -23,7 +23,7 @@ public class Logger {
 	private static final SimpleDateFormat ISO8601;
 	
 	static {
-		ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+		ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH.mm.ss.SSSXXX");
 	}
 	
 	/**

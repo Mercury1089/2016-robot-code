@@ -114,14 +114,15 @@ public class Robot extends IterativeRobot {
 		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
 
-		aim = (AimEnum) shootChooser.getSelected();
-		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,
-				(DefenseEnum) defenseChooser.getSelected(), accel, this);
+		
 	}
 		
 
 	@Override
 	public void autonomousInit() {
+		aim = (AimEnum) shootChooser.getSelected();
+		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,
+				(DefenseEnum) defenseChooser.getSelected(), accel, this);
 		gyro.reset();
 		auton.resetState();
 		Logger.init();
@@ -134,6 +135,7 @@ public class Robot extends IterativeRobot {
 		auton.move();
 		
 		camera.getNTInfo(false); // in case not already called in move()
+		SmartDashboard.putString("Auton State", auton.getState());
 		debug();		
 	}
 
@@ -287,7 +289,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void shootProc(AimEnum aim) {
 		double recenteredMoveDistance;
-		if (!drive.checkDegreeRotateVoltagePractice() && isShooting) { 
+		if (!drive.checkDegreeRotateVoltage() && isShooting) { 
 			camera.getNTInfo(true);
 
 			if (camera.isInTurnAngle()) {
@@ -392,8 +394,5 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is flat", accel.isFlat());
 		SmartDashboard.putString("Press", "" + Utilities.round(compressor.getPressurePSI(), 2) + "PSI");
 		SmartDashboard.putBoolean("Is enough pressure", compressor.isInShotPressure());
-		
-		// Auton
-		SmartDashboard.putString("Auton State", auton.getState());
 	}
 }
