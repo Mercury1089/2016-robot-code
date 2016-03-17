@@ -1,15 +1,15 @@
 <xml version="1.0">
 <dashboard>
-	<widget field="Pressure" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="935" y="157"/>
-	</widget>
 	<widget field="Is enough pressure" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="937" y="94"/>
-		<width>161</width>
-		<height>57</height>
+		<location x="947" y="109"/>
+		<width>146</width>
+		<height>51</height>
 	</widget>
 	<widget field="Auton State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="726" y="24"/>
+		<location x="777" y="16"/>
+	</widget>
+	<widget field="Press" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1010" y="240"/>
 	</widget>
 	<widget field="Is flat" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="1104" y="53"/>
@@ -45,7 +45,7 @@
 		<location x="634" y="330"/>
 	</widget>
 	<widget field="Defense: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="634" y="152"/>
+		<location x="643" y="178"/>
 	</widget>
 	<widget field="Position: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="640" y="10"/>
@@ -148,4 +148,5 @@
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="Speed Rotate Method"/>
 </xml>

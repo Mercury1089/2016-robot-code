@@ -159,7 +159,7 @@ public class Camera {
 		setRectangles(null, null, null, null, null);
 		
 		// Wait up to AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS for new data in the listener, or take what it has
-		while(wait_secs < DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS && ntListener.getModificationTime().before(time_stamp)) {
+		while(waitForNewInfo && wait_secs < DriveTrain.AUTOROTATE_CAMERA_CATCHUP_DELAY_SECS && ntListener.getModificationTime().before(time_stamp)) {
 			wait_secs += NT_LISTENER_RETRY_DELAY;
 			Timer.delay(NT_LISTENER_RETRY_DELAY);
 		}
@@ -185,8 +185,8 @@ public class Camera {
 	public void getNTInfo(boolean waitForNewInfo) {
 
 		// Comment/uncomment one of the following to directly use the NT or use the listener
-		//updateFromNT(waitForNewInfo);
-		updateFromListener(waitForNewInfo);
+		updateFromNT(waitForNewInfo);
+		//updateFromListener(waitForNewInfo);
 
 		if (isCoherent() && rectArea.length > 0) { // searches array for largest
 													// target

@@ -24,7 +24,6 @@ public class CameraNTListener implements ITableListener{
 	 * <pre>
 	 * public void run()
 	 * </pre>
-	 * Has the Listener input information into the logger
 	 */
 	
 	public synchronized void run(){
@@ -33,9 +32,7 @@ public class CameraNTListener implements ITableListener{
 			isListening = true;
 		}
 		double[] def = {}; // Return an empty array by default.
-		Logger.log("Listening started. Area: " + Arrays.toString(nt.getNumberArray("area", def)), " Width: " + Arrays.toString(nt.getNumberArray("width", def)), 
-			   " Height: " + Arrays.toString(nt.getNumberArray("height", def)), " CenterX: " + Arrays.toString(nt.getNumberArray("centerX", def)), 
-			   "CenterY: " + Arrays.toString(nt.getNumberArray("centerY", def)));
+		
 	}
 	
 	/**
@@ -55,7 +52,6 @@ public class CameraNTListener implements ITableListener{
 	@Override
 	public void valueChanged(ITable source, String key , Object value, boolean isNew){
 		Calendar ts = Calendar.getInstance(); // Get the time before synchronized so time is accurate as possible
-		Logger.log("String: " + key + " Value: " + Arrays.toString((double[])value) + " new: " + isNew);
 		synchronized(this) {
 			switch (key) {
 				case "area": {

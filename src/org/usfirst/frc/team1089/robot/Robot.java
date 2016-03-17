@@ -188,20 +188,6 @@ public class Robot extends IterativeRobot {
 			shooter.shoot(); // shoot ball
 		}
 		
-		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)){
-			Logger.log("Raise portcullis lifter");
-			portLifter.raise();
-		}
-		
-		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)){
-			Logger.log("Lower portcullis lifter");
-			portLifter.lower();
-		}
-
-		if(getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.R3)){
-			gyro.reset();
-		}
-		
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
 			Logger.log("Put shooter arm in lowest position");
@@ -224,7 +210,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		//raising, lowering, and powering intake
-		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3)) {
+		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3) || getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
 			Logger.log("Raise intake door");
 			intake.lower(false); // up
 		}
@@ -251,9 +237,6 @@ public class Robot extends IterativeRobot {
 			cBase.rumble(true);
 		} else {
 			cBase.rumble(false);
-		}
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)){
-				gyro.reset();
 		}
 		/*
 		while(drive.checkDegreeRotateVoltage()) {
@@ -402,7 +385,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
 		SmartDashboard.putBoolean("Is flat", accel.isFlat());
-		SmartDashboard.putString("Pressure", "" + Utilities.round(compressor.getPressurePSI(), 2) + "PSI");
+		SmartDashboard.putString("Press", "" + Utilities.round(compressor.getPressurePSI(), 2) + "PSI");
 		SmartDashboard.putBoolean("Is enough pressure", compressor.isInShotPressure());
 		
 		// Auton
