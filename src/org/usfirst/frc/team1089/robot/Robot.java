@@ -49,6 +49,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		Logger.init();
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
 		camera.runListener();
@@ -124,6 +125,7 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 		auton.resetState();
 		Logger.init();
+		Logger.log("Entered Auton");
 	}
 
 	@Override
@@ -137,8 +139,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-			Logger.close();
-			System.out.println("Closed stream!");
+		Logger.log("DISABLED");
+		Logger.close();
+		System.out.println("Closed stream!");
 	}
 	
 	@Override
@@ -151,12 +154,14 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopInit() {
+		Logger.init();
+		Logger.log("Entered Teleop");
 	}
 	
 
 	@Override
 	// Handle global manipulation of robot here
-	public void teleopPeriodic() {
+	public void teleopPeriodic() {	
 		isInAuton = false;
 		// Get initial info
 		camera.getNTInfo(false);
