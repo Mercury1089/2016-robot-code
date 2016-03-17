@@ -11,7 +11,7 @@ public class Defense{
 	private static final int 
 					BEFORE_DEFENSE_FEET = 4, THROUGH_DEFENSE_FEET = 4,
 					INITIAL_CDF_FEET = 4, REMAINING_CDF_FEET = 4,
-					AFTER_DEFENSE_FEET = 3 ;
+					AFTER_DEFENSE_FEET = 3, THROUGH_DEFENSE_FEET_ROCK_WALL = 7;
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
 		drive = d;
@@ -47,7 +47,7 @@ public class Defense{
 			}
 			case ROCK_WALL: {
 				shooter.raise(Shooter.MEDIUM);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + 3 + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROCK_WALL + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
 				drive.waitMove();		// full speed
 				break;
 			}

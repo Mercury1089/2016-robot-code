@@ -30,7 +30,7 @@ public class StrongholdAuton {
 								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_RECENTER_DISTANCE_FEET = 10.0, SPYBOT_DRIVE_DISTANCE_FEET = 4.0;
 	
 	// distances for MOVE1
-	private static int MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6,
+	private static int  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6,
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET = 9,
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,
 						MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 3, 
@@ -151,7 +151,7 @@ public class StrongholdAuton {
 	 * Crosses defense, centers, moves 10 feet away from goal, and shoots in auton
 	 * 
 	 */
-	public void move() {
+	public void move() {  
 		
 		if (pos == PosEnum.NOTHING){
 			state = DONE;
@@ -210,8 +210,8 @@ public class StrongholdAuton {
 				} else if (pos == PosEnum.POS3) {
 					//drive.degreeRotateVoltage(60);
 					//drive.waitDegreeRotateVoltage();
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove();
+					//drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					//drive.waitMove();			
 					//drive.degreeRotateVoltage(-60);
 					//drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS4) {

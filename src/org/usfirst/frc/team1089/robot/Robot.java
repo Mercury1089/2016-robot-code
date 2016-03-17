@@ -49,7 +49,6 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
-		Logger.init();
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
 		camera.runListener();
