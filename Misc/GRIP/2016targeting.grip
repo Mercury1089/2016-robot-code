@@ -1,7 +1,7 @@
 <grip:Pipeline>
   <sources>
     <grip:Camera>
-      <property name="address" value="http://10.10.89.11"/>
+      <property name="address" value="http://axis-1089.local"/>
     </grip:Camera>
   </sources>
   <steps>
@@ -86,6 +86,18 @@
           <double>100.0</double>
         </value>
       </grip:Input>
+      <grip:Input step="4" socket="8">
+        <value>0</value>
+      </grip:Input>
+      <grip:Input step="4" socket="9">
+        <value>1.0E12</value>
+      </grip:Input>
+      <grip:Input step="4" socket="10">
+        <value>0</value>
+      </grip:Input>
+      <grip:Input step="4" socket="11">
+        <value>1000</value>
+      </grip:Input>
       <grip:Output step="4" socket="0" previewed="true"/>
     </grip:Step>
     <grip:Step name="Publish ContoursReport">
@@ -121,8 +133,8 @@
   </steps>
   <connections>
     <grip:Connection>
-      <grip:Output step="4" socket="0" previewed="true"/>
-      <grip:Input step="5" socket="0"/>
+      <grip:Output step="3" socket="0" previewed="true"/>
+      <grip:Input step="4" socket="0"/>
     </grip:Connection>
     <grip:Connection>
       <grip:Output step="2" socket="0" previewed="false"/>
@@ -137,16 +149,16 @@
       <grip:Input step="1" socket="0"/>
     </grip:Connection>
     <grip:Connection>
-      <grip:Output source="0" socket="0" previewed="true"/>
-      <grip:Input step="6" socket="0"/>
-    </grip:Connection>
-    <grip:Connection>
       <grip:Output step="1" socket="0" previewed="false"/>
       <grip:Input step="2" socket="0"/>
     </grip:Connection>
     <grip:Connection>
-      <grip:Output step="3" socket="0" previewed="true"/>
-      <grip:Input step="4" socket="0"/>
+      <grip:Output source="0" socket="0" previewed="true"/>
+      <grip:Input step="6" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="4" socket="0" previewed="true"/>
+      <grip:Input step="5" socket="0"/>
     </grip:Connection>
   </connections>
   <settings>

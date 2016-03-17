@@ -185,8 +185,8 @@ public class Camera {
 	public void getNTInfo(boolean waitForNewInfo) {
 
 		// Comment/uncomment one of the following to directly use the NT or use the listener
-		updateFromNT(waitForNewInfo);
-		//updateFromListener(waitForNewInfo);
+		//updateFromNT(waitForNewInfo);
+		updateFromListener(waitForNewInfo);
 
 		if (isCoherent() && rectArea.length > 0) { // searches array for largest
 													// target
