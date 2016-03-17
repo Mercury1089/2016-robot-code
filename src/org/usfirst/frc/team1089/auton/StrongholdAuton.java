@@ -227,18 +227,18 @@ public class StrongholdAuton {
 			}
 			case ROTATE1: {//Rotate towards goal without relying on camera (as we might not see the goal yet)
 				if (pos == PosEnum.POS1) {
-					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);// 35
-					//drive.waitDegreeRotateVoltage();
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);// 35
+					drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS2) {
-					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES);
-					//drive.waitDegreeRotateVoltage();
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES);
+					drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS3) {
 					// do nothing
 				} else if (pos == PosEnum.POS4) {
 					// do nothing
 				} else if (pos == PosEnum.POS5) {
-					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES);
-					//drive.waitDegreeRotateVoltage();
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES);
+					drive.waitDegreeRotateVoltage();
 				}						
 				intake.lower(false);
 				state++;
