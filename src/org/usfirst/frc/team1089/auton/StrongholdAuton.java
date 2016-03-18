@@ -57,6 +57,7 @@ public class StrongholdAuton {
 	private PosEnum pos;
 	private double centeredMoveDistance;
 	private AimEnum aim;
+	private DefenseEnum defenseEnum;
 	private MercAccelerometer accel;
 	private Shooter shooter;
 	private AnalogGyro gyro;
@@ -97,7 +98,8 @@ public class StrongholdAuton {
 		drive = d;
 		camera = c;
 		pos = p;
-		aim = a ;
+		aim = a;
+		defenseEnum = dE;
 		shooter = s;
 		gyro = g;
 		accel = ac;
@@ -153,7 +155,7 @@ public class StrongholdAuton {
 	 */
 	public void move() {  
 		
-		if (pos == PosEnum.NOTHING){
+		if (defenseEnum == DefenseEnum.DO_NOTHING){
 			state = DONE;
 		}
 		if (pos == PosEnum.SPYBOT){
@@ -310,7 +312,7 @@ public class StrongholdAuton {
 						Logger.log("Auton finish case: SHOOT");
 					}
 				}
-				else if (aim == AimEnum.LOW && (pos != PosEnum.POS3 && pos != PosEnum.POS4)) {
+				else if (aim == AimEnum.LOW) {
 					robot.shootProc(aim);
 					if (!robot.isShooting()) {
 						state++;

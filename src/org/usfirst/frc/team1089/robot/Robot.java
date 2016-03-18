@@ -40,6 +40,8 @@ public class Robot extends IterativeRobot {
 	private SendableChooser defenseChooser, shootChooser, posChooser;
 	private StrongholdAuton auton;
 	private AimEnum aim;
+	private DefenseEnum defense;
+	private PosEnum pos;
 	private DriverStation driverStation;
 	private Config config;
 
@@ -89,12 +91,14 @@ public class Robot extends IterativeRobot {
 		// Set up our 3 Sendable Choosers for the SmartDashboard
 
 		defenseChooser = new SendableChooser();
-		defenseChooser.addDefault("Default", DefenseEnum.DO_NOTHING);
+		defenseChooser.addDefault("Do Nothing", DefenseEnum.DO_NOTHING);
 		defenseChooser.addObject("Low Bar", DefenseEnum.LOW_BAR);
 		defenseChooser.addObject("Moat", DefenseEnum.MOAT);
 		defenseChooser.addObject("Ramparts", DefenseEnum.RAMPARTS);
 		defenseChooser.addObject("Rock Wall", DefenseEnum.ROCK_WALL);
 		defenseChooser.addObject("Rough Terrain", DefenseEnum.ROUGH_TERRAIN);
+		defenseChooser.addObject("Cheval De Frise", DefenseEnum.CHEVAL_DE_FRISE);
+		defenseChooser.addObject("Portcullis", DefenseEnum.PORTCULLIS);
 		SmartDashboard.putData("Defense: ", defenseChooser);
 
 		posChooser = new SendableChooser();
@@ -104,7 +108,6 @@ public class Robot extends IterativeRobot {
 		posChooser.addObject("4", PosEnum.POS4);
 		posChooser.addObject("5", PosEnum.POS5);
 		posChooser.addObject("Spybot", PosEnum.SPYBOT);
-		posChooser.addObject("Do Nothing", PosEnum.NOTHING);
 		SmartDashboard.putData("Position: ", posChooser);
 
 		shootChooser = new SendableChooser();
@@ -120,6 +123,16 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		aim = (AimEnum) shootChooser.getSelected();
+		defense = (DefenseEnum) defenseChooser.getSelected();
+		pos = (PosEnum) posChooser.getSelected();
+		
+		if ((defense == DefenseEnum.LOW_BAR && pos != PosEnum.POS1) || (defense != DefenseEnum.LOW_BAR && pos == PosEnum.POS1)) {
+			defense = DefenseEnum.DO_NOTHING;
+		}
+		if (aim == AimEnum.LOW && (pos == PosEnum.POS3 || pos == PosEnum.POS4)) {
+			defense =  DefenseEnum.DO_NOTHING;
+		}
+		
 		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,
 				(DefenseEnum) defenseChooser.getSelected(), accel, this);
 		gyro.reset();

@@ -6,6 +6,5 @@ public enum PosEnum {
 	POS3,
 	POS4,
 	POS5, 
-	SPYBOT, 
-	NOTHING;
+	SPYBOT,
 }
