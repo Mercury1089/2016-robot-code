@@ -1,5 +1,12 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Press" type="String" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="1025" y="229"/>
+		<width>115</width>
+		<height>37</height>
+		<property name="Background" value="255.204.153.255"/>
+		<property name="Font Size" value="20"/>
+	</widget>
 	<widget field="Is enough pressure" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="947" y="109"/>
 		<width>146</width>
@@ -7,9 +14,6 @@
 	</widget>
 	<widget field="Auton State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="777" y="16"/>
-	</widget>
-	<widget field="Press" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1010" y="240"/>
 	</widget>
 	<widget field="Is flat" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="1104" y="53"/>
