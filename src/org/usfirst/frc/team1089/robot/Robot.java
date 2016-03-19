@@ -168,6 +168,8 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopInit() {
+		Logger.log("Ending Auton");
+		Logger.close();
 		Logger.init();
 		Logger.log("Entered Teleop");
 	}
