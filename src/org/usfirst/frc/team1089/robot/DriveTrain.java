@@ -507,7 +507,13 @@ public class DriveTrain {
 	public void waitDegreeRotateVoltage() {
 		long start = Calendar.getInstance().getTimeInMillis();
 		// Assumes we only use in Auton
-		while (checkDegreeRotateVoltage() && ds.isAutonomous() && (Calendar.getInstance().getTimeInMillis()  - start) < 15000);
+		while (checkDegreeRotateVoltage()) {
+			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= 15000) {
+				isDegreeRotating = false; // we take the flag down
+				stop(); // we stop the motors
+				break;
+			}
+		}
 	}
 
 	/**
@@ -516,12 +522,13 @@ public class DriveTrain {
 	 * </pre>
 	 *
 	 * Hangs the process until the robot is not rotating.
-	 */
+	 *
 	public void waitDegreeRotateVoltageNew() {
 		while (checkDegreeRotateVoltageNew()) {
 			// do nothing
 		}
 	}
+	 */
 
 	/**
 	 * <pre>
@@ -533,6 +540,11 @@ public class DriveTrain {
 	public void waitMove() {
 		long start = Calendar.getInstance().getTimeInMillis();
 		// Assumes we only use in Auton
-		while (checkMove() && ds.isAutonomous() && (Calendar.getInstance().getTimeInMillis()  - start) < 15000);
+		while (checkMove()) {
+			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= 15000) {
+				setToManual();
+				break;
+			};
+		}
 	}
 }
