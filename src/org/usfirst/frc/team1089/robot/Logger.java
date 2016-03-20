@@ -122,7 +122,7 @@ public class Logger {
 		logError(msg);
 	}
 	
-	/**
+	/** 
 	 * <pre>
 	 * public static synchronized void close()
 	 * </pre>
@@ -130,9 +130,12 @@ public class Logger {
 	 */
 	public static synchronized void close() {
 		try {
-			is_logging = false;
-			writer.close();
-			out.close();
+			if(writer != null && out != null){			
+				is_logging = false;
+				writer.close();
+				out.close();
+				log = null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}

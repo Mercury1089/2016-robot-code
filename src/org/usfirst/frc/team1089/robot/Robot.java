@@ -195,6 +195,7 @@ public class Robot extends IterativeRobot {
 		// Aims at target / initiates asynchronous shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			Logger.log("Aim and shoot");
+			Logger.log("SHOT!!!");
 			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
 
@@ -251,7 +252,7 @@ public class Robot extends IterativeRobot {
 
 		//makes controller rumble when the robot is able to take a shot
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
-			Logger.log("In range to shoot! Press the button!");
+			//Logger.log("In range to shoot! Press the button!");
 			cBase.rumble(true);
 		} else {
 			cBase.rumble(false);
