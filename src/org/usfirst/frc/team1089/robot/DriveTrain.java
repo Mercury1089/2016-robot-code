@@ -46,6 +46,8 @@ public class DriveTrain {
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 500;
 	private static final double TURN_THRESH_VELOCITY = 10;
+	private static final long WAIT_MOVE_OR_ROTATE_TIMEOUT_MS = 15000;
+	
 	private static DriverStation ds = DriverStation.getInstance();
 
 	//private int autoRotCounter = 0;
@@ -502,7 +504,7 @@ public class DriveTrain {
 		long start = Calendar.getInstance().getTimeInMillis();
 		// Assumes we only use in Auton
 		while (checkDegreeRotateVoltage()) {
-			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= 15000) {
+			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= WAIT_MOVE_OR_ROTATE_TIMEOUT_MS) {
 				stop(); // we stop everthing
 				break;
 			}
@@ -534,7 +536,7 @@ public class DriveTrain {
 		long start = Calendar.getInstance().getTimeInMillis();
 		// Assumes we only use in Auton
 		while (checkMove()) {
-			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= 15000) {
+			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= WAIT_MOVE_OR_ROTATE_TIMEOUT_MS) {
 				stop();
 				break;
 			};
