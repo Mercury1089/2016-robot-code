@@ -155,6 +155,8 @@ public class Robot extends IterativeRobot {
 		camera.getNTInfo(false); // in case not already called in move()
 		SmartDashboard.putString("Auton State", auton.getState());
 		debug();		
+		
+
 	}
 
 	@Override
