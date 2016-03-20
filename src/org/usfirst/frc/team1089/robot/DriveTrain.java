@@ -1,7 +1,10 @@
 package org.usfirst.frc.team1089.robot;
 
+import java.util.Calendar;
+
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,6 +46,7 @@ public class DriveTrain {
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 500;
 	private static final double TURN_THRESH_VELOCITY = 10;
+	private static DriverStation ds;
 
 	//private int autoRotCounter = 0;
 	private Config config;
@@ -501,7 +505,9 @@ public class DriveTrain {
 	 * Hangs the process until the robot is not rotating.
 	 */
 	public void waitDegreeRotateVoltage() {
-		while (checkDegreeRotateVoltage());
+		long start = Calendar.getInstance().getTimeInMillis();
+		// Assumes we only use in Auton
+		while (checkDegreeRotateVoltage() && ds.isAutonomous() && (Calendar.getInstance().getTimeInMillis()  - start) < 15000);
 	}
 
 	/**
@@ -525,6 +531,8 @@ public class DriveTrain {
 	 * Hangs the process until the robot is not moving.
 	 */
 	public void waitMove() {
-		while (checkMove());
+		long start = Calendar.getInstance().getTimeInMillis();
+		// Assumes we only use in Auton
+		while (checkMove() && ds.isAutonomous() && (Calendar.getInstance().getTimeInMillis()  - start) < 15000);
 	}
 }
