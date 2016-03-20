@@ -128,6 +128,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
+		this.resetAll();
+		drive.stop();
+
 		aim = (AimEnum) shootChooser.getSelected();
 		defense = (DefenseEnum) defenseChooser.getSelected();
 		pos = (PosEnum) posChooser.getSelected();
@@ -140,7 +143,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,
-				(DefenseEnum) defenseChooser.getSelected(), accel, this);
+				defense, accel, this);
 		gyro.reset();
 		auton.resetState();
 		Logger.init();
@@ -176,7 +179,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		drive.resetAll();
+		drive.stop();
 		this.resetAll();
 		Logger.log("Ending Auton, Entered Teleop");
 	}

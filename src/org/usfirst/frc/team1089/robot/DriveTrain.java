@@ -51,12 +51,6 @@ public class DriveTrain {
 	//private int autoRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
-	
-	public void resetAll(){
-		this.stop();
-		isMoving = false;
-		isDegreeRotating = false;
-	}
 
 	/**
 	 * <pre>
@@ -509,8 +503,7 @@ public class DriveTrain {
 		// Assumes we only use in Auton
 		while (checkDegreeRotateVoltage()) {
 			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= 15000) {
-				isDegreeRotating = false; // we take the flag down
-				stop(); // we stop the motors
+				stop(); // we stop everthing
 				break;
 			}
 		}
@@ -542,7 +535,7 @@ public class DriveTrain {
 		// Assumes we only use in Auton
 		while (checkMove()) {
 			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= 15000) {
-				setToManual();
+				stop();
 				break;
 			};
 		}
