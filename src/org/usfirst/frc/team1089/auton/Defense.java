@@ -11,7 +11,7 @@ public class Defense{
 	private static final int 
 					BEFORE_DEFENSE_FEET = 4, THROUGH_DEFENSE_FEET = 4,
 					INITIAL_CDF_FEET = 4, REMAINING_CDF_FEET = 4,
-					AFTER_DEFENSE_FEET = 3, THROUGH_DEFENSE_FEET_ROCK_WALL = 7;
+					AFTER_DEFENSE_FEET = 3, THROUGH_DEFENSE_FEET_ROCK_WALL = 7;  // for rockwall we add 3 feet to allow for huge slippage
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
 		drive = d;
