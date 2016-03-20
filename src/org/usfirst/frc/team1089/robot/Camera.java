@@ -28,6 +28,7 @@ public class Camera {
 	private static final int MAX_NT_RETRY = 5;
 	private static final double NT_LISTENER_RETRY_DELAY = 0.05; // Time in seconds to wait before re-checking the NT listenner
 	private Config config;
+	
 
 	/**
 	 * <pre>

@@ -49,6 +49,12 @@ public class Robot extends IterativeRobot {
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
+	public void resetAll(){
+		isShooting = false;
+		isInAuton = false;
+		shootingAttemptCounter = 0;
+	}
+	
 	@Override
 	public void robotInit() {
 		config = Config.getInstance();
@@ -157,7 +163,7 @@ public class Robot extends IterativeRobot {
 		Logger.close();
 		System.out.println("Closed stream!");
 	}
-	
+	 
 	@Override
 	public void disabledPeriodic() {
 		camera.getNTInfo(false);
@@ -165,9 +171,11 @@ public class Robot extends IterativeRobot {
 		
 		cBase.rumble(false);
 	}
-	
+
 	@Override
 	public void teleopInit() {
+		drive.resetAll();
+		this.resetAll();
 		Logger.log("Ending Auton, Entered Teleop");
 	}
 	

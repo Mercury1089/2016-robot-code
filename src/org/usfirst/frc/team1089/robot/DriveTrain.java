@@ -47,6 +47,12 @@ public class DriveTrain {
 	//private int autoRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
+	
+	public void resetAll(){
+		this.stop();
+		isMoving = false;
+		isDegreeRotating = false;
+	}
 
 	/**
 	 * <pre>
