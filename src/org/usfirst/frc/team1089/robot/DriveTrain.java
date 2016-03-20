@@ -46,7 +46,7 @@ public class DriveTrain {
 	private static final double DEADZONE_LIMIT = 0.3;
 	private static final double MOVE_THRESH_TICKS = 500;
 	private static final double TURN_THRESH_VELOCITY = 10;
-	private static DriverStation ds;
+	private static DriverStation ds = DriverStation.getInstance();
 
 	//private int autoRotCounter = 0;
 	private Config config;
