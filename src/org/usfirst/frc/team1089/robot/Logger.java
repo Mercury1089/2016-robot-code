@@ -33,7 +33,7 @@ public class Logger {
 	 * Initializes the current {@code Logger} with the file at the specified location.
 	 */
 	public static synchronized void init() {
-		if (log == null) {
+		if (!is_logging) {
 			try {
 				File path;
 				log = new File("home/lvuser/log/log_" + ISO8601.format(Calendar.getInstance().getTime()) + ".txt");
@@ -130,10 +130,16 @@ public class Logger {
 	 */
 	public static synchronized void close() {
 		try {
-			if(writer != null && out != null){			
-				is_logging = false;
-				writer.close();
-				out.close();
+			is_logging = false;
+			if(log != null){
+				if(writer != null) {
+					writer.close();
+					writer = null;
+				}
+				if(out != null) {
+					out.close();
+					out = null;
+				}
 				log = null;
 			}
 		} catch (Exception e) {
