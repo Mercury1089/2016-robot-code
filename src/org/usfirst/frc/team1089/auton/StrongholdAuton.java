@@ -46,7 +46,8 @@ public class StrongholdAuton {
 	
 	// maximum optimal shooting distances
 	private static int SHOOT_DISTANCE_P1_P3_P4_FEET = 11,
-					SHOOT_DISTANCE_P2_P5_FEET = 5;
+					SHOOT_DISTANCE_P5_FEET = 5,
+					SHOOT_DISTANCE_P2_FEET = 11;	//shooting from center, long shot 
 					/*SHOOT_DISTANCE_P3_FEET = 11,
 					SHOOT_DISTANCE_P4_FEET = 11,*/ 
 					/*SHOOT_DISTANCE_P5_FEET = 5;*/
@@ -266,13 +267,29 @@ public class StrongholdAuton {
 							state = DONE;
 						}
 					}
-				} else if (pos == PosEnum.POS2 || pos == PosEnum.POS5) { // in cases where we expect to be close
+				} else if (pos == PosEnum.POS2) { // in cases where we expect to be far
+					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+						state = DONE;
+					}
+					else {
+						//Assume we are looking at the correct goal
+						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET);
+						// If distance to center is not unrealistic, continue
+						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+							state++;
+							Logger.log("Auton finish case: CALCULATE");
+						}
+						else {
+							state = DONE;
+						}
+					}
+				} else if (pos == PosEnum.POS5) { // in cases where we expect to be close
 					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P2_P5_FEET);
+						centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET);
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
