@@ -142,7 +142,7 @@ public class StrongholdAuton {
 		case DONE:
 			return "DONE";
 		default:
-				return "UNKNOWN";
+			return "UNKNOWN";
 		}
 	}
 	
@@ -156,19 +156,28 @@ public class StrongholdAuton {
 	 */
 	public void move() {  
 		
-		if (defenseEnum == DefenseEnum.DO_NOTHING){
+		if (state == START && defenseEnum == DefenseEnum.DO_NOTHING){ // we only do this hack once
+			Logger.log("Auton entered DefenseEnum.DO_NOTHING hack");
 			state = DONE;
+			Logger.log("Auton forced DONE state because DefenseEnum.DO_NOTHING was selected");
 		}
-		if (pos == PosEnum.SPYBOT){
+		
+		if (state == START && pos == PosEnum.SPYBOT){ // we only do this hack once or we will never shoot
+			Logger.log("Auton entered PosEnum.SPYBOT hack");
 			drive.moveDistance(SPYBOT_DRIVE_DISTANCE_FEET, 0.4, 0, 0, 6.0);
+			drive.waitMove(); // we cannot go to the next state until we are done moving (or if we timeout)
 			state = AIM;
+			Logger.log("Auton forced AIM state because PosEnum.SPYBOT was selected");
 		}
+		
 		switch (state) {
 			case START: {// Adjust shooter/intake
 
 				breachAttempts = 0;
 				if(pos == PosEnum.POS1) {
+					Logger.log("Auton START about to lower intake because PosEnum.POS1 was selected");
 					intake.lower(true);
+					Logger.log("Auton START lowered intake because PosEnum.POS1 was selected");
 				}
 				
 				state++;
@@ -178,25 +187,37 @@ public class StrongholdAuton {
 			}
 			case BREACH: {//Breaching Phase
 				if (breachAttempts == 0) {
+					Logger.log("Auton BREACH about to attempt first breach");
 					defense.breach();
 					breachAttempts++; //Breach only once
+					Logger.log("Auton BREACH attempted breach");
 				}
-				if (accel.isFlat()) { // loops until flat - TODO should we do anything to help if not?
+				if (accel.isFlat()) { // loops until flat (but only while autonPeriodic is called) - TODO should we do anything to help if not?
+					Logger.log("Auton BREACH about to raise shooter");
 					shooter.raise(Shooter.MEDIUM);
+					Logger.log("Auton BREACH raised shooter");
 					state++;
 					Logger.log("Auton finish case: BREACH");
-				}	
+				} else {
+					// accel is not flat - do nothing for now
+				}
 				break;
 			}
 			case STRAIGHTEN: {//Straighten
+				Logger.log("Auton STRAIGHTEN about to raise intake");
 				intake.lower(false);
+				Logger.log("Auton STRAIGHTEN raised intake");
+				
 				if (aim == AimEnum.NONE) {
 					state = DONE;
+					Logger.log("Auton finish case: STRAIGHTEN. Jumping to DONE state because AimEnum.NONE was selected");
 				}
 				else {
 					if (pos != PosEnum.POS1) { // we only skip correction in POS1
+						Logger.log("Auton STRAIGHTEN about to straighten using gyro");
 						drive.degreeRotateVoltage(-gyro.getAngle()); // Assume gyro has been reset to zero before breaching
 						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton STRAIGHTEN straightened using gyro");
 					}
 					state++;
 					Logger.log("Auton finish case: STRAIGHTEN");
@@ -205,11 +226,15 @@ public class StrongholdAuton {
 			}
 			case MOVE1: {//Move to rotation point if needed
 				if (pos == PosEnum.POS1) {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS1");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.42, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS1");
 				} else if (pos == PosEnum.POS2) {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS2");
 				} else if (pos == PosEnum.POS3) {
 					//drive.degreeRotateVoltage(60);
 					//drive.waitDegreeRotateVoltage();
@@ -218,11 +243,15 @@ public class StrongholdAuton {
 					//drive.degreeRotateVoltage(-60);
 					//drive.waitDegreeRotateVoltage();
 				} else if (pos == PosEnum.POS4) {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS4");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS4");
 				} else if (pos == PosEnum.POS5) {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS5");
 				}				
 				state++;
 				Logger.log("Auton finish case: MOVE1");
@@ -230,20 +259,29 @@ public class StrongholdAuton {
 			}
 			case ROTATE1: {//Rotate towards goal without relying on camera (as we might not see the goal yet)
 				if (pos == PosEnum.POS1) {
+					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS1");
 					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);// 35
 					drive.waitDegreeRotateVoltage();
+					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5");
 				} else if (pos == PosEnum.POS2) {
+					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2");
 					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES);
 					drive.waitDegreeRotateVoltage();
+					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2");
 				} else if (pos == PosEnum.POS3) {
 					// do nothing
 				} else if (pos == PosEnum.POS4) {
 					// do nothing
 				} else if (pos == PosEnum.POS5) {
+					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5");
 					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES);
 					drive.waitDegreeRotateVoltage();
-				}						
+					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5");
+				}
+				Logger.log("Auton ROTATE1 about to raise intake");
 				intake.lower(false);
+				Logger.log("Auton ROTATE1 raised intake");
+				
 				state++;
 				Logger.log("Auton finish case: ROTATE1");
 				break;
@@ -254,6 +292,7 @@ public class StrongholdAuton {
 				if (pos == PosEnum.POS1 || pos == PosEnum.POS3 || pos == PosEnum.POS4) { // in cases where we expect to be far
 					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
+						Logger.log("Auton finish case: CALCULATE (abnormal horizontal distance) PosEnum.POS1, POS3 or POS4");
 					}
 					else {
 						//Assume we are looking at the correct goal
@@ -261,15 +300,17 @@ public class StrongholdAuton {
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
-							Logger.log("Auton finish case: CALCULATE");
+							Logger.log("Auton finish case: CALCULATE (OK) PosEnum.POS1, POS3 or POS4");
 						}
 						else {
 							state = DONE;
+							Logger.log("Auton finish case: CALCULATE (abnormal centered move distance) PosEnum.POS1, POS3 or POS4");
 						}
 					}
 				} else if (pos == PosEnum.POS2) { // in cases where we expect to be far
 					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
+						Logger.log("Auton finish case: CALCULATE (abnormal horizontal distance) PosEnum.POS2");
 					}
 					else {
 						//Assume we are looking at the correct goal
@@ -277,15 +318,17 @@ public class StrongholdAuton {
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
-							Logger.log("Auton finish case: CALCULATE");
+							Logger.log("Auton finish case: CALCULATE (OK) PosEnum.POS2");
 						}
 						else {
 							state = DONE;
+							Logger.log("Auton finish case: CALCULATE (abnormal centered move distance) PosEnum.POS2");
 						}
 					}
 				} else if (pos == PosEnum.POS5) { // in cases where we expect to be close
 					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
+						Logger.log("Auton finish case: CALCULATE (abnormal horizontal distance) PosEnum.POS5");
 					}
 					else {
 						//Assume we are looking at the correct goal
@@ -293,26 +336,31 @@ public class StrongholdAuton {
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
-							Logger.log("Auton finish case: CALCULATE");
+							Logger.log("Auton finish case: CALCULATE (OK) PosEnum.POS5");
 						}
 						else {
 							state = DONE;
+							Logger.log("Auton finish case: CALCULATE (abnormal centered move distance) PosEnum.POS5");
 						}
 					}
 				}
 				break;
 			}
 			case MOVE2: {//Move forward so that distance from goal is an acceptable distance
+				Logger.log("Auton MOVE2 about to attempt move");
 				drive.moveDistance(centeredMoveDistance, 0.4, 0, 0, 4.5);
 				drive.waitMove();
+				Logger.log("Auton MOVE2 attempted move");
 				state++;
 				Logger.log("Auton finish case: MOVE2");
 				break;
 			}
 			case AIM: {// Aim
 				if (centerAttempts == 0) {
+					Logger.log("Auton AIM about to start aim proc");
 					robot.aimProc();
 					centerAttempts++;
+					Logger.log("Auton AIM started aim proc");
 				}
 				
 				if(!drive.checkDegreeRotateVoltage()) {
@@ -326,18 +374,19 @@ public class StrongholdAuton {
 					robot.shootProc(aim);
 					if (!robot.isShooting()) {
 						state++;
-						Logger.log("Auton finish case: SHOOT");
+						Logger.log("Auton finish case: SHOOT (AimEnum.HIGH)");
 					}
 				}
 				else if (aim == AimEnum.LOW) {
 					robot.shootProc(aim);
 					if (!robot.isShooting()) {
 						state++;
-						Logger.log("Auton finish case: SHOOT");
+						Logger.log("Auton finish case: SHOOT (AimEnum.LOW)");
 					}
 				}
 				else {
 					state = DONE;
+					Logger.log("Auton finish case: SHOOT (not aiming)");
 				}
 				break;
 			}
