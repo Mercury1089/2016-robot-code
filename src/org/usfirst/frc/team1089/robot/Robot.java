@@ -291,16 +291,25 @@ public class Robot extends IterativeRobot {
 	 */
 	public void aimProc() {
 		shootingAttemptCounter = 0;
+		Logger.log("aimProc: about to raise intake");
 		intake.lower(false);
+		Logger.log("aimProc: intake raised");
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
+			Logger.log("aimProc: in distance and in line with goal");
 			boolean initialPancake = shooter.isElevatorUp();
 			shooter.raiseShootingHeight(camera);
 			if (shooter.isElevatorUp() != initialPancake){
+				Logger.log("aimProc: waiting for shooter to catch up...");
 				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); 
+				Logger.log("aimProc: done waiting for shooter to catch up");
 			}				// waits for shooter to get in position
 			isShooting = true;
 			drive.degreeRotateVoltage(camera.getTurnAngle());
+			Logger.log("aimProc: shooting sequence started. Good luck.");
+		}
+		else {
+			Logger.log("aimProc: not in distance or not in line with goal. Sorry.");
 		}
 	}
 	
@@ -315,11 +324,14 @@ public class Robot extends IterativeRobot {
 	public void shootProc(AimEnum aim) {
 		double recenteredMoveDistance;
 		if (!drive.checkDegreeRotateVoltage() && isShooting) { 
+			Logger.log("shootProc: done rotating, shooting sequence continuing");
 			camera.getNTInfo(true);
 
 			if (camera.isInTurnAngle()) {
+				Logger.log("shootProc: in turn angle, will shoot");
 				isShooting = false;
 				if (aim == AimEnum.LOW && isInAuton) {
+					Logger.log("shootProc: AimEnum.LOW auton hack called");
 					// calculates how far the batter is from where we are now
 					recenteredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - StrongholdAuton.LENGTH_OF_BATTER_FEET); 
 					
@@ -329,7 +341,10 @@ public class Robot extends IterativeRobot {
 						drive.waitMove();
 						shooter.raise(Shooter.DOWN);
 					}
+					Logger.log("shootProc: AimEnum.LOW auton hack done");
 				} 
+				
+				Logger.log("shootProc: SHOOTING PARAMETERS ARE AS FOLLOW:");
 				Logger.log("Camera Diagonal Distance: " + camera.getDiagonalDist());
 				Logger.log("Camera Horizontal Distance: " + camera.getHorizontalDist());
 				Logger.log("Camera Opening Width: " + camera.getOpeningWidth());
@@ -338,11 +353,14 @@ public class Robot extends IterativeRobot {
 				Logger.log("Pressure: " + compressor.getPressurePSI());
 				
 				shooter.shoot();
+				Logger.log("shootProc: shot made!");
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				shootingAttemptCounter++;
+				Logger.log("shootProc: not in turn angle, will try again");
 			} else {
 				isShooting = false; 
+				Logger.log("shootProc: we give up");
 			}
 		}
 	}
