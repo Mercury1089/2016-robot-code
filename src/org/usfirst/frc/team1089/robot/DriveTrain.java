@@ -132,7 +132,7 @@ public class DriveTrain {
 				speedRotate(vout); // we rotate until we are told otherwise
 			}
 			else {
-				Logger.log("checkDegreeRotateVoltage: done rotating");
+				Logger.log("DriveTrain.checkDegreeRotateVoltage: done rotating");
 				isDegreeRotating = false; // we take the flag down
 				stop(); // we stop the motors
 			}
@@ -179,7 +179,7 @@ public class DriveTrain {
 					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
 					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
 
-				Logger.log("checkMove2: done moving, setting to manual");
+				Logger.log("DriveTrain.checkMove2: done moving, setting to manual");
 				setToManual();
 			}
 		}
@@ -211,7 +211,7 @@ public class DriveTrain {
 				speedRotate(vout); // we rotate until we are told otherwise
 			}
 			else {
-				Logger.log("checkDegreeRotateVoltagePractice: done rotating");
+				Logger.log("DriveTrain.checkDegreeRotateVoltagePractice: done rotating");
 				isDegreeRotating = false; // we take the flag down
 				stop(); // we stop the motors
 			}
@@ -252,7 +252,7 @@ public class DriveTrain {
 				speedRotate(s / 2.0);
 			}
 			else {
-				Logger.log("checkDegreeRotateVoltageNew: done rotating");
+				Logger.log("DriveTrain.checkDegreeRotateVoltageNew: done rotating");
 				isDegreeRotating = false; // we take the flag down
 				stop(); // we stop the motors
 			}
@@ -287,7 +287,7 @@ public class DriveTrain {
 					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
 					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
 
-				Logger.log("checkMove: done moving, setting to manual");
+				Logger.log("DriveTrain.checkMove: done moving, setting to manual");
 				setToManual();
 			}
 		}
@@ -510,7 +510,7 @@ public class DriveTrain {
 		// Assumes we only use in Auton
 		while (checkDegreeRotateVoltage()) {
 			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= WAIT_MOVE_OR_ROTATE_TIMEOUT_MS) {
-				Logger.log("waitDegreeRotateVoltage: TIMEOUT!");
+				Logger.log("DriveTrain.waitDegreeRotateVoltage: TIMEOUT!");
 				stop(); // we stop everything
 				break;
 			}
@@ -543,7 +543,7 @@ public class DriveTrain {
 		// Assumes we only use in Auton
 		while (checkMove()) {
 			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= WAIT_MOVE_OR_ROTATE_TIMEOUT_MS) {
-				Logger.log("waitMove: TIMEOUT!");
+				Logger.log("DriveTrain.waitMove: TIMEOUT!");
 				stop();
 				break;
 			};

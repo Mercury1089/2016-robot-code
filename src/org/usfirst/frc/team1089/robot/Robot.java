@@ -121,13 +121,14 @@ public class Robot extends IterativeRobot {
 		shootChooser.addObject("High Goal", AimEnum.HIGH);
 		shootChooser.addObject("Low Goal", AimEnum.LOW);
 		SmartDashboard.putData("Aim:", shootChooser);
-
-		
 	}
 		
 
 	@Override
 	public void autonomousInit() {
+		Logger.init();
+		Logger.log("Robot.autonomousInit: Entering Auton");
+		
 		this.resetAll();
 		drive.stop();
 
@@ -138,16 +139,18 @@ public class Robot extends IterativeRobot {
 		if ((defense == DefenseEnum.LOW_BAR && pos != PosEnum.POS1) || (defense != DefenseEnum.LOW_BAR && pos == PosEnum.POS1)) {
 			defense = DefenseEnum.DO_NOTHING;
 		}
+		
 		if (aim == AimEnum.LOW && (pos == PosEnum.POS3 || pos == PosEnum.POS4)) {
 			defense =  DefenseEnum.DO_NOTHING;
 		}
 		
 		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,
 				defense, accel, this);
+		
 		gyro.reset();
 		auton.resetState();
-		Logger.init();
-		Logger.log("Entered Auton");
+
+		Logger.log("Robot.autonomousInit: Entered Auton");
 	}
 
 	@Override
@@ -158,13 +161,11 @@ public class Robot extends IterativeRobot {
 		camera.getNTInfo(false); // in case not already called in move()
 		SmartDashboard.putString("Auton State", auton.getState());
 		debug();		
-		
-
 	}
 
 	@Override
 	public void disabledInit() {
-		Logger.log("DISABLED");
+		Logger.log("Robot.disabledInit: Entered DISABLED");
 		Logger.close();
 		System.out.println("Closed stream!");
 	}
@@ -179,9 +180,10 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		Logger.log("Robot.teleopInit: Ending Auton (if in Auton before), Entering Teleop");
 		drive.stop();
 		this.resetAll();
-		Logger.log("Ending Auton, Entered Teleop");
+		Logger.log("Robot.teleopInit: Entered Teleop");
 	}
 	
 
@@ -200,14 +202,14 @@ public class Robot extends IterativeRobot {
 		
 		// Aborts shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN7)){
-			Logger.log("Abort button pressed");
+			Logger.log("INPUT: Abort button pressed");
 			isShooting = false;
 			drive.stop();
 		}
 
 		// Aims at target / initiates asynchronous shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
-			Logger.log("Aim and shoot");
+			Logger.log("INPUT: Aim and shoot");
 			Logger.log("SHOT!!!");
 			aimProc(); // aims at the target / initiates asynchronous shooting sequence
 		}
@@ -216,50 +218,50 @@ public class Robot extends IterativeRobot {
 		shootProc(aim); // completes shooting sequence once aiming is successful (if initiated) 
 
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.RB)) {
-			Logger.log("Shoot without aiming");
+			Logger.log("INPUT: Shoot without aiming");
 			shooter.shoot(); // shoot ball
 		}
 		
 		// raising and lowering shooter elevator
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			Logger.log("Put shooter arm in lowest position");
+			Logger.log("INPUT: Put shooter arm in lowest position");
 			shooter.raise(Shooter.DOWN);
 			intake.lower(true);
 			// intake.moveBall(0.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN2)) {
-			Logger.log("Put shooter arm in low pancake position");
+			Logger.log("INPUT: Put shooter arm in low pancake position");
 			shooter.raise(Shooter.LOW); // pancake
 			// intake.moveBall(0.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN1)) {
-			Logger.log("Put shooter in medium shooting position");
+			Logger.log("INPUT: Put shooter in medium shooting position");
 			shooter.raise(Shooter.MEDIUM); // shooting height
 			intake.lower(true);
 			// intake.moveBall(1.0);
 		} else if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN3)) {
-			Logger.log("Put shooter in highest position");
+			Logger.log("INPUT: Put shooter in highest position");
 			shooter.raise(Shooter.HIGH); // close shooting height
 			// intake.moveBall(0.0);
 		}
 
 		//raising, lowering, and powering intake
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN3) || getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.Y)) {
-			Logger.log("Raise intake door");
+			Logger.log("INPUT: Raise intake door");
 			intake.lower(false); // up
 		}
 
 		if (getPressedDown(ControllerBase.Joysticks.LEFT_STICK, ControllerBase.JoystickButtons.BTN5)) {
-			Logger.log("Turn intake motor on in forward direction");
+			Logger.log("INPUT: Turn intake motor on in forward direction");
 			intake.moveBall(-1.0); // pull ball in
 			intake.lower(true); // down
 		}
 		
 		if (getPressedDown(ControllerBase.Joysticks.RIGHT_STICK, ControllerBase.JoystickButtons.BTN4)) {
-			Logger.log("Turn intake motor off");
+			Logger.log("INPUT: Turn intake motor off");
 			intake.moveBall(0); // stop intake
 		}
 		
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
-			Logger.log("Reverse intake");
+			Logger.log("INPUT: Reverse intake");
 			intake.moveBall(1.0); // push ball out
 		}
 
@@ -291,25 +293,25 @@ public class Robot extends IterativeRobot {
 	 */
 	public void aimProc() {
 		shootingAttemptCounter = 0;
-		Logger.log("aimProc: about to raise intake");
+		Logger.log("Robot.aimProc: about to raise intake");
 		intake.lower(false);
-		Logger.log("aimProc: intake raised");
+		Logger.log("Robot.aimProc: intake raised");
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
-			Logger.log("aimProc: in distance and in line with goal");
+			Logger.log("Robot.aimProc: in distance and in line with goal");
 			boolean initialPancake = shooter.isElevatorUp();
 			shooter.raiseShootingHeight(camera);
 			if (shooter.isElevatorUp() != initialPancake){
-				Logger.log("aimProc: waiting for shooter to catch up...");
+				Logger.log("Robot.aimProc: waiting for shooter to catch up...");
 				Timer.delay(Shooter.RAISE_SHOOTER_CATCHUP_DELAY_SECS); 
-				Logger.log("aimProc: done waiting for shooter to catch up");
+				Logger.log("Robot.aimProc: done waiting for shooter to catch up");
 			}				// waits for shooter to get in position
 			isShooting = true;
 			drive.degreeRotateVoltage(camera.getTurnAngle());
-			Logger.log("aimProc: shooting sequence started. Good luck.");
+			Logger.log("Robot.aimProc: shooting sequence started. Good luck.");
 		}
 		else {
-			Logger.log("aimProc: not in distance or not in line with goal. Sorry.");
+			Logger.log("Robot.aimProc: not in distance or not in line with goal. Sorry.");
 		}
 	}
 	
@@ -324,11 +326,11 @@ public class Robot extends IterativeRobot {
 	public void shootProc(AimEnum aim) {
 		double recenteredMoveDistance;
 		if (!drive.checkDegreeRotateVoltage() && isShooting) { 
-			Logger.log("shootProc: done rotating, shooting sequence continuing");
+			Logger.log("Robot.shootProc: done rotating, shooting sequence continuing");
 			camera.getNTInfo(true);
 
 			if (camera.isInTurnAngle()) {
-				Logger.log("shootProc: in turn angle, will shoot");
+				Logger.log("Robot.shootProc: in turn angle, will shoot");
 				isShooting = false;
 				if (aim == AimEnum.LOW && isInAuton) {
 					Logger.log("shootProc: AimEnum.LOW auton hack called");
@@ -341,26 +343,26 @@ public class Robot extends IterativeRobot {
 						drive.waitMove();
 						shooter.raise(Shooter.DOWN);
 					}
-					Logger.log("shootProc: AimEnum.LOW auton hack done");
+					Logger.log("Robot.shootProc: AimEnum.LOW auton hack done");
 				} 
 				
-				Logger.log("shootProc: SHOOTING PARAMETERS ARE AS FOLLOW:");
-				Logger.log("Camera Diagonal Distance: " + camera.getDiagonalDist());
-				Logger.log("Camera Horizontal Distance: " + camera.getHorizontalDist());
-				Logger.log("Camera Opening Width: " + camera.getOpeningWidth());
-				Logger.log("Camera Turn Angle: " + camera.getTurnAngle());
-				Logger.log("Is flat: " + accel.isFlat());
-				Logger.log("Pressure: " + compressor.getPressurePSI());
+				Logger.log("Robot.shootProc: SHOOTING PARAMETERS ARE AS FOLLOW:");
+				Logger.log("SHOOTING: Camera Diagonal Distance: " + camera.getDiagonalDist());
+				Logger.log("SHOOTING: Camera Horizontal Distance: " + camera.getHorizontalDist());
+				Logger.log("SHOOTING: Camera Opening Width: " + camera.getOpeningWidth());
+				Logger.log("SHOOTING: Camera Turn Angle: " + camera.getTurnAngle());
+				Logger.log("SHOOTING: Is flat: " + accel.isFlat());
+				Logger.log("SHOOTING: Pressure: " + compressor.getPressurePSI());
 				
 				shooter.shoot();
-				Logger.log("shootProc: shot made!");
+				Logger.log("Robot.shootProc: shot made!");
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				shootingAttemptCounter++;
-				Logger.log("shootProc: not in turn angle, will try again");
+				Logger.log("Robot.shootProc: not in turn angle, will try again");
 			} else {
 				isShooting = false; 
-				Logger.log("shootProc: we give up");
+				Logger.log("Robot.shootProc: gave up trying");
 			}
 		}
 	}
