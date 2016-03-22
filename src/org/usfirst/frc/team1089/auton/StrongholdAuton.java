@@ -35,15 +35,14 @@ public class StrongholdAuton {
 								MAX_CENTER_CLOSE_DISTANCE_BACKWARDS_FEET = 0.0; // for close distance we do not allow to go back for now (always use positive number)
 	
 	// distances for MOVE1
-	private static int  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6,
-						MOVE_DISTANCE_POST_DEFENSE_P2_FEET = 3, // temp changed from 9 ft so we don't go to the side - should be 9 ft
-						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,
-						MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 3, 
-						MOVE_DISTANCE_POST_DEFENSE_P5_FEET = 10;
+	private static int  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6 - Defense.BUFFER_AFTER_DEFENSE_FEET,
+						MOVE_DISTANCE_POST_DEFENSE_P2_FEET = 3  - Defense.BUFFER_AFTER_DEFENSE_FEET, // temp changed from 9 ft so we don't go to the side - should be 9 ft
+						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,*/
+						MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 3  - Defense.BUFFER_AFTER_DEFENSE_FEET, 
+						MOVE_DISTANCE_POST_DEFENSE_P5_FEET = 10  - Defense.BUFFER_AFTER_DEFENSE_FEET;
 	
 	// angles for ROTATE1
-	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 60, //TODO From our testing that we had done on the last day of build 
-															//45 degrees was too much so I'm not sure why we are going to 60.
+	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 60,
 						ROTATE_POST_DEFENSE_P2_DEGREES = 45, // temp because P2 is not 9 feet - should be 60 degrees
 						/*ROTATE_POST_DEFENSE_P3_DEGREES = 0,*/
 						/*ROTATE_POST_DEFENSE_P4_DEGREES = 0,*/ 

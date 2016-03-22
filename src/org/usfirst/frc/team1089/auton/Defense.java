@@ -9,10 +9,13 @@ public class Defense{
 	private DriveTrain drive;
 	private Shooter shooter;
 	
-	private static final int 
+	public static final int 
 					BEFORE_DEFENSE_FEET = 4, THROUGH_DEFENSE_FEET = 4,
 					INITIAL_CDF_FEET = 4, REMAINING_CDF_FEET = 4,
-					AFTER_DEFENSE_FEET = 3, THROUGH_DEFENSE_FEET_ROCK_WALL = 7;  // for rockwall we add 3 feet to allow for huge slippage
+					AFTER_DEFENSE_FEET = 3, BUFFER_DEFENSE_FEET = 1, 
+					ROCK_WALL_SLIPPAGE_COMPENSATION_FEET = 2,
+					THROUGH_DEFENSE_FEET_ROCK_WALL =  THROUGH_DEFENSE_FEET + ROCK_WALL_SLIPPAGE_COMPENSATION_FEET,  // for rockwall we add 2 feet to allow for huge slippage + buffer 
+					BUFFER_AFTER_DEFENSE_FEET = 1; // this is a variable buffer
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
 		drive = d;
@@ -25,7 +28,7 @@ public class Defense{
 			case LOW_BAR: {
 				Logger.log("Defense LOW_BAR in");
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET + BUFFER_AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove(); 		//moveDistance is an asynchronous operation - we need to wait until it is done
 				Logger.log("Defense LOW_BAR out");
 				break;
@@ -33,7 +36,7 @@ public class Defense{
 			case MOAT: {
 				Logger.log("Defense MOAT in");
 				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 12.0); //TODO test and change ALL these values
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET + BUFFER_AFTER_DEFENSE_FEET, 0.4, 0, 0, 12.0); //TODO test and change ALL these values
 				drive.waitMove();		//full speed
 				Logger.log("Defense MOAT out");
 				break;
@@ -41,7 +44,7 @@ public class Defense{
 			case ROUGH_TERRAIN: {
 				Logger.log("Defense ROUGH_TERRAIN in");
 				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET + BUFFER_AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
 				drive.waitMove();		//need fast PID voltage - to be changed
 				Logger.log("Defense ROUGH_TERRAIN out");
 				break;
@@ -49,7 +52,7 @@ public class Defense{
 			case RAMPARTS: {
 				Logger.log("Defense RAMPARTS in");
 				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET + BUFFER_AFTER_DEFENSE_FEET, 0.4, 0, 0, 6); 
 				drive.waitMove();		//human speed
 				Logger.log("Defense RAMPARTS out");
 				break;
@@ -57,7 +60,7 @@ public class Defense{
 			case ROCK_WALL: {
 				Logger.log("Defense ROCK_WALL in");
 				shooter.raise(Shooter.MEDIUM);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROCK_WALL + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROCK_WALL + AFTER_DEFENSE_FEET + BUFFER_AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
 				drive.waitMove();		// full speed
 				Logger.log("Defense ROCK_WALL out");
 				break;
@@ -68,7 +71,7 @@ public class Defense{
 				drive.moveDistance(INITIAL_CDF_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
+				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET + BUFFER_AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
 				drive.waitMove();
 				Logger.log("Defense CHEVAL_DE_FRISE out");
 				break;
@@ -79,7 +82,7 @@ public class Defense{
 				drive.moveDistance(INITIAL_CDF_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				//OPEN PORTCULLIS DOOR code
-				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);	//change constants 
+				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET + BUFFER_AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);	//change constants 
 				drive.waitMove();
 				Logger.log("Defense PORTCULLIS out");
 				break;
