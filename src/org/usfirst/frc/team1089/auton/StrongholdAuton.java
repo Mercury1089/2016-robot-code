@@ -19,7 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class StrongholdAuton {
 	// states of auton
-	private static final int START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
+	private static final int START = 0, BREACH = 1, STRAIGHTEN = 2,
+								MOVE1 = 3, ROTATE1 = 4,
 								CALCULATE = 5, MOVE2 = 6, AIM = 7, SHOOT = 8, 
 								DONE = 9;
 	
@@ -130,10 +131,10 @@ public class StrongholdAuton {
 			return "START";
 		case BREACH:
 			return "BREACH";
-		case MOVE1:
-			return "MOVE1";
 		case STRAIGHTEN:
 			return "STRAIGHTEN";
+		case MOVE1:
+			return "MOVE1";			
 		case ROTATE1:
 			return "ROTATE1";
 		case CALCULATE:
