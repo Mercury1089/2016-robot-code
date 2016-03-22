@@ -25,9 +25,13 @@ public class StrongholdAuton {
 	
 	// various safety checks
 	public static final double LENGTH_OF_BATTER_FEET = 4.0, 
-								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 8.0, 
-								MAX_CLOSE_DISTANCE_TO_GOAL_FEET = 11.0, MIN_CLOSE_DISTANCE_TO_GOAL_FEET = 4.0,
-								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_RECENTER_DISTANCE_FEET = 10.0, SPYBOT_DRIVE_DISTANCE_FEET = 4.0;
+								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 7.0, // arbitrary distances for abnormal checks after move - can be out of shooting range
+								MAX_CLOSE_DISTANCE_TO_GOAL_FEET = 11.0, MIN_CLOSE_DISTANCE_TO_GOAL_FEET = 4.0, // arbitrary distances for abnormal checks after move - can be out of shooting range
+								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_CENTER_CLOSE_DISTANCE_FEET = 6.0, // max forward distances for center/re-center - need to allow to reach shooting range!
+								MAX_RECENTER_DISTANCE_FEET = 10.0, 
+								SPYBOT_DRIVE_DISTANCE_FEET = 4.0,
+								MAX_CENTER_DISTANCE_BACKWARDS_FEET = 1.0, // max backward distance for center - need to allow to reach shooting range! (always use positive number)
+								MAX_CENTER_CLOSE_DISTANCE_BACKWARDS_FEET = 0.0; // for close distance we do not allow to go back for now (always use positive number)
 	
 	// distances for MOVE1
 	private static int  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6,
@@ -45,12 +49,13 @@ public class StrongholdAuton {
 						ROTATE_POST_DEFENSE_P5_DEGREES = -60;
 	
 	// maximum optimal shooting distances
-	private static int SHOOT_DISTANCE_P1_P3_P4_FEET = 11,
-					SHOOT_DISTANCE_P5_FEET = 5,
+	private static int SHOOT_DISTANCE_P1_P3_P4_FEET = 11, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
+					SHOOT_DISTANCE_P5_FEET = 5, // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P2_FEET = 11;	//shooting from center, long shot 
 					/*SHOOT_DISTANCE_P3_FEET = 11,
 					SHOOT_DISTANCE_P4_FEET = 11,*/ 
 					/*SHOOT_DISTANCE_P5_FEET = 5;*/
+
 	
 	private Defense defense;
 	private Camera camera;
@@ -302,7 +307,7 @@ public class StrongholdAuton {
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
+						centeredMoveDistance = Math.max(-MAX_CENTER_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
@@ -320,7 +325,7 @@ public class StrongholdAuton {
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET);
+						centeredMoveDistance = Math.max(-MAX_CENTER_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET);
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
@@ -338,9 +343,9 @@ public class StrongholdAuton {
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET);
+						centeredMoveDistance = Math.max(-MAX_CENTER_CLOSE_DISTANCE_BACKWARDS_FEET, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET);
 						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+						if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
 							state++;
 							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5");
 						}
