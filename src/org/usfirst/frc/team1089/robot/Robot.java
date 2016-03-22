@@ -13,6 +13,7 @@ import org.usfirst.frc.team1089.robot.ControllerBase.Joysticks;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -439,5 +440,17 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is flat", accel.isFlat());
 		SmartDashboard.putString("Press", "" + Utilities.round(compressor.getPressurePSI(), 2) + "PSI");
 		SmartDashboard.putBoolean("Is enough pressure", compressor.isInShotPressure());
+	}
+	
+	public void logTeamAndAllianceInfo() {
+		if (driverStation != null) {
+			Logger.log("TEAM Location: " + driverStation.getLocation());
+			
+			Alliance alliance = driverStation.getAlliance();
+			
+			if (alliance != null) { 
+				Logger.log("TEAM Alliance: " + alliance.toString());
+			}
+		}				
 	}
 }
