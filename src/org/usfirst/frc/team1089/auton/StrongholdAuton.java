@@ -10,8 +10,8 @@ import org.usfirst.frc.team1089.robot.Robot;
 import org.usfirst.frc.team1089.robot.Shooter;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The {@code StrongholdAuton} class contains fields and methods for crossing a defense
@@ -26,35 +26,37 @@ public class StrongholdAuton {
 	
 	// various safety checks
 	public static final double LENGTH_OF_BATTER_FEET = 4.0, 
-								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 7.0, // arbitrary distances for abnormal checks after move - can be out of shooting range
+								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 8.0, // arbitrary distances for abnormal checks after move - can be out of shooting range
 								MAX_CLOSE_DISTANCE_TO_GOAL_FEET = 11.0, MIN_CLOSE_DISTANCE_TO_GOAL_FEET = 4.0, // arbitrary distances for abnormal checks after move - can be out of shooting range
 								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_CENTER_CLOSE_DISTANCE_FEET = 6.0, // max forward distances for center/re-center - need to allow to reach shooting range!
 								MAX_RECENTER_DISTANCE_FEET = 10.0, 
 								SPYBOT_DRIVE_DISTANCE_FEET = 4.0,
-								MAX_CENTER_DISTANCE_BACKWARDS_FEET = 1.0, // max backward distance for center - need to allow to reach shooting range! (always use positive number)
+								MAX_CENTER_DISTANCE_BACKWARDS_FEET = 0.0, // max backward distance for center - need to allow to reach shooting range! (always use positive number)
 								MAX_CENTER_CLOSE_DISTANCE_BACKWARDS_FEET = 0.0; // for close distance we do not allow to go back for now (always use positive number)
 	
 	// distances for MOVE1
 	private static int  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6 - Defense.BUFFER_AFTER_DEFENSE_FEET,
-						MOVE_DISTANCE_POST_DEFENSE_P2_FEET = 3  - Defense.BUFFER_AFTER_DEFENSE_FEET, // temp changed from 9 ft so we don't go to the side - should be 9 ft
+						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH = 9  - Defense.BUFFER_AFTER_DEFENSE_FEET,
+						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH = 3  - Defense.BUFFER_AFTER_DEFENSE_FEET,
 						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,*/
 						MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 3  - Defense.BUFFER_AFTER_DEFENSE_FEET, 
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET = 10  - Defense.BUFFER_AFTER_DEFENSE_FEET;
 	
 	// angles for ROTATE1
 	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 60,
-						ROTATE_POST_DEFENSE_P2_DEGREES = 45, // temp because P2 is not 9 feet - should be 60 degrees
+						ROTATE_POST_DEFENSE_P2_DEGREES_LEFT_PATH = 60, 
+						ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH = 45,
 						/*ROTATE_POST_DEFENSE_P3_DEGREES = 0,*/
 						/*ROTATE_POST_DEFENSE_P4_DEGREES = 0,*/ 
 						ROTATE_POST_DEFENSE_P5_DEGREES = -60;
 	
 	// maximum optimal shooting distances
 	private static int SHOOT_DISTANCE_P1_P3_P4_FEET = 11, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
-					SHOOT_DISTANCE_P5_FEET = 5, // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
-					SHOOT_DISTANCE_P2_FEET = 11;	//shooting from center, long shot 
+					SHOOT_DISTANCE_P2_FEET_LEFT_PATH = 5,	// shooting from left, short shot
+					SHOOT_DISTANCE_P2_FEET_CENTER_PATH = 11,	//shooting from center, long shot 
 					/*SHOOT_DISTANCE_P3_FEET = 11,
 					SHOOT_DISTANCE_P4_FEET = 11,*/ 
-					/*SHOOT_DISTANCE_P5_FEET = 5;*/
+					SHOOT_DISTANCE_P5_FEET = 5; // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
 
 	
 	private Defense defense;
@@ -237,7 +239,10 @@ public class StrongholdAuton {
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS1");
 				} else if (pos == PosEnum.POS2) {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2");
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					// LEFT_PATH
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
+					// CENTER_PATH
+					//drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS2");
 				} else if (pos == PosEnum.POS3) {
@@ -267,12 +272,15 @@ public class StrongholdAuton {
 			case ROTATE1: {//Rotate towards goal without relying on camera (as we might not see the goal yet)
 				if (pos == PosEnum.POS1) {
 					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS1");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);// 35
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS1");
 				} else if (pos == PosEnum.POS2) {
 					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES);
+					// LEFT_PATH
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_LEFT_PATH);
+					// CENTER_PATH
+					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH);
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2");
 				} else if (pos == PosEnum.POS3) {
@@ -318,25 +326,47 @@ public class StrongholdAuton {
 							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS1, POS3 or POS4");
 						}
 					}
-				} else if (pos == PosEnum.POS2) { // in cases where we expect to be far
-					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+				}
+				// LEFT_PATH 
+				else if (pos == PosEnum.POS2) { // in cases where we expect to be close
+					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2");
+						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2 LEFT_PATH");
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(-MAX_CENTER_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET);
+						centeredMoveDistance = Math.max(-MAX_CENTER_CLOSE_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_LEFT_PATH);
 						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+						if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
 							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2");
+							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2 LEFT_PATH");
 						}
 						else {
 							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2");
+							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2 LEFT_PATH");
 						}
 					}
-				} else if (pos == PosEnum.POS5) { // in cases where we expect to be close
+				} // CENTER_PATH
+				/*else if (pos == PosEnum.POS2) { // in cases where we expect to be far
+					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+						state = DONE;
+						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2 CENTER_PATH");
+					}
+					else {
+						//Assume we are looking at the correct goal
+						centeredMoveDistance = Math.max(-MAX_CENTER_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_CENTER_PATH);
+						// If distance to center is not unrealistic, continue
+						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+							state++;
+							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2 CENTER_PATH");
+						}
+						else {
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2 CENTER_PATH");
+						}
+					}
+				}*/
+				else if (pos == PosEnum.POS5) { // in cases where we expect to be close
 					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
 						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5");
