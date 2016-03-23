@@ -128,6 +128,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		Logger.init();
+		logTeamAndAllianceInfo();
 		Logger.log("Robot.autonomousInit: Entering Auton");
 		
 		this.resetAll();
