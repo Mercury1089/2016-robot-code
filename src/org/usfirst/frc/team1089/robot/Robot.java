@@ -349,12 +349,14 @@ public class Robot extends IterativeRobot {
 				} 
 				
 				Logger.log("Robot.shootProc: SHOOTING PARAMETERS ARE AS FOLLOW:");
-				Logger.log("SHOOTING: Camera Diagonal Distance: " + camera.getDiagonalDist());
-				Logger.log("SHOOTING: Camera Horizontal Distance: " + camera.getHorizontalDist());
-				Logger.log("SHOOTING: Camera Opening Width: " + camera.getOpeningWidth());
-				Logger.log("SHOOTING: Camera Turn Angle: " + camera.getTurnAngle());
+				Logger.log("SHOOTING: Camera Diagonal Distance: " + Utilities.round(camera.getDiagonalDist(), 3) + " ft.");
+				Logger.log("SHOOTING: Camera Horizontal Distance: " + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
+				Logger.log("SHOOTING: Camera Opening Width: " + Utilities.round(camera.getOpeningWidth(), 3) + " in.");
+				Logger.log("SHOOTING: Camera Turn Angle: " + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
+				Logger.log("SHOOTING: Accel Tilt" + Utilities.round(accel.getTilt(), 3) + " deg.");
 				Logger.log("SHOOTING: Is flat: " + accel.isFlat());
-				Logger.log("SHOOTING: Pressure: " + compressor.getPressurePSI());
+				Logger.log("SHOOTING: Pressure: " + Utilities.round(compressor.getPressurePSI(), 3) + " PSI");
+				Logger.log("SHOOTING: Is enough pressure: " + compressor.isInShotPressure());
 				
 				shooter.shoot();
 				Logger.log("Robot.shootProc: shot made!");
@@ -439,7 +441,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is in turn angle", camera.isInTurnAngle());
 		SmartDashboard.putBoolean("Is in line with goal", camera.isInLineWithGoal());
 		SmartDashboard.putBoolean("Is flat", accel.isFlat());
-		SmartDashboard.putString("Press", "" + Utilities.round(compressor.getPressurePSI(), 2) + "PSI");
+		SmartDashboard.putString("Press", "" + Utilities.round(compressor.getPressurePSI(), 3) + " PSI");
 		SmartDashboard.putBoolean("Is enough pressure", compressor.isInShotPressure());
 	}
 	
@@ -451,6 +453,10 @@ public class Robot extends IterativeRobot {
 			
 			if (alliance != null) { 
 				Logger.log("TEAM Alliance: " + alliance.toString());
+			}
+			
+			if (config != null) {
+				Logger.log("CONFIG: " + config.toString());
 			}
 		}				
 	}
