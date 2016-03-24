@@ -123,7 +123,7 @@ public class StrongholdAuton {
 		centerAttempts = 0;
 	}
 	
-	// START = 0, BREACH = 1, MOVE1 = 2, STRAIGHTEN = 3, ROTATE1 = 4,
+	// START = 0, BREACH = 1, STRAIGHTEN = 2, MOVE1 = 3, ROTATE1 = 4,
 	// CALCULATE = 5, MOVE2 = 6, AIM = 7, SHOOT = 8, 
 	// DONE = 9;
 	public String getState() {
@@ -315,7 +315,7 @@ public class StrongholdAuton {
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(-MAX_CENTER_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
+						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
@@ -335,7 +335,7 @@ public class StrongholdAuton {
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(-MAX_CENTER_CLOSE_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_LEFT_PATH);
+						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_LEFT_PATH);
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
 							state++;
@@ -354,7 +354,7 @@ public class StrongholdAuton {
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(-MAX_CENTER_DISTANCE_BACKWARDS_FEET,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_CENTER_PATH);
+						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_CENTER_PATH);
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
@@ -373,7 +373,7 @@ public class StrongholdAuton {
 					}
 					else {
 						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(-MAX_CENTER_CLOSE_DISTANCE_BACKWARDS_FEET, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET);
+						centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET);
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
 							state++;
