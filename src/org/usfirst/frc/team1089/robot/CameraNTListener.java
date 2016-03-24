@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Calendar;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -31,7 +31,7 @@ public class CameraNTListener implements ITableListener{
 			nt.addTableListener(this);
 			isListening = true;
 		}
-		double[] def = {}; // Return an empty array by default.
+		//double[] def = {}; // Return an empty array by default.
 		
 	}
 	
