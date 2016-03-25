@@ -114,7 +114,8 @@ public class Robot extends IterativeRobot {
 		posChooser.addObject("2 Center", PosEnum.POS2_CENTER_PATH);
 		posChooser.addObject("3", PosEnum.POS3);
 		posChooser.addObject("4", PosEnum.POS4);
-		posChooser.addObject("5", PosEnum.POS5);
+		posChooser.addObject("5 Right", PosEnum.POS5_RIGHT_PATH);
+		posChooser.addObject("5 Secret", PosEnum.POS5_SECRET_PATH);
 		posChooser.addObject("Spybot", PosEnum.SPYBOT);
 		SmartDashboard.putData("Position: ", posChooser);
 
