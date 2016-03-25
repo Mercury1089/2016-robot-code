@@ -110,7 +110,8 @@ public class Robot extends IterativeRobot {
 
 		posChooser = new SendableChooser();
 		posChooser.addDefault("1", PosEnum.POS1);
-		posChooser.addObject("2", PosEnum.POS2);
+		posChooser.addObject("2 Left", PosEnum.POS2_LEFT_PATH);
+		posChooser.addObject("2 Center", PosEnum.POS2_CENTER_PATH);
 		posChooser.addObject("3", PosEnum.POS3);
 		posChooser.addObject("4", PosEnum.POS4);
 		posChooser.addObject("5", PosEnum.POS5);

@@ -237,14 +237,16 @@ public class StrongholdAuton {
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.42, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS1");
-				} else if (pos == PosEnum.POS2) {
-					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2");
-					// LEFT_PATH
+				} else if (pos == PosEnum.POS2_LEFT_PATH) {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2_LEFT_PATH");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
-					// CENTER_PATH
-					//drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
-					Logger.log("Auton MOVE1 attempted move PosEnum.POS2");
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_LEFT_PATH");
+				} else if (pos == PosEnum.POS2_CENTER_PATH) {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2_CENTER_PATH");
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_CENTER_PATH");	
 				} else if (pos == PosEnum.POS3) {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS3");
 					//drive.degreeRotateVoltage(60);
@@ -275,14 +277,16 @@ public class StrongholdAuton {
 					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS1");
-				} else if (pos == PosEnum.POS2) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2");
-					// LEFT_PATH
+				} else if (pos == PosEnum.POS2_LEFT_PATH) {
+					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2_LEFT_PATH");
 					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_LEFT_PATH);
-					// CENTER_PATH
-					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH);
 					drive.waitDegreeRotateVoltage();
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2");
+					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_LEFT_PATH");
+				} else if (pos == PosEnum.POS2_CENTER_PATH) {
+					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2_CENTER_PATH");
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH);
+					drive.waitDegreeRotateVoltage();
+					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_CENTER_PATH");	
 				} else if (pos == PosEnum.POS3) {
 					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS3");
 					// do nothing
@@ -327,11 +331,10 @@ public class StrongholdAuton {
 						}
 					}
 				}
-				// LEFT_PATH 
-				else if (pos == PosEnum.POS2) { // in cases where we expect to be close
+				else if (pos == PosEnum.POS2_LEFT_PATH) { // in cases where we expect to be close
 					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2 LEFT_PATH");
+						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_LEFT_PATH");
 					}
 					else {
 						//Assume we are looking at the correct goal
@@ -339,18 +342,18 @@ public class StrongholdAuton {
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
 							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2 LEFT_PATH");
+							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2_LEFT_PATH");
 						}
 						else {
 							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2 LEFT_PATH");
+							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_LEFT_PATH");
 						}
 					}
-				} // CENTER_PATH
-				/*else if (pos == PosEnum.POS2) { // in cases where we expect to be far
+				}
+				else if (pos == PosEnum.POS2_CENTER_PATH) { // in cases where we expect to be far
 					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2 CENTER_PATH");
+						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_CENTER_PATH");
 					}
 					else {
 						//Assume we are looking at the correct goal
@@ -358,14 +361,14 @@ public class StrongholdAuton {
 						// If distance to center is not unrealistic, continue
 						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2 CENTER_PATH");
+							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2_CENTER_PATH");
 						}
 						else {
 							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2 CENTER_PATH");
+							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_CENTER_PATH");
 						}
 					}
-				}*/
+				}
 				else if (pos == PosEnum.POS5) { // in cases where we expect to be close
 					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 						state = DONE;
