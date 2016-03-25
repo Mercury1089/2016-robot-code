@@ -36,6 +36,7 @@ public class StrongholdAuton {
 	private static int  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 6 - Defense.BUFFER_AFTER_DEFENSE_FEET,
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH = 9  - Defense.BUFFER_AFTER_DEFENSE_FEET,
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH = 3  - Defense.BUFFER_AFTER_DEFENSE_FEET,
+						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH = 5,
 						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,*/
 						MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 3  - Defense.BUFFER_AFTER_DEFENSE_FEET, 
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_RIGHT_PATH = 10  - Defense.BUFFER_AFTER_DEFENSE_FEET,
@@ -248,6 +249,12 @@ public class StrongholdAuton {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2_CENTER_PATH");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
+					drive.degreeRotateVoltage(90);
+					drive.waitDegreeRotateVoltage();
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove();			
+					drive.degreeRotateVoltage(-60); // -60 since we are still not fully in front
+					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_CENTER_PATH");	
 				} else if (pos == PosEnum.POS3) {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS3");
@@ -297,8 +304,8 @@ public class StrongholdAuton {
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_LEFT_PATH");
 				} else if (pos == PosEnum.POS2_CENTER_PATH) {
 					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2_CENTER_PATH");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH);
-					drive.waitDegreeRotateVoltage();
+					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH);
+					//drive.waitDegreeRotateVoltage();
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_CENTER_PATH");	
 				} else if (pos == PosEnum.POS3) {
 					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS3");
