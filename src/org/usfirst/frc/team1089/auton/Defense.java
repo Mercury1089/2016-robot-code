@@ -21,7 +21,7 @@ public class Defense{
 					ROCK_WALL_SLIPPAGE_COMPENSATION_FEET = 2, // should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
 					THROUGH_DEFENSE_FEET_ROCK_WALL =  THROUGH_DEFENSE_FEET + ROCK_WALL_SLIPPAGE_COMPENSATION_FEET,  // for rockwall we add 2 feet to allow for huge slippage + buffer 
 					ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET = 2, // should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
-					THROUGH_DEFENSE_FEET_ROUGH_TERRAIN =  THROUGH_DEFENSE_FEET + ROCK_WALL_SLIPPAGE_COMPENSATION_FEET;  // for rough terrain we add 2 feet to allow for huge slippage + buffer
+					THROUGH_DEFENSE_FEET_ROUGH_TERRAIN =  THROUGH_DEFENSE_FEET + ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET;  // for rough terrain we add 2 feet to allow for huge slippage + buffer
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
 		drive = d;
