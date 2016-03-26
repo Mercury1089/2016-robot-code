@@ -40,7 +40,7 @@ public class StrongholdAuton {
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH = 5  - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH = 5, // ok
 						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,*/
-						MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 5  - Defense.AFTER_DEFENSE_FEET, 
+						/*MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 5  - Defense.AFTER_DEFENSE_FEET,*/ 
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_RIGHT_PATH = 13  - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_SECRET_PATH = 5,
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_SECRET_PATH = 8 - Defense.AFTER_DEFENSE_FEET;
@@ -269,8 +269,8 @@ public class StrongholdAuton {
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS3");
 				} else if (pos == PosEnum.POS4) {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS4");
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove();
+					/*drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove();*/
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS4");
 				} else if (pos == PosEnum.POS5_RIGHT_PATH) {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_RIGHT_PATH");
