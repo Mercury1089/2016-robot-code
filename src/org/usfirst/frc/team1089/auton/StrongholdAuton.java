@@ -31,7 +31,7 @@ public class StrongholdAuton {
 								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_CENTER_CLOSE_DISTANCE_FEET = 6.0, // max forward distances for center/re-center - need to allow to reach shooting range!
 								MAX_RECENTER_DISTANCE_FEET = 10.0,  
 								SPYBOT_DRIVE_DISTANCE_FEET = 4.0,
-								MAX_P5_BACKWARD_DISTANCE_FEET = 4.5,
+								MAX_P5_BACKWARD_DISTANCE_FEET = 5.5,
 								PERFECT_ALIGNMENT = 0;
 	
 	// distances for MOVE1
@@ -65,8 +65,6 @@ public class StrongholdAuton {
 					SHOOT_DISTANCE_P5_FEET_RIGHT_PATH = 5, // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P5_FEET_SECRET_PATH = 11, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH = 9; //minimum distance 
-	
-	private static int MAX_SHOT_DISTANCE_TO_GOAL_FEET = 14;
 	
 	private Defense defense;
 	private Camera camera;
