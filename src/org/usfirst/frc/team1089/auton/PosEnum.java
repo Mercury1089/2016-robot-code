@@ -8,5 +8,6 @@ public enum PosEnum {
 	POS4,
 	POS5_RIGHT_PATH, 
 	POS5_SECRET_PATH,
+	POS5_BACKWARD_PATH,
 	SPYBOT,
 }

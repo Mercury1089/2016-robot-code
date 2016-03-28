@@ -29,8 +29,10 @@ public class StrongholdAuton {
 								MAX_DISTANCE_TO_GOAL_FEET = 20.0, MIN_DISTANCE_TO_GOAL_FEET = 8.0, // arbitrary distances for abnormal checks after move - can be out of shooting range
 								MAX_CLOSE_DISTANCE_TO_GOAL_FEET = 11.0, MIN_CLOSE_DISTANCE_TO_GOAL_FEET = 4.0, // arbitrary distances for abnormal checks after move - can be out of shooting range
 								MAX_CENTER_DISTANCE_FEET = 6.0, MAX_CENTER_CLOSE_DISTANCE_FEET = 6.0, // max forward distances for center/re-center - need to allow to reach shooting range!
-								MAX_RECENTER_DISTANCE_FEET = 10.0, 
-								SPYBOT_DRIVE_DISTANCE_FEET = 4.0;
+								MAX_RECENTER_DISTANCE_FEET = 10.0,  
+								SPYBOT_DRIVE_DISTANCE_FEET = 4.0,
+								MAX_P5_BACKWARD_DISTANCE_FEET = 4.5,
+								PERFECT_ALIGNMENT = 0;
 	
 	// distances for MOVE1
 	// to simplify things now distances are expressed as <distance_from_defense> minus Defense.AFTER_DEFENSE_FEET
@@ -41,7 +43,7 @@ public class StrongholdAuton {
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH = 5, // ok
 						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3,*/
 						/*MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 5  - Defense.AFTER_DEFENSE_FEET,*/ 
-						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_RIGHT_PATH = 13  - Defense.AFTER_DEFENSE_FEET, // ok
+						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH = 13  - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_SECRET_PATH = 5,
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_SECRET_PATH = 8 - Defense.AFTER_DEFENSE_FEET;
 	
@@ -51,7 +53,7 @@ public class StrongholdAuton {
 						ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH = 45,
 						/*ROTATE_POST_DEFENSE_P3_DEGREES = 0,*/
 						/*ROTATE_POST_DEFENSE_P4_DEGREES = 0,*/ 
-						ROTATE_POST_DEFENSE_P5_DEGREES_RIGHT_PATH = -60,
+						ROTATE_POST_DEFENSE_P5_DEGREES_PATH = -60,
 						ROTATE_POST_DEFENSE_P5_DEGREES_SECRET_PATH = -60;
 	
 	// maximum optimal shooting distances
@@ -61,8 +63,10 @@ public class StrongholdAuton {
 					/*SHOOT_DISTANCE_P3_FEET = 11,
 					SHOOT_DISTANCE_P4_FEET = 11,*/ 
 					SHOOT_DISTANCE_P5_FEET_RIGHT_PATH = 5, // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
-					SHOOT_DISTANCE_P5_FEET_SECRET_PATH = 11; // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
-
+					SHOOT_DISTANCE_P5_FEET_SECRET_PATH = 11, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
+					SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH = 9; //minimum distance 
+	
+	private static int MAX_SHOT_DISTANCE_TO_GOAL_FEET = 14;
 	
 	private Defense defense;
 	private Camera camera;
@@ -274,7 +278,7 @@ public class StrongholdAuton {
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS4");
 				} else if (pos == PosEnum.POS5_RIGHT_PATH) {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_RIGHT_PATH");
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_RIGHT_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_RIGHT_PATH");
 				} else if (pos == PosEnum.POS5_SECRET_PATH) {
@@ -288,7 +292,13 @@ public class StrongholdAuton {
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_SECRET_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_SECRET_PATH");
+				} else if (pos == PosEnum.POS5_BACKWARD_PATH) {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_BACKWARD_PATH");
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH, 0.4, 0, 0, 6.0);
+					drive.waitMove();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_BACKWARD_PATH");
 				}
+				
 				state++;
 				Logger.log("Auton MOVE1 FINISHED");
 				break;
@@ -319,7 +329,7 @@ public class StrongholdAuton {
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS4");
 				} else if (pos == PosEnum.POS5_RIGHT_PATH) {
 					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_RIGHT_PATH");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_RIGHT_PATH);
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_PATH);
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_RIGHT_PATH");
 				} else if (pos == PosEnum.POS5_SECRET_PATH) {
@@ -327,6 +337,11 @@ public class StrongholdAuton {
 					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_SECRET_PATH);
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_SECRET_PATH");
+				} else if (pos == PosEnum.POS5_BACKWARD_PATH) {
+					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_BACKWARD_PATH");
+					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_PATH);
+					drive.waitDegreeRotateVoltage();
+					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_BACKWARD_PATH");
 				}
 				Logger.log("Auton ROTATE1 about to raise intake");
 				intake.lower(false);
@@ -432,6 +447,40 @@ public class StrongholdAuton {
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET_PATH");
 						}
+					}
+				}
+				else if (pos == PosEnum.POS5_BACKWARD_PATH) { 
+					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
+						state = DONE;
+						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
+					}
+					else {
+						centeredMoveDistance = camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH;
+						
+						if(Math.abs(centeredMoveDistance) > MAX_P5_BACKWARD_DISTANCE_FEET) {
+							//if we have to move too much - something must have gone wrong
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
+						}
+						
+						if (centeredMoveDistance < PERFECT_ALIGNMENT){		
+							//if we have to move back
+							state++;
+							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
+						}
+						else if (centeredMoveDistance == PERFECT_ALIGNMENT) {	
+							//if we don't have to move back
+							state = AIM;
+							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
+							Logger.log("Skipping MOVE2, going to AIM, in perfect shot range");
+						}
+						else if (centeredMoveDistance > PERFECT_ALIGNMENT){
+							//if we are further than we expected but still in shooting range
+							state = AIM;
+							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
+							Logger.log("Skipping MOVE2 ,going to AIM, going for longer shot");
+						} 
+						//only difference between the last two - the logs
 					}
 				}
 				break;
