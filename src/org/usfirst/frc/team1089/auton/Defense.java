@@ -15,6 +15,8 @@ public class Defense{
 					THROUGH_DEFENSE_FEET = 4, // defenses are 4 feet by definition
 					INITIAL_CDF_FEET = 3, // cheval de frise
 					REMAINING_CDF_FEET = 4, // cheval de frise
+					INITIAL_PORTCULLIS_FEET = 3, // Portcullis = same as CDF
+					REMAINING_PORTCULLIS_FEET = 4, // Portcullis = same as CDF
 					CORE_AFTER_DEFENSE = 3, // what we need to clear the defense (so the back of the robot goes back the defense)
 					BUFFER_AFTER_DEFENSE = 2, // a buffer to avoid not fully clearing the defense
 					AFTER_DEFENSE_FEET = CORE_AFTER_DEFENSE + BUFFER_AFTER_DEFENSE, // this corresponds to 3 feet to clear plus 2 feet of buffer
@@ -85,10 +87,10 @@ public class Defense{
 			case PORTCULLIS: {
 				Logger.log("Defense PORTCULLIS in");
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistance(INITIAL_CDF_FEET, 0.4, 0, 0, 4.5);
+				drive.moveDistance(INITIAL_PORTCULLIS_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove();
-				//OPEN PORTCULLIS DOOR code
-				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5);	//change constants 
+				shooter.raise(Shooter.HIGH);
+				drive.moveDistance(REMAINING_PORTCULLIS_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.7);	//values have to be tested 
 				drive.waitMove();
 				Logger.log("Defense PORTCULLIS out");
 				break;
