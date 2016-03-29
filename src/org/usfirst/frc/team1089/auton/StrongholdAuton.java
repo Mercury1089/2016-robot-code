@@ -239,17 +239,23 @@ public class StrongholdAuton {
 				break;
 			}
 			case MOVE1: {//Move to rotation point if needed
-				if (pos == PosEnum.POS1) {
+				
+				switch(pos) {
+				case POS1: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS1");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P1_FEET, 0.42, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS1");
-				} else if (pos == PosEnum.POS2_LEFT_PATH) {
+					break;
+				}
+				case POS2_LEFT_PATH: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2_LEFT_PATH");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_LEFT_PATH");
-				} else if (pos == PosEnum.POS2_CENTER_PATH) {
+					break;
+				}
+				case POS2_CENTER_PATH: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2_CENTER_PATH");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
@@ -259,8 +265,10 @@ public class StrongholdAuton {
 					drive.waitMove();			
 					drive.degreeRotateVoltage(-60); // -60 since we are still not fully in front
 					drive.waitDegreeRotateVoltage();
-					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_CENTER_PATH");	
-				} else if (pos == PosEnum.POS3) {
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_CENTER_PATH");
+					break;
+				}
+				case POS3: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS3");
 					//drive.degreeRotateVoltage(60);
 					//drive.waitDegreeRotateVoltage();
@@ -269,17 +277,30 @@ public class StrongholdAuton {
 					//drive.degreeRotateVoltage(-60);
 					//drive.waitDegreeRotateVoltage();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS3");
-				} else if (pos == PosEnum.POS4) {
+					break;
+				}
+				case POS4:{
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS4");
 					/*drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();*/
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS4");
-				} else if (pos == PosEnum.POS5_RIGHT_PATH) {
+					break;
+				}
+				case POS5_BACKWARD_PATH: {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_BACKWARD_PATH");
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH, 0.4, 0, 0, 6.0);
+					drive.waitMove();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_BACKWARD_PATH");
+					break;
+				}
+				case POS5_RIGHT_PATH: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_RIGHT_PATH");
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_RIGHT_PATH");
-				} else if (pos == PosEnum.POS5_SECRET_PATH) {
+					break;
+				}
+				case POS5_SECRET_PATH: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_SECRET_PATH");
 					drive.degreeRotateVoltage(60);
 					drive.waitDegreeRotateVoltage();
@@ -290,11 +311,11 @@ public class StrongholdAuton {
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_SECRET_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_SECRET_PATH");
-				} else if (pos == PosEnum.POS5_BACKWARD_PATH) {
-					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_BACKWARD_PATH");
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH, 0.4, 0, 0, 6.0);
-					drive.waitMove();
-					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_BACKWARD_PATH");
+					break;
+				}
+				default:
+					state = DONE;
+					break;
 				}
 				
 				state++;
@@ -302,45 +323,68 @@ public class StrongholdAuton {
 				break;
 			}
 			case ROTATE1: {//Rotate towards goal without relying on camera (as we might not see the goal yet)
-				if (pos == PosEnum.POS1) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS1");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);
-					drive.waitDegreeRotateVoltage();
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS1");
-				} else if (pos == PosEnum.POS2_LEFT_PATH) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2_LEFT_PATH");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_LEFT_PATH);
-					drive.waitDegreeRotateVoltage();
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_LEFT_PATH");
-				} else if (pos == PosEnum.POS2_CENTER_PATH) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2_CENTER_PATH");
-					//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH);
-					//drive.waitDegreeRotateVoltage();
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_CENTER_PATH");	
-				} else if (pos == PosEnum.POS3) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS3");
-					// do nothing
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS3");
-				} else if (pos == PosEnum.POS4) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS4");
-					// do nothing
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS4");
-				} else if (pos == PosEnum.POS5_RIGHT_PATH) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_RIGHT_PATH");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_PATH);
-					drive.waitDegreeRotateVoltage();
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_RIGHT_PATH");
-				} else if (pos == PosEnum.POS5_SECRET_PATH) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_SECRET_PATH");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_SECRET_PATH);
-					drive.waitDegreeRotateVoltage();
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_SECRET_PATH");
-				} else if (pos == PosEnum.POS5_BACKWARD_PATH) {
-					Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_BACKWARD_PATH");
-					drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_PATH);
-					drive.waitDegreeRotateVoltage();
-					Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_BACKWARD_PATH");
+				
+				switch(pos) {
+					case POS1:{
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS1");
+						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P1_DEGREES);
+						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS1");
+						break;
+					}
+					case POS2_CENTER_PATH: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2_CENTER_PATH");
+						//drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH);
+						//drive.waitDegreeRotateVoltage();
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_CENTER_PATH");
+						break;
+					}
+					case POS2_LEFT_PATH: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS2_LEFT_PATH");
+						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P2_DEGREES_LEFT_PATH);
+						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS2_LEFT_PATH");
+						break;
+					}
+					case POS3: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS3");
+						// do nothing
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS3");
+						break;
+					}
+					case POS4: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS4");
+						// do nothing
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS4");
+						break;
+					}
+					case POS5_BACKWARD_PATH: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_BACKWARD_PATH");
+						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_PATH);
+						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_BACKWARD_PATH");
+						break;
+					}
+					case POS5_RIGHT_PATH: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_RIGHT_PATH");
+						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_PATH);
+						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_RIGHT_PATH");
+						break;
+					}
+					case POS5_SECRET_PATH: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_SECRET_PATH");
+						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_DEGREES_SECRET_PATH);
+						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_SECRET_PATH");
+						break;
+					}
+					default: {
+						state = DONE;
+						break;
+					}
 				}
+				
 				Logger.log("Auton ROTATE1 about to raise intake");
 				intake.lower(false);
 				Logger.log("Auton ROTATE1 raised intake");
@@ -352,135 +396,150 @@ public class StrongholdAuton {
 			case CALCULATE: { //Use camera to figure out how far we really are from the goal
 				camera.getNTInfo(true);
 				
-				if (pos == PosEnum.POS1 || pos == PosEnum.POS3 || pos == PosEnum.POS4) { // in cases where we expect to be far
-					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS1, POS3 or POS4");
-					}
-					else {
-						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
-						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
-							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS1, POS3 or POS4");
+				switch(pos) {
+					case POS1:
+					case POS3: 
+					case POS4: {
+						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS1, POS3 or POS4");
 						}
 						else {
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS1, POS3 or POS4");
+							//Assume we are looking at the correct goal
+							centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
+							// If distance to center is not unrealistic, continue
+							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+								state++;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS1, POS3 or POS4");
+							}
+							else {
+								state = DONE;
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS1, POS3 or POS4");
+							}
 						}
+						break;
 					}
-				}
-				else if (pos == PosEnum.POS2_LEFT_PATH) { // in cases where we expect to be close
-					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
-						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_LEFT_PATH");
-					}
-					else {
-						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_LEFT_PATH);
-						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
-							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2_LEFT_PATH");
+					case POS2_CENTER_PATH: {
+						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_CENTER_PATH");
 						}
 						else {
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_LEFT_PATH");
+							//Assume we are looking at the correct goal
+							centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_CENTER_PATH);
+							// If distance to center is not unrealistic, continue
+							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+								state++;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2_CENTER_PATH");
+							}
+							else {
+								state = DONE;
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_CENTER_PATH");
+							}
 						}
+						break;
 					}
-				}
-				else if (pos == PosEnum.POS2_CENTER_PATH) { // in cases where we expect to be far
-					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_CENTER_PATH");
-					}
-					else {
-						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_CENTER_PATH);
-						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
-							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2_CENTER_PATH");
+					case POS2_LEFT_PATH: {
+						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_LEFT_PATH");
 						}
 						else {
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_CENTER_PATH");
+							//Assume we are looking at the correct goal
+							centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_LEFT_PATH);
+							// If distance to center is not unrealistic, continue
+							if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
+								state++;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS2_LEFT_PATH");
+							}
+							else {
+								state = DONE;
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_LEFT_PATH");
+							}
 						}
+						break;
 					}
-				}
-				else if (pos == PosEnum.POS5_RIGHT_PATH) { // in cases where we expect to be close
-					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
-						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_RIGHT_PATH");
-					}
-					else {
-						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_RIGHT_PATH);
-						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
-							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_RIGHT_PATH");
-						}
-						else {
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_RIGHT_PATH");
-						}
-					}
-				}
-				else if (pos == PosEnum.POS5_SECRET_PATH) { // in cases where we expect to be far
-					if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET_PATH");
-					}
-					else {
-						//Assume we are looking at the correct goal
-						centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_SECRET_PATH);
-						// If distance to center is not unrealistic, continue
-						if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
-							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_SECRET_PATH");
-						}
-						else {
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET_PATH");
-						}
-					}
-				}
-				else if (pos == PosEnum.POS5_BACKWARD_PATH) { 
-					if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
-						state = DONE;
-						Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
-					}
-					else {
-						centeredMoveDistance = camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH;
-						
-						if(Math.abs(centeredMoveDistance) > MAX_P5_BACKWARD_DISTANCE_FEET) {
-							//if we have to move too much - something must have gone wrong
+					case POS5_BACKWARD_PATH: {
+						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
 						}
-						
-						if (centeredMoveDistance < PERFECT_ALIGNMENT){		
-							//if we have to move back
-							state++;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
+						else {
+							centeredMoveDistance = camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH;
+							
+							if(Math.abs(centeredMoveDistance) > MAX_P5_BACKWARD_DISTANCE_FEET) {
+								//if we have to move too much - something must have gone wrong
+								state = DONE;
+								Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
+							}
+							
+							if (centeredMoveDistance < PERFECT_ALIGNMENT){		
+								//if we have to move back
+								state++;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
+							}
+							else if (centeredMoveDistance == PERFECT_ALIGNMENT) {	
+								//if we don't have to move back
+								state = AIM;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
+								Logger.log("Skipping MOVE2, going to AIM, in perfect shot range");
+							}
+							else if (centeredMoveDistance > PERFECT_ALIGNMENT){
+								//if we are further than we expected but still in shooting range
+								state = AIM;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
+								Logger.log("Skipping MOVE2 ,going to AIM, going for longer shot");
+							} 
+							//only difference between the last two - the logs
 						}
-						else if (centeredMoveDistance == PERFECT_ALIGNMENT) {	
-							//if we don't have to move back
-							state = AIM;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
-							Logger.log("Skipping MOVE2, going to AIM, in perfect shot range");
+						break;
+					}
+					case POS5_RIGHT_PATH: {
+						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_RIGHT_PATH");
 						}
-						else if (centeredMoveDistance > PERFECT_ALIGNMENT){
-							//if we are further than we expected but still in shooting range
-							state = AIM;
-							Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_BACKWARD_PATH");
-							Logger.log("Skipping MOVE2 ,going to AIM, going for longer shot");
-						} 
-						//only difference between the last two - the logs
+						else {
+							//Assume we are looking at the correct goal
+							centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_RIGHT_PATH);
+							// If distance to center is not unrealistic, continue
+							if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
+								state++;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_RIGHT_PATH");
+							}
+							else {
+								state = DONE;
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_RIGHT_PATH");
+							}
+						}
+						break;
+					}
+					case POS5_SECRET_PATH: {
+						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET_PATH");
+						}
+						else {
+							//Assume we are looking at the correct goal
+							centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_SECRET_PATH);
+							// If distance to center is not unrealistic, continue
+							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
+								state++;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_SECRET_PATH");
+							}
+							else {
+								state = DONE;
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET_PATH");
+							}
+						}
+						break;
+					}
+					default: {
+						state = DONE;
+						break;
 					}
 				}
+				
 				break;
 			}
 			case MOVE2: {//Move forward so that distance from goal is an acceptable distance
