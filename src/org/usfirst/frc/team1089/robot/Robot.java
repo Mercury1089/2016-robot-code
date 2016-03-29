@@ -49,6 +49,7 @@ public class Robot extends IterativeRobot {
 	private int shootingAttemptCounter = 0;
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
+	private double turnAngle = 0;
 	
 	public void resetAll(){
 		isShooting = false;
@@ -312,9 +313,10 @@ public class Robot extends IterativeRobot {
 				Logger.log("Robot.aimProc: done waiting for shooter to catch up");
 			}				// waits for shooter to get in position
 			isShooting = true;
-			drive.degreeRotateVoltage(camera.getTurnAngle());
-			Logger.log("Turned " + camera.getTurnAngle() + " degrees");
+			turnAngle = camera.getTurnAngle();
+			drive.degreeRotateVoltage(turnAngle);
 			Logger.log("Robot.aimProc: shooting sequence started. Good luck.");
+			Logger.log("Turning " + turnAngle + " degrees");
 		}
 		else {
 			Logger.log("Robot.aimProc: not in distance or not in line with goal. Sorry.");
