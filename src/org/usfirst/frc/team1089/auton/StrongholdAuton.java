@@ -544,7 +544,7 @@ public class StrongholdAuton {
 						break;
 					}
 				}
-				
+				Logger.log("Our turn angle is " + camera.getTurnAngle() + " degrees");
 				break;
 			}
 			case MOVE2: {//Move forward so that distance from goal is an acceptable distance

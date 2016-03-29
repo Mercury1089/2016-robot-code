@@ -313,6 +313,7 @@ public class Robot extends IterativeRobot {
 			}				// waits for shooter to get in position
 			isShooting = true;
 			drive.degreeRotateVoltage(camera.getTurnAngle());
+			Logger.log("Turned " + camera.getTurnAngle() + " degrees");
 			Logger.log("Robot.aimProc: shooting sequence started. Good luck.");
 		}
 		else {
