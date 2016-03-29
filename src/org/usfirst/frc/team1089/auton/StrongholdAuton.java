@@ -408,6 +408,7 @@ public class StrongholdAuton {
 							//Assume we are looking at the correct goal
 							centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P1_P3_P4_FEET);
 							// If distance to center is not unrealistic, continue
+							Logger.log("About to move " + centeredMoveDistance + "ft.");
 							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 								state++;
 								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS1, POS3 or POS4");
@@ -427,6 +428,7 @@ public class StrongholdAuton {
 						else {
 							//Assume we are looking at the correct goal
 							centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_CENTER_PATH);
+							Logger.log("About to move " + centeredMoveDistance + "ft.");
 							// If distance to center is not unrealistic, continue
 							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 								state++;
@@ -447,6 +449,7 @@ public class StrongholdAuton {
 						else {
 							//Assume we are looking at the correct goal
 							centeredMoveDistance = Math.max(0.0,camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_LEFT_PATH);
+							Logger.log("About to move " + centeredMoveDistance + "ft.");
 							// If distance to center is not unrealistic, continue
 							if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
 								state++;
@@ -466,7 +469,7 @@ public class StrongholdAuton {
 						}
 						else {
 							centeredMoveDistance = camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH;
-							
+							Logger.log("About to move " + centeredMoveDistance + "ft.");
 							if(Math.abs(centeredMoveDistance) > MAX_P5_BACKWARD_DISTANCE_FEET) {
 								//if we have to move too much - something must have gone wrong
 								state = DONE;
@@ -502,6 +505,7 @@ public class StrongholdAuton {
 						else {
 							//Assume we are looking at the correct goal
 							centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_RIGHT_PATH);
+							Logger.log("About to move " + centeredMoveDistance + "ft.");
 							// If distance to center is not unrealistic, continue
 							if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
 								state++;
@@ -522,6 +526,7 @@ public class StrongholdAuton {
 						else {
 							//Assume we are looking at the correct goal
 							centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_SECRET_PATH);
+							Logger.log("About to move " + centeredMoveDistance + "ft.");
 							// If distance to center is not unrealistic, continue
 							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 								state++;
