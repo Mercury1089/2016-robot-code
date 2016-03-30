@@ -49,28 +49,21 @@ public class Defense{
 				Logger.log("Defense MOAT out");
 				break;
 			}
-			case ROUGH_TERRAIN: {
-				Logger.log("Defense ROUGH_TERRAIN in");
-				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROUGH_TERRAIN + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
-				drive.waitMove();		//need fast PID voltage - to be changed
-				Logger.log("Defense ROUGH_TERRAIN out");
-				break;
-			}
 			case RAMPARTS: {
 				Logger.log("Defense RAMPARTS in");
-				shooter.raise(Shooter.LOW);
+				shooter.raise(Shooter.MEDIUM);
 				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6); 
 				drive.waitMove();		//human speed
 				Logger.log("Defense RAMPARTS out");
 				break;
 			}
+			case ROUGH_TERRAIN:
 			case ROCK_WALL: {
-				Logger.log("Defense ROCK_WALL in");
+				Logger.log("Defense ROCK_WALL/ROUGH_TERRAIN in");
 				shooter.raise(Shooter.MEDIUM);
 				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROCK_WALL + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
 				drive.waitMove();		// full speed
-				Logger.log("Defense ROCK_WALL out");
+				Logger.log("Defense ROCK_WALL/ROUGH_TERRAIN out");
 				break;
 			}
 			case CHEVAL_DE_FRISE: {
