@@ -250,7 +250,7 @@ public class StrongholdAuton {
 				}
 				case POS2_LEFT_PATH: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS2_LEFT_PATH");
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH + 1, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_LEFT_PATH");
 					break;
@@ -263,7 +263,7 @@ public class StrongholdAuton {
 					drive.waitDegreeRotateVoltage();
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();			
-					drive.degreeRotateVoltage(-60); // -60 since we are still not fully in front
+					drive.degreeRotateVoltage(-80); // -60 since we are still not fully in front	//Mr. Evans says 102
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_CENTER_PATH");
 					break;

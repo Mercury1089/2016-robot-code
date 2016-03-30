@@ -4,6 +4,8 @@ import org.usfirst.frc.team1089.robot.DriveTrain;
 import org.usfirst.frc.team1089.robot.Logger;
 import org.usfirst.frc.team1089.robot.Shooter;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class Defense{
 	private DefenseEnum defenseEnum;
 	private DriveTrain drive;
@@ -20,10 +22,13 @@ public class Defense{
 					CORE_AFTER_DEFENSE = 3, // what we need to clear the defense (so the back of the robot goes back the defense)
 					BUFFER_AFTER_DEFENSE = 2, // a buffer to avoid not fully clearing the defense
 					AFTER_DEFENSE_FEET = CORE_AFTER_DEFENSE + BUFFER_AFTER_DEFENSE, // this corresponds to 3 feet to clear plus 2 feet of buffer
-					ROCK_WALL_SLIPPAGE_COMPENSATION_FEET = 2, // should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
+					ROCK_WALL_SLIPPAGE_COMPENSATION_FEET = 2,// should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
+					MOAT_SLIPPAGE_COMPENSATION_FEET = 2,
 					THROUGH_DEFENSE_FEET_ROCK_WALL =  THROUGH_DEFENSE_FEET + ROCK_WALL_SLIPPAGE_COMPENSATION_FEET,  // for rockwall we add 2 feet to allow for huge slippage + buffer 
 					ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET = 2, // should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
 					THROUGH_DEFENSE_FEET_ROUGH_TERRAIN =  THROUGH_DEFENSE_FEET + ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET;  // for rough terrain we add 2 feet to allow for huge slippage + buffer
+	
+	public static final double INITIAL_CDF = 3.5;
 	
 	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
 		drive = d;
@@ -43,8 +48,8 @@ public class Defense{
 			}
 			case MOAT: {
 				Logger.log("Defense MOAT in");
-				shooter.raise(Shooter.LOW);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 12.0); //TODO test and change ALL these values
+				shooter.raise(Shooter.MEDIUM);
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET + MOAT_SLIPPAGE_COMPENSATION_FEET, 0.4, 0, 0, 12.0); //TODO test and change ALL these values
 				drive.waitMove();		//full speed
 				Logger.log("Defense MOAT out");
 				break;
@@ -69,10 +74,11 @@ public class Defense{
 			case CHEVAL_DE_FRISE: {
 				Logger.log("Defense CHEVAL_DE_FRISE in");
 				shooter.raise(Shooter.MEDIUM);
-				drive.moveDistance(INITIAL_CDF_FEET, 0.4, 0, 0, 4.5);
+				drive.moveDistance(INITIAL_CDF, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				shooter.raise(Shooter.DOWN);
-				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
+				Timer.delay(1);
+				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET - .5, 0.4, 0, 0, 4.5); 
 				drive.waitMove();
 				Logger.log("Defense CHEVAL_DE_FRISE out");
 				break;
