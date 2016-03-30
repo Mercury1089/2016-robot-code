@@ -49,7 +49,6 @@ public class Robot extends IterativeRobot {
 	private int shootingAttemptCounter = 0;
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
-	private double turnAngle = 0;
 	
 	public void resetAll(){
 		isShooting = false;
@@ -302,6 +301,7 @@ public class Robot extends IterativeRobot {
 		Logger.log("Robot.aimProc: about to raise intake");
 		intake.lower(false);
 		Logger.log("Robot.aimProc: intake raised");
+		double turnAngle = 0;
 
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
 			Logger.log("Robot.aimProc: in distance and in line with goal");
