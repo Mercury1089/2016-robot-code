@@ -154,7 +154,7 @@ public class Robot extends IterativeRobot {
 		
 		gyro.reset();
 		auton.resetState();
-
+		intake.lower(true);
 		Logger.log("Robot.autonomousInit: Entered Auton");
 	}
 
