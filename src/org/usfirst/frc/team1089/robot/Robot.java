@@ -110,13 +110,14 @@ public class Robot extends IterativeRobot {
 
 		posChooser = new SendableChooser();
 		posChooser.addDefault("1", PosEnum.POS1);
+		posChooser.addObject("2 Backwards", PosEnum.POS2_BACKWARD_PATH);
 		posChooser.addObject("2 Left", PosEnum.POS2_LEFT_PATH);
 		posChooser.addObject("2 Center", PosEnum.POS2_CENTER_PATH);
 		posChooser.addObject("3", PosEnum.POS3);
 		posChooser.addObject("4", PosEnum.POS4);
 		posChooser.addObject("5 Right", PosEnum.POS5_RIGHT_PATH);
-		posChooser.addObject("5 Secret", PosEnum.POS5_SECRET_PATH);
 		posChooser.addObject("5 Backwards", PosEnum.POS5_BACKWARD_PATH);
+		posChooser.addObject("5 Secret", PosEnum.POS5_SECRET_PATH);
 		posChooser.addObject("Spybot", PosEnum.SPYBOT);
 		SmartDashboard.putData("Position: ", posChooser);
 
