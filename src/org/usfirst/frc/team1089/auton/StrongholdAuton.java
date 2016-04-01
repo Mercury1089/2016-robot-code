@@ -66,7 +66,7 @@ public class StrongholdAuton {
 					SHOOT_DISTANCE_P5_FEET_RIGHT_PATH = 5, // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P5_FEET_SECRET_PATH = 11, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH = 8.75, //minimum distance 
-					SHOOT_DISTANCE_P2_FEET_BACKWARD_PATH = 8.5;
+					SHOOT_DISTANCE_P2_FEET_BACKWARD_PATH = 9;
 	
 	private Defense defense;
 	private Camera camera;
