@@ -115,6 +115,7 @@ public class Robot extends IterativeRobot {
 		posChooser.addObject("2 Center", PosEnum.POS2_CENTER_PATH);
 		posChooser.addObject("3", PosEnum.POS3);
 		posChooser.addObject("4", PosEnum.POS4);
+		posChooser.addObject("5 Center", PosEnum.POS5_CENTER_PATH);
 		posChooser.addObject("5 Right", PosEnum.POS5_RIGHT_PATH);
 		posChooser.addObject("5 Backwards", PosEnum.POS5_BACKWARD_PATH);
 		posChooser.addObject("5 Secret", PosEnum.POS5_SECRET_PATH);
@@ -148,6 +149,10 @@ public class Robot extends IterativeRobot {
 		
 		if (aim == AimEnum.LOW && (pos == PosEnum.POS3 || pos == PosEnum.POS4)) {
 			defense =  DefenseEnum.DO_NOTHING;
+		}
+		
+		if ((pos == PosEnum.POS5_SECRET_PATH || pos == PosEnum.POS5_BACKWARD_PATH) && aim != AimEnum.NONE) {
+			aim = AimEnum.NONE;
 		}
 		
 		auton = new StrongholdAuton(drive, camera, shooter, intake, gyro, (PosEnum) posChooser.getSelected(), aim,

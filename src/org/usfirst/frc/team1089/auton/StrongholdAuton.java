@@ -41,7 +41,8 @@ public class StrongholdAuton {
 	private static double  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 9.0 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH = 11.5 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH = 5.0  - Defense.AFTER_DEFENSE_FEET, // ok
-						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH = 5.0, // ok
+						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH = 4.75, // ok
+						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_CENTER_PATH = 4.0,
 						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3.0,*/
 						/*MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 5.0  - Defense.AFTER_DEFENSE_FEET,*/ 
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH = 12.5 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
@@ -262,7 +263,7 @@ public class StrongholdAuton {
 					drive.waitDegreeRotateVoltage();
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();			
-					drive.degreeRotateVoltage(-80); // -60 since we are still not fully in front	//Mr. Evans says 102
+					drive.degreeRotateVoltage(-75); // -60 since we are still not fully in front	//Mr. Evans says 102
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS2_CENTER_PATH");
 					break;
@@ -283,6 +284,19 @@ public class StrongholdAuton {
 					/*drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P4_FEET, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();*/
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS4");
+					break;
+				}
+				case POS5_CENTER_PATH: {
+					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_CENTER_PATH");
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove();
+					drive.degreeRotateVoltage(-90);
+					drive.waitDegreeRotateVoltage();
+					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
+					drive.waitMove();			
+					drive.degreeRotateVoltage(80); 
+					drive.waitDegreeRotateVoltage();
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_CENTER_PATH");
 					break;
 				}
 				case POS5_BACKWARD_PATH: {
@@ -356,6 +370,10 @@ public class StrongholdAuton {
 						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS4");
 						// do nothing
 						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS4");
+						break;
+					}
+					case POS5_CENTER_PATH: {
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_CENTER_PATH");
 						break;
 					}
 					case POS5_BACKWARD_PATH: {
@@ -559,10 +577,11 @@ public class StrongholdAuton {
 						}
 						break;
 					}
+					case POS5_CENTER_PATH: 
 					case POS5_SECRET_PATH: {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET_PATH");
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET/Center_PATH");
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -576,7 +595,7 @@ public class StrongholdAuton {
 							}
 							else {
 								state = DONE;
-								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET_PATH");
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET/Center_PATH");
 							}
 						}
 						break;
