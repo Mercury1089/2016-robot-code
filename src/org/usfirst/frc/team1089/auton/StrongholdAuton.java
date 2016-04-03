@@ -288,8 +288,6 @@ public class StrongholdAuton {
 				}
 				case POS5_CENTER_PATH: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_CENTER_PATH");
-					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
-					drive.waitMove();
 					drive.degreeRotateVoltage(-90);
 					drive.waitDegreeRotateVoltage();
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
@@ -591,11 +589,11 @@ public class StrongholdAuton {
 							// If distance to center is not unrealistic, continue
 							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 								state++;
-								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_SECRET_PATH");
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_SECRET/CENTER_PATH");
 							}
 							else {
 								state = DONE;
-								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET/Center_PATH");
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET/CENTER_PATH");
 							}
 						}
 						break;
