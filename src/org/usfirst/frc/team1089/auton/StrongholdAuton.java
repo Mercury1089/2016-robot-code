@@ -42,7 +42,7 @@ public class StrongholdAuton {
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH = 11.5 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH = 5.0  - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH = 4.75, // ok
-						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_CENTER_PATH = 4.0,
+						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_CENTER_PATH = 4.5,
 						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3.0,*/
 						/*MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 5.0  - Defense.AFTER_DEFENSE_FEET,*/ 
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH = 12.5 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
@@ -292,7 +292,7 @@ public class StrongholdAuton {
 					drive.waitDegreeRotateVoltage();
 					drive.moveDistance(MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_CENTER_PATH, 0.4, 0, 0, 6.0); //TODO test and change these values
 					drive.waitMove();			
-					drive.degreeRotateVoltage(80); 
+					drive.degreeRotateVoltage(82); 
 					drive.waitDegreeRotateVoltage();
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_CENTER_PATH");
 					break;
