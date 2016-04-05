@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1089.robot;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
@@ -7,6 +8,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 public class Scaler {
 	private CANTalon lifter;
 	private CANTalon deployer;
+	private AnalogPotentiometer scaler;
 	private static final double SCALER_DEPLOY_TIME = .25, LIFT_TIME = 3.0;
 	public Scaler(CANTalon lifterMotor, CANTalon deployerMotor) {
 		lifter = lifterMotor;
