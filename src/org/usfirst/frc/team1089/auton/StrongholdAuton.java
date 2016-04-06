@@ -38,14 +38,14 @@ public class StrongholdAuton {
 	// distances for MOVE1
 	// to simplify things now distances are expressed as <distance_from_defense> minus Defense.AFTER_DEFENSE_FEET
 	// consequently, if Defense.AFTER_DEFENSE_FEET is 5 feet nothing should be below 5 feet!
-	private static double  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 9.0 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
-						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH = 11.5 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
+	private static double  MOVE_DISTANCE_POST_DEFENSE_P1_FEET = 9.0 + 1.5 - Defense.AFTER_DEFENSE_FEET, // ok
+						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_LEFT_PATH = 11.5 + 1.5 - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_P2_FEET_CENTER_PATH = 5.0  - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P2_FEET_CENTER_PATH = 4.75, // ok
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_CENTER_PATH = 4.5,
 						/*MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P3_FEET = 3.0,*/
 						/*MOVE_DISTANCE_POST_DEFENSE_P4_FEET = 5.0  - Defense.AFTER_DEFENSE_FEET,*/ 
-						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH = 12.5 + 1.0 - Defense.AFTER_DEFENSE_FEET, // ok
+						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_PATH = 12.5 + 1.5 - Defense.AFTER_DEFENSE_FEET, // ok
 						MOVE_DISTANCE_POST_DEFENSE_SIDEWAY_P5_FEET_SECRET_PATH = 5.0,
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_SECRET_PATH = 9.0 - Defense.AFTER_DEFENSE_FEET;
 	
@@ -56,6 +56,7 @@ public class StrongholdAuton {
 						/*ROTATE_POST_DEFENSE_P3_DEGREES = 0,*/
 						/*ROTATE_POST_DEFENSE_P4_DEGREES = 0,*/ 
 						ROTATE_POST_DEFENSE_P5_DEGREES_PATH = -60,
+						ROTATE_POST_DEFENSE_P5_HAILMARY_PATH = -30,
 						ROTATE_POST_DEFENSE_P5_DEGREES_SECRET_PATH = -60;
 	
 	// maximum optimal shooting distances
@@ -286,6 +287,10 @@ public class StrongholdAuton {
 					Logger.log("Auton MOVE1 attempted move PosEnum.POS4");
 					break;
 				}
+				case POS5_HAILMARY: {
+					Logger.log("Auton MOVE1 attempted move PosEnum.POS5_HAILMARY_PATH");
+					break;
+				}
 				case POS5_CENTER_PATH: {
 					Logger.log("Auton MOVE1 about to attempt move PosEnum.POS5_CENTER_PATH");
 					drive.degreeRotateVoltage(-90);
@@ -372,6 +377,15 @@ public class StrongholdAuton {
 					}
 					case POS5_CENTER_PATH: {
 						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_CENTER_PATH");
+						break;
+					}
+					case POS5_HAILMARY: {
+						Logger.log("Auton ROTATE1 about to attempt rotate PosEnum.POS5_HAILMARY_PATH");
+						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_HAILMARY_PATH);
+						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_HAILMARY_PATH");
+						Logger.log("Moving to AIM Proc");
+						state = AIM;		//going to aim, need to calculate?
 						break;
 					}
 					case POS5_BACKWARD_PATH: {

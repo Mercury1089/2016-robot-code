@@ -13,6 +13,7 @@ public class Ports {
 	public static class Analog {
 		public static final int GYRO = 0;
 		public static final int CHECK_PRESSURE = 1;
+		public static final int SCALER_POT = 2;
 	}
 
 	/**
@@ -63,5 +64,7 @@ public class Ports {
 		public static final int SHOOTER_ELEVATOR_HIGH_REVERSE = 2;
 		public static final int INTAKE_ELEVATOR_FORWARD = 5;
 		public static final int INTAKE_ELEVATOR_REVERSE = 6;
+		public static final int LIFT_DEPLOYER_FORWARD = 7;
+		public static final int LIFT_DEPLOYER_REVERSE = 8;
 	}
 }

@@ -55,7 +55,7 @@ public class Defense{
 			case RAMPARTS: {
 				Logger.log("Defense RAMPARTS in");
 				shooter.raise(Shooter.MEDIUM);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 12.0); 	//ramparts is now moat speed
 				drive.waitMove();		//human speed
 				Logger.log("Defense RAMPARTS out");
 				break;
