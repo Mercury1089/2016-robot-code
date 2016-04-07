@@ -49,7 +49,7 @@
 		<location x="630" y="298"/>
 	</widget>
 	<widget field="Defense: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="791" y="5"/>
+		<location x="784" y="1"/>
 	</widget>
 	<widget field="Position: " type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="628" y="2"/>

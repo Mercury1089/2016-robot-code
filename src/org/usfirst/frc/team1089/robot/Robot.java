@@ -26,9 +26,7 @@ public class Robot extends IterativeRobot {
 
 	private Shooter shooter;
 	private Intake intake;
-	private Scaler scaler;
 	private Compressor compressor;
-	private PortcullisLifter portLifter;
 
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
@@ -87,8 +85,7 @@ public class Robot extends IterativeRobot {
 
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 		intake = new Intake(intakeMotor);
-		portLifter = new PortcullisLifter(pLifter);
-		scaler = new Scaler(lifterMotor, deployerMotor);
+		
 		
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
@@ -115,6 +112,7 @@ public class Robot extends IterativeRobot {
 		posChooser.addObject("2 Center", PosEnum.POS2_CENTER_PATH);
 		posChooser.addObject("3", PosEnum.POS3);
 		posChooser.addObject("4", PosEnum.POS4);
+		posChooser.addObject("5 Hailmary", PosEnum.POS5_HAILMARY);
 		posChooser.addObject("5 Center", PosEnum.POS5_CENTER_PATH);
 		posChooser.addObject("5 Right", PosEnum.POS5_RIGHT_PATH);
 		posChooser.addObject("5 Backwards", PosEnum.POS5_BACKWARD_PATH);
@@ -433,14 +431,14 @@ public class Robot extends IterativeRobot {
 		// Accelerometer
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
 		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 3));
-
+ 
 		// Camera
 		SmartDashboard.putString("Area:", Arrays.toString(camera.getRectArea()) + " px.");
 		SmartDashboard.putString("Width:", Arrays.toString(camera.getRectWidth()) + " px.");
 		SmartDashboard.putString("Height:", Arrays.toString(camera.getRectHeight()) + " px.");
 		SmartDashboard.putString("Center X:", Arrays.toString(camera.getCenterX()) + " px.");
 		SmartDashboard.putString("Center Y:", Arrays.toString(camera.getCenterY()) + " px.");
-
+ 
 		SmartDashboard.putString("Diagonal Distance", "" + Utilities.round(camera.getDiagonalDist(), 3) + " ft.");
 		SmartDashboard.putString("Horizontal Distance: ", "" + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 		SmartDashboard.putString("Angle to turn", "" + Utilities.round(camera.getTurnAngle(), 3) + " deg.");

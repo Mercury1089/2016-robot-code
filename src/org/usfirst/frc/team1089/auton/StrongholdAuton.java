@@ -384,8 +384,7 @@ public class StrongholdAuton {
 						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_HAILMARY_PATH);
 						drive.waitDegreeRotateVoltage();
 						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_HAILMARY_PATH");
-						Logger.log("Moving to AIM Proc");
-						state = AIM;		//going to aim, need to calculate?
+						Logger.log("Moving to AIM Proc");		//going to aim, need to calculate?
 						break;
 					}
 					case POS5_BACKWARD_PATH: {
