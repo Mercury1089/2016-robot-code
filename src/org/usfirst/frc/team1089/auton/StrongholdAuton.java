@@ -66,6 +66,7 @@ public class StrongholdAuton {
 					/*SHOOT_DISTANCE_P3_FEET = 11,
 					SHOOT_DISTANCE_P4_FEET = 11,*/ 
 					SHOOT_DISTANCE_P5_FEET_RIGHT_PATH = 5, // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
+					SHOOT_DISTANCE_P5_FEET_HAILMARY_PATH = 12,	//value not decided, can be changed later
 					SHOOT_DISTANCE_P5_FEET_SECRET_PATH = 11, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH = 8.75, //minimum distance 
 					SHOOT_DISTANCE_P2_FEET_BACKWARD_PATH = 9;
@@ -384,7 +385,6 @@ public class StrongholdAuton {
 						drive.degreeRotateVoltage(ROTATE_POST_DEFENSE_P5_HAILMARY_PATH);
 						drive.waitDegreeRotateVoltage();
 						Logger.log("Auton ROTATE1 attempted rotation PosEnum.POS5_HAILMARY_PATH");
-						Logger.log("Moving to AIM Proc");		//going to aim, need to calculate?
 						break;
 					}
 					case POS5_BACKWARD_PATH: {
@@ -530,6 +530,29 @@ public class StrongholdAuton {
 						}
 						break;
 					}
+					case POS5_HAILMARY: {
+						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
+							state = DONE;
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_RIGHT_PATH");
+						}
+						else {
+							//Assume we are looking at the correct goal
+							centeredMoveDistance = Math.max(0.0, camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_HAILMARY_PATH);
+							//right now we look to get to 12 ft. We could change it to only move 1 ft. every time
+							Logger.log("About to move " + centeredMoveDistance + "ft.");
+							Logger.log("Our turn angle is " + camera.getTurnAngle() + " degrees");
+							// If distance to center is not unrealistic, continue
+							if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
+								state++;
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_RIGHT_PATH");
+							}
+							else {
+								state = DONE;
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_RIGHT_PATH");
+							}
+						}
+						break;
+					}	
 					case POS5_BACKWARD_PATH: {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
