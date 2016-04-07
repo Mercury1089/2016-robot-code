@@ -531,9 +531,9 @@ public class StrongholdAuton {
 						break;
 					}
 					case POS5_HAILMARY: {
-						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
+						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_RIGHT_PATH");
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_HAIL_MARY");
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -542,13 +542,13 @@ public class StrongholdAuton {
 							Logger.log("About to move " + centeredMoveDistance + "ft.");
 							Logger.log("Our turn angle is " + camera.getTurnAngle() + " degrees");
 							// If distance to center is not unrealistic, continue
-							if (centeredMoveDistance < MAX_CENTER_CLOSE_DISTANCE_FEET) {
+							if (centeredMoveDistance < MAX_CENTER_DISTANCE_FEET) {
 								state++;
-								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_RIGHT_PATH");
+								Logger.log("Auton CALCULATE FINISHED (OK) PosEnum.POS5_HAIL_MARY");
 							}
 							else {
 								state = DONE;
-								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_RIGHT_PATH");
+								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_HAIL_MARY");
 							}
 						}
 						break;
@@ -615,7 +615,7 @@ public class StrongholdAuton {
 					case POS5_SECRET_PATH: {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET/Center_PATH");
+							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET/CENTER_PATH");
 						}
 						else {
 							//Assume we are looking at the correct goal
