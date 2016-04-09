@@ -23,7 +23,7 @@ public class Defense{
 					BUFFER_AFTER_DEFENSE = 2, // a buffer to avoid not fully clearing the defense
 					AFTER_DEFENSE_FEET = CORE_AFTER_DEFENSE + BUFFER_AFTER_DEFENSE, // this corresponds to 3 feet to clear plus 2 feet of buffer
 					ROCK_WALL_SLIPPAGE_COMPENSATION_FEET = 2,// should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
-					MOAT_SLIPPAGE_COMPENSATION_FEET = 2,
+					MOAT_SLIPPAGE_COMPENSATION_FEET = 3,
 					THROUGH_DEFENSE_FEET_ROCK_WALL =  THROUGH_DEFENSE_FEET + ROCK_WALL_SLIPPAGE_COMPENSATION_FEET,  // for rockwall we add 2 feet to allow for huge slippage + buffer 
 					ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET = 2, // should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
 					THROUGH_DEFENSE_FEET_ROUGH_TERRAIN =  THROUGH_DEFENSE_FEET + ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET;  // for rough terrain we add 2 feet to allow for huge slippage + buffer
