@@ -189,6 +189,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		Logger.init();
+		logTeamAndAllianceInfo();
 		Logger.log("Robot.teleopInit: Ending Auton (if in Auton before), Entering Teleop");
 		drive.stop();
 		this.resetAll();
