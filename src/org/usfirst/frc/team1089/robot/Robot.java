@@ -369,7 +369,7 @@ public class Robot extends IterativeRobot {
 				Logger.log("SHOOTING: Is flat: " + accel.isFlat());
 				Logger.log("SHOOTING: Pressure: " + Utilities.round(compressor.getPressurePSI(), 3) + " PSI");
 				Logger.log("SHOOTING: Is enough pressure: " + compressor.isInShotPressure());
-				
+				Timer.delay(.250);
 				shooter.shoot();
 				Logger.log("Robot.shootProc: shot made!");
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
