@@ -34,6 +34,9 @@ public class DriveTrain {
 													// (in gyro control mode)
 	private double _heading = 0.0; // heading when rotating
 	private long _heading_display_reset_time_ms = 0; // to log time 
+	private double _rotate_vmin_adjuster = 0.0; // to adjust vmin dynamically
+	private static final double ROTATE_CHECK_PERIOD_MS = 1000;
+	private static final double _rotate_vmin_adjuster_increment = 0.01; // what we add to vmin 
 
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12; //15;
@@ -113,7 +116,7 @@ public class DriveTrain {
 		if (isDegreeRotating) { // only if we have been told to rotate
 			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
 			double vmax = Math.pow(0.7, 1.0/BOOST); // WAS 0.77 FOR OLD DRIVETRAIN, BUT CONSIDER REDUCING FURTHER (E.G. 0.67 IF KEEPING VMIN AS 0.27)
-			double vmin = Math.pow(0.36, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
+			double vmin = Math.pow(0.36 + _rotate_vmin_adjuster, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
 			double dmax = 45.0; // WAS 60.0 FOR OLD DRIVETRAIN - CONSIDER INCREASING A LITTLE (OR EVEN PUT 60 BACK TO MAKE IT EASIER TO TUNE)
 			double dmin = 0.0; // 5.0;
 			double error = _heading - gyro.getAngle();
@@ -127,12 +130,15 @@ public class DriveTrain {
 				vout = Math.pow(vout, BOOST);
 				speedRotate(vout); // we rotate until we are told otherwise
 				
-				if ((Calendar.getInstance().getTimeInMillis() - _heading_display_reset_time_ms) > 1000) {
+				if ((Calendar.getInstance().getTimeInMillis() - _heading_display_reset_time_ms) > ROTATE_CHECK_PERIOD_MS) {
 					Logger.log("DriveTrain.checkDegreeRotateVoltage: rotating (positive error)");
 					Logger.log("Desired heading is: " + _heading);
 					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
+					_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
+					
 				}
 			}
 			else if (error < config.TURN_ANGLE_MIN_DEGREES) {
@@ -140,12 +146,14 @@ public class DriveTrain {
 				vout = Math.pow(vout, BOOST);
 				speedRotate(vout); // we rotate until we are told otherwise
 				
-				if ((Calendar.getInstance().getTimeInMillis() - _heading_display_reset_time_ms) > 1000) {
+				if ((Calendar.getInstance().getTimeInMillis() - _heading_display_reset_time_ms) > ROTATE_CHECK_PERIOD_MS) {
 					Logger.log("DriveTrain.checkDegreeRotateVoltage: rotating (negative error)");
 					Logger.log("Desired heading is: " + _heading);
 					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
+					_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
 				}
 			}
 			else {
@@ -336,6 +344,7 @@ public class DriveTrain {
 						// in check method)
 		_heading = heading; // we save where we want to go
 		_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
+		_rotate_vmin_adjuster = 0.0;
 	}
 	
 	/**
@@ -360,6 +369,7 @@ public class DriveTrain {
 						// in check method)
 		_heading = heading; // we save where we want to go
 		_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
+		_rotate_vmin_adjuster = 0.0;
 
 		//insert initial kick here if needed
 	}
