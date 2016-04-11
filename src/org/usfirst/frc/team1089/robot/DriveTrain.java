@@ -35,9 +35,11 @@ public class DriveTrain {
 	private double _heading = 0.0; // heading when rotating
 	private long _heading_display_reset_time_ms = 0; // to log time 
 	private double _rotate_vmin_adjuster = 0.0; // to adjust vmin dynamically
+	private double starting_vmin = 0.36;
 	private static final double ROTATE_CHECK_PERIOD_MS = 1000;
 	private static final double _rotate_vmin_adjuster_increment = 0.01; // what we add to vmin 
-
+	private static final double GYRO_RATE_MIN = 10;
+	
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12; //15;
 	private static final double TIER_3_DEGREES_FROM_TARGET = 6;
@@ -116,7 +118,7 @@ public class DriveTrain {
 		if (isDegreeRotating) { // only if we have been told to rotate
 			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
 			double vmax = Math.pow(0.7, 1.0/BOOST); // WAS 0.77 FOR OLD DRIVETRAIN, BUT CONSIDER REDUCING FURTHER (E.G. 0.67 IF KEEPING VMIN AS 0.27)
-			double vmin = Math.pow(0.36 + _rotate_vmin_adjuster, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
+			double vmin = Math.pow(starting_vmin + _rotate_vmin_adjuster, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
 			double dmax = 45.0; // WAS 60.0 FOR OLD DRIVETRAIN - CONSIDER INCREASING A LITTLE (OR EVEN PUT 60 BACK TO MAKE IT EASIER TO TUNE)
 			double dmin = 0.0; // 5.0;
 			double error = _heading - gyro.getAngle();
@@ -137,7 +139,7 @@ public class DriveTrain {
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					if (gyro.getRate() < 10) { // only if we are slowly rotating
+					if (gyro.getRate() < GYRO_RATE_MIN) { // only if we are slowly rotating
 						Logger.log("Turning rate below threshold.");
 						_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
 					}
@@ -157,7 +159,7 @@ public class DriveTrain {
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					if (gyro.getRate() < 10) { // only if we are slowly rotating
+					if (gyro.getRate() < GYRO_RATE_MIN) { // only if we are slowly rotating
 						Logger.log("Turning rate below threshold.");
 						_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
 					}
