@@ -365,7 +365,7 @@ public class Robot extends IterativeRobot {
 				Logger.log("SHOOTING: Camera Horizontal Distance: " + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 				Logger.log("SHOOTING: Camera Opening Width: " + Utilities.round(camera.getOpeningWidth(), 3) + " in.");
 				Logger.log("SHOOTING: Camera Turn Angle: " + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
-				Logger.log("SHOOTING: Accel Tilt" + Utilities.round(accel.getTilt(), 3) + " deg.");
+				Logger.log("SHOOTING: Accel Tilt: " + Utilities.round(accel.getTilt(), 3) + " deg.");
 				Logger.log("SHOOTING: Is flat: " + accel.isFlat());
 				Logger.log("SHOOTING: Pressure: " + Utilities.round(compressor.getPressurePSI(), 3) + " PSI");
 				Logger.log("SHOOTING: Is enough pressure: " + compressor.isInShotPressure());
@@ -376,9 +376,11 @@ public class Robot extends IterativeRobot {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				shootingAttemptCounter++;
 				Logger.log("Robot.shootProc: not in turn angle, will try again");
+				Logger.log("... because Camera Turn Angle is still " + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 			} else {
 				isShooting = false; 
 				Logger.log("Robot.shootProc: gave up trying");
+				Logger.log("... because Camera Turn Angle is still " + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 			}
 		}
 	}
