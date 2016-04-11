@@ -63,15 +63,16 @@ public class Robot extends IterativeRobot {
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new Shooter();
-		compressor = new Compressor();
-		compressor.checkCompressor();
-
-		mercEncoder = new MercEncoder();
-
-		// Set up gyro
+		
+		// Set up gyro - we do this before starting the compressor so that calibration is not affected by vibrations
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); // TODO Add Constants
+		
+		compressor = new Compressor();
+		compressor.checkCompressor();
+
+		mercEncoder = new MercEncoder();	
 
 		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
