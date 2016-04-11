@@ -183,6 +183,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledPeriodic() {
 		camera.getNTInfo(false);
+		cBase.update(); 
 		debug();
 		
 		cBase.rumble(false);
