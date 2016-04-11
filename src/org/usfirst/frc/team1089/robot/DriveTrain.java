@@ -133,6 +133,9 @@ public class DriveTrain {
 			}
 			else {
 				Logger.log("DriveTrain.checkDegreeRotateVoltage: done rotating");
+				Logger.log("Desired heading was: " + _heading);
+				Logger.log("Gyro reports a post-rotation angle of: " + gyro.getAngle());
+				Logger.log("Normalized voltage used on final approach was : " + vout);
 				isDegreeRotating = false; // we take the flag down
 				stop(); // we stop the motors
 			}
