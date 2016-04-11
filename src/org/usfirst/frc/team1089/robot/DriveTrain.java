@@ -134,9 +134,13 @@ public class DriveTrain {
 					Logger.log("DriveTrain.checkDegreeRotateVoltage: rotating (positive error)");
 					Logger.log("Desired heading is: " + _heading);
 					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
+					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+					if (gyro.getRate() < 10) { // only if we are slowly rotating
+						Logger.log("Turning rate below threshold.");
+						_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+					}
 					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
 					
 				}
@@ -150,9 +154,13 @@ public class DriveTrain {
 					Logger.log("DriveTrain.checkDegreeRotateVoltage: rotating (negative error)");
 					Logger.log("Desired heading is: " + _heading);
 					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
+					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+					if (gyro.getRate() < 10) { // only if we are slowly rotating
+						Logger.log("Turning rate below threshold.");
+						_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+					}
 					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
 				}
 			}
