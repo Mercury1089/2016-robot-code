@@ -186,6 +186,12 @@ public class Robot extends IterativeRobot {
 		debug();
 		
 		cBase.rumble(false);
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
+			Logger.log("Recalibrating and resetting gyro");
+			gyro.calibrate();
+			gyro.reset();
+		}
 	}
 
 	@Override
@@ -279,12 +285,6 @@ public class Robot extends IterativeRobot {
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.BACK)) {
 			Logger.log("INPUT: Reverse intake");
 			intake.moveBall(1.0); // push ball out
-		}
-		
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
-			Logger.log("Recalibrating and resetting gyro");
-			gyro.calibrate();
-			gyro.reset();
 		}
 
 		//makes controller rumble when the robot is able to take a shot
