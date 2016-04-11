@@ -33,6 +33,7 @@ public class DriveTrain {
 	private boolean isDegreeRotating = false; // indicates we are rotating
 													// (in gyro control mode)
 	private double _heading = 0.0; // heading when rotating
+	private long _heading_display_reset_time_ms = 0; // to log time 
 
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
 	private static final double TIER_2_DEGREES_FROM_TARGET = 12; //15;
@@ -125,11 +126,27 @@ public class DriveTrain {
 				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error-offset))));
 				vout = Math.pow(vout, BOOST);
 				speedRotate(vout); // we rotate until we are told otherwise
+				
+				if ((Calendar.getInstance().getTimeInMillis() - _heading_display_reset_time_ms) > 1000) {
+					Logger.log("DriveTrain.checkDegreeRotateVoltage: rotating (positive error)");
+					Logger.log("Desired heading is: " + _heading);
+					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
+					Logger.log("Normalized voltage currently at: " + vout);
+					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
+				}
 			}
 			else if (error < config.TURN_ANGLE_MIN_DEGREES) {
 				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+offset))));
 				vout = Math.pow(vout, BOOST);
 				speedRotate(vout); // we rotate until we are told otherwise
+				
+				if ((Calendar.getInstance().getTimeInMillis() - _heading_display_reset_time_ms) > 1000) {
+					Logger.log("DriveTrain.checkDegreeRotateVoltage: rotating (negative error)");
+					Logger.log("Desired heading is: " + _heading);
+					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
+					Logger.log("Normalized voltage currently at: " + vout);
+					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
+				}
 			}
 			else {
 				Logger.log("DriveTrain.checkDegreeRotateVoltage: done rotating");
@@ -318,6 +335,7 @@ public class DriveTrain {
 						// (but we could also save the start angle and subtract
 						// in check method)
 		_heading = heading; // we save where we want to go
+		_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
 	}
 	
 	/**
@@ -341,6 +359,7 @@ public class DriveTrain {
 						// (but we could also save the start angle and subtract
 						// in check method)
 		_heading = heading; // we save where we want to go
+		_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
 
 		//insert initial kick here if needed
 	}
