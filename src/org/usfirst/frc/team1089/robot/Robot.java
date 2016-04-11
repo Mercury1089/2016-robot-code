@@ -280,6 +280,12 @@ public class Robot extends IterativeRobot {
 			Logger.log("INPUT: Reverse intake");
 			intake.moveBall(1.0); // push ball out
 		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
+			Logger.log("Recalibrating and resetting gyro");
+			gyro.calibrate();
+			gyro.reset();
+		}
 
 		//makes controller rumble when the robot is able to take a shot
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
