@@ -37,7 +37,7 @@ public class DriveTrain {
 	private double _rotate_vmin_adjuster = 0.0; // to adjust vmin dynamically
 	private double starting_vmin = 0.36;
 	private static final double ROTATE_CHECK_PERIOD_MS = 1000;
-	private static final double _rotate_vmin_adjuster_increment = 0.01; // what we add to vmin 
+	private static final double ROTATE_VMIN_ADJUSTER_INCREMENT = 0.01; // what we add to vmin 
 	private static final double GYRO_RATE_MIN = 10;
 	
 	private static final double TIER_1_DEGREES_FROM_TARGET = 20;
@@ -141,7 +141,7 @@ public class DriveTrain {
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
 					if (gyro.getRate() < GYRO_RATE_MIN) { // only if we are slowly rotating
 						Logger.log("Turning rate below threshold.");
-						_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+						_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
 					}
 					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
 					
@@ -161,7 +161,7 @@ public class DriveTrain {
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
 					if (gyro.getRate() < GYRO_RATE_MIN) { // only if we are slowly rotating
 						Logger.log("Turning rate below threshold.");
-						_rotate_vmin_adjuster += _rotate_vmin_adjuster_increment;
+						_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
 					}
 					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
 				}
