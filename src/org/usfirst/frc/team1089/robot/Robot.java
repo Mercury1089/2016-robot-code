@@ -454,8 +454,9 @@ public class Robot extends IterativeRobot {
 				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), +1.0), 3) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
-
-		SmartDashboard.putNumber("VMIN", drive.getVMinTotal());
+		
+		SmartDashboard.putNumber("Starting VMIN", drive.getVMinStarting());
+		SmartDashboard.putNumber("Current VMIN", drive.getVMinTotal());
 		
 		// Accelerometer
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));

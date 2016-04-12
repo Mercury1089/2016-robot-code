@@ -53,6 +53,8 @@ public class DriveTrain {
 	private static final double MOVE_THRESH_TICKS = 500;
 	private static final double TURN_THRESH_VELOCITY = 10;
 	private static final long WAIT_MOVE_OR_ROTATE_TIMEOUT_MS = 15000;
+	private static final double MAX_VMIN_ADJUSTER = .34;
+	private static final double MIN_VMIN_ADJUSTER = -.3;
 	
 	private static DriverStation ds = DriverStation.getInstance();
 
@@ -510,16 +512,27 @@ public class DriveTrain {
 	}
 	
 	public void raiseVMinAdjuster() {
-		_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
+		if(_rotate_vmin_adjuster < MAX_VMIN_ADJUSTER) {
+			_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
+			Logger.log("Changed Rotate Vmin Adjuster to" + _rotate_vmin_adjuster);
+		}
 	}
 	
 	public void lowerVMinAdjuster() {
+		if(_rotate_vmin_adjuster > MIN_VMIN_ADJUSTER) {
 		  _rotate_vmin_adjuster -= ROTATE_VMIN_ADJUSTER_INCREMENT;
+		  Logger.log("Changed Rotate Vmin Adjuster to" + _rotate_vmin_adjuster);
+		}
 	}
 	
 	public double getVMinTotal() {
 		return vmin + _rotate_vmin_adjuster;
 	}
+	
+	public double getVMinStarting() {
+		return starting_vmin;
+	}
+	
 	/**
 	 * <pre>
 	 * public void tankDrive(Joystick leftStick,
