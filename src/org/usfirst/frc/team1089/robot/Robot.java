@@ -189,7 +189,7 @@ public class Robot extends IterativeRobot {
 		cBase.rumble(false);
 		
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
-			Logger.log("Recalibrating and resetting gyro");
+			Logger.log("INPUT: Recalibrate and reset gyro");
 			gyro.calibrate();
 			gyro.reset();
 		}
@@ -290,12 +290,12 @@ public class Robot extends IterativeRobot {
 		
 		//VMIN adjusters 
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
-			Logger.log("Raising VMIN .01");
+			Logger.log("INPUT: Raise VMIN");
 			drive.raiseVMinAdjuster();	
 		}
 		
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
-			Logger.log("Lowering VMIN by .01");
+			Logger.log("INPUT: Lower VMIN");
 			drive.lowerVMinAdjuster();	
 		}
 
