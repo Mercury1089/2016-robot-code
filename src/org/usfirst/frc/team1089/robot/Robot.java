@@ -287,6 +287,17 @@ public class Robot extends IterativeRobot {
 			Logger.log("INPUT: Reverse intake");
 			intake.moveBall(1.0); // push ball out
 		}
+		
+		//VMIN adjusters 
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+			Logger.log("Raising VMIN .01");
+			drive.raiseVMinAdjuster();	
+		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+			Logger.log("Lowering VMIN by .01");
+			drive.lowerVMinAdjuster();	
+		}
 
 		//makes controller rumble when the robot is able to take a shot
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
@@ -444,6 +455,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
 
+		SmartDashboard.putNumber("VMIN", drive.getVMinTotal());
+		
 		// Accelerometer
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
 		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 3));

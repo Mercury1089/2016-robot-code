@@ -59,7 +59,9 @@ public class DriveTrain {
 	//private int autoRotCounter = 0;
 	private Config config;
 	private MercEncoder mercEncoder;
-
+	
+	public double vmin; 
+	
 	/**
 	 * <pre>
 	 * public DriveTrain(CANTalon leftFront,
@@ -102,6 +104,7 @@ public class DriveTrain {
 		leftBackTalon.set(leftFrontTalon.getDeviceID());
 		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
+		vmin = Math.pow(starting_vmin + _rotate_vmin_adjuster, 1.0/301.0); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
 	}
 
 	/**
@@ -118,7 +121,7 @@ public class DriveTrain {
 		if (isDegreeRotating) { // only if we have been told to rotate
 			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
 			double vmax = Math.pow(0.7, 1.0/BOOST); // WAS 0.77 FOR OLD DRIVETRAIN, BUT CONSIDER REDUCING FURTHER (E.G. 0.67 IF KEEPING VMIN AS 0.27)
-			double vmin = Math.pow(starting_vmin + _rotate_vmin_adjuster, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
+			vmin = Math.pow(starting_vmin + _rotate_vmin_adjuster, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
 			double dmax = 45.0; // WAS 60.0 FOR OLD DRIVETRAIN - CONSIDER INCREASING A LITTLE (OR EVEN PUT 60 BACK TO MAKE IT EASIER TO TUNE)
 			double dmin = 0.0; // 5.0;
 			double error = _heading - gyro.getAngle();
@@ -139,9 +142,9 @@ public class DriveTrain {
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					if (gyro.getRate() < GYRO_RATE_MIN) { // only if we are slowly rotating
+					if (Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
 						Logger.log("Turning rate below threshold.");
-						_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
+						raiseVMinAdjuster();
 					}
 					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
 					
@@ -159,9 +162,9 @@ public class DriveTrain {
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					if (gyro.getRate() < GYRO_RATE_MIN) { // only if we are slowly rotating
+					if (Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
 						Logger.log("Turning rate below threshold.");
-						_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
+						raiseVMinAdjuster();
 					}
 					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
 				}
@@ -506,6 +509,17 @@ public class DriveTrain {
 		rightFrontTalon.set(0);
 	}
 	
+	public void raiseVMinAdjuster() {
+		_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
+	}
+	
+	public void lowerVMinAdjuster() {
+		  _rotate_vmin_adjuster -= ROTATE_VMIN_ADJUSTER_INCREMENT;
+	}
+	
+	public double getVMinTotal() {
+		return vmin + _rotate_vmin_adjuster;
+	}
 	/**
 	 * <pre>
 	 * public void tankDrive(Joystick leftStick,
