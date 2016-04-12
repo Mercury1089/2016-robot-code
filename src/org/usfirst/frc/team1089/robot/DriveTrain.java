@@ -35,8 +35,7 @@ public class DriveTrain {
 	private double _heading = 0.0; // heading when rotating
 	private long _heading_display_reset_time_ms = 0; // to log time 
 	private double _rotate_vmin_adjuster = 0.0; // to adjust vmin dynamically
-	private double starting_vmin = 0.36;
-	public double vmin;
+	private static final double STARTING_VMIN = 0.36;
 	long rotateStartMs;
 
 	private static final long ROTATE_INCREASE_DELAY_MS = 1000;
@@ -110,7 +109,6 @@ public class DriveTrain {
 		leftBackTalon.set(leftFrontTalon.getDeviceID());
 		rightBackTalon.set(rightFrontTalon.getDeviceID());
 		gyro = g;
-		vmin = Math.pow(starting_vmin + _rotate_vmin_adjuster, 1.0/301.0); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
 	}
 
 	/**
@@ -127,7 +125,7 @@ public class DriveTrain {
 		if (isDegreeRotating) { // only if we have been told to rotate
 			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
 			double vmax = Math.pow(0.7, 1.0/BOOST); // WAS 0.77 FOR OLD DRIVETRAIN, BUT CONSIDER REDUCING FURTHER (E.G. 0.67 IF KEEPING VMIN AS 0.27)
-			vmin = Math.pow(starting_vmin + _rotate_vmin_adjuster, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
+			double vmin = Math.pow(STARTING_VMIN + _rotate_vmin_adjuster, 1.0/BOOST); // WAS 0.37 FOR OLD DRIVETRAIN. MIGHT BE BORDERLINE TOO SMALL?
 			double dmax = 45.0; // WAS 60.0 FOR OLD DRIVETRAIN - CONSIDER INCREASING A LITTLE (OR EVEN PUT 60 BACK TO MAKE IT EASIER TO TUNE)
 			double dmin = 0.0; // 5.0;
 			double error = _heading - gyro.getAngle();
@@ -534,11 +532,11 @@ public class DriveTrain {
 	}
 	
 	public double getVMinTotal() {
-		return starting_vmin + _rotate_vmin_adjuster;
+		return STARTING_VMIN + _rotate_vmin_adjuster;
 	}
 	
 	public double getVMinStarting() {
-		return starting_vmin;
+		return STARTING_VMIN;
 	}
 	
 	/**
