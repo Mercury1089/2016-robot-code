@@ -65,7 +65,7 @@ public class DriveTrain {
 
 	//private int autoRotCounter = 0;
 	private Config config;
-	private MercEncoder mercEncoder;	
+	private MercEncoder mercEncoder;
 
 	/**
 	 * <pre>
@@ -145,14 +145,14 @@ public class DriveTrain {
 					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
+					Logger.log("Vmin adjuster is: " + _rotate_vmin_adjuster);
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					if ((System.currentTimeMillis() - rotateStartMs) > ROTATE_INCREASE_DELAY_MS && Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
-						Logger.log("Turning rate below threshold.");
-						rotateStartMs = System.currentTimeMillis();
-						raiseVMinAdjuster();
-					}
-					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
-					
+				}
+				
+				if ((System.currentTimeMillis() - rotateStartMs) > ROTATE_INCREASE_DELAY_MS && Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
+					Logger.log("Turning rate below threshold.");
+					rotateStartMs = System.currentTimeMillis();
+					raiseVMinAdjuster();
 				}
 			}
 			else if (error < config.TURN_ANGLE_MIN_DEGREES) {
@@ -166,13 +166,14 @@ public class DriveTrain {
 					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
-					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-					if ((System.currentTimeMillis() - rotateStartMs) > ROTATE_INCREASE_DELAY_MS && Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
-						Logger.log("Turning rate below threshold.");
-						rotateStartMs = System.currentTimeMillis();
-						raiseVMinAdjuster();
-					}
-					Logger.log("Vmin adjuster set to: " + _rotate_vmin_adjuster);
+					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();	
+					Logger.log("Vmin adjuster is: " + _rotate_vmin_adjuster);
+				}
+				
+				if ((System.currentTimeMillis() - rotateStartMs) > ROTATE_INCREASE_DELAY_MS && Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
+					Logger.log("Turning rate below threshold.");
+					rotateStartMs = System.currentTimeMillis();
+					raiseVMinAdjuster();
 				}
 			}
 			else {
@@ -520,14 +521,14 @@ public class DriveTrain {
 	public void raiseVMinAdjuster() {
 		if(_rotate_vmin_adjuster < MAX_VMIN_ADJUSTER) {
 			_rotate_vmin_adjuster += ROTATE_VMIN_ADJUSTER_INCREMENT;
-			Logger.log("Changed Rotate Vmin Adjuster to" + _rotate_vmin_adjuster);
+			Logger.log("Changed (raised) Rotate Vmin Adjuster to " + _rotate_vmin_adjuster);
 		}
 	}
 	
 	public void lowerVMinAdjuster() {
 		if(_rotate_vmin_adjuster > MIN_VMIN_ADJUSTER) {
 		  _rotate_vmin_adjuster -= ROTATE_VMIN_ADJUSTER_INCREMENT;
-		  Logger.log("Changed Rotate Vmin Adjuster to" + _rotate_vmin_adjuster);
+		  Logger.log("Changed (lowered) Rotate Vmin Adjuster to " + _rotate_vmin_adjuster);
 		}
 	}
 	
