@@ -183,8 +183,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledPeriodic() {
 		camera.getNTInfo(false);
+		
 		cBase.update(); 
-		debug();
 		
 		cBase.rumble(false);
 		
@@ -193,6 +193,19 @@ public class Robot extends IterativeRobot {
 			gyro.calibrate();
 			gyro.reset();
 		}
+		
+		//VMIN adjusters 
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+			Logger.log("INPUT: Raise VMIN");
+			drive.raiseVMinAdjuster();	
+		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+			Logger.log("INPUT: Lower VMIN");
+			drive.lowerVMinAdjuster();	
+		}
+		
+		debug();
 	}
 
 	@Override
@@ -310,7 +323,6 @@ public class Robot extends IterativeRobot {
 		while(drive.checkDegreeRotateVoltage()) {
 			Timer.delay(0.1);
 		}*/
-		
 		
 		debug();
 	}
