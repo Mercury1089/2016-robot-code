@@ -195,14 +195,19 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//VMIN adjusters 
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
 			Logger.log("INPUT: Raise VMIN");
 			drive.raiseVMinAdjuster();	
 		}
 		
-		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
 			Logger.log("INPUT: Lower VMIN");
 			drive.lowerVMinAdjuster();	
+		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+			Logger.log("INPUT: Reset VMIN");
+			drive.resetVMinAdjuster();	
 		}
 		
 		debug();
