@@ -150,7 +150,11 @@ public class DriveTrain {
 				}
 				
 				if ((System.currentTimeMillis() - rotateStartMs) > ROTATE_INCREASE_DELAY_MS && Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
-					Logger.log("Turning rate below threshold.");
+					Logger.log("DriveTrain.checkDegreeRotateVoltage: Turning rate below threshold.");
+					Logger.log("Desired heading is: " + _heading);
+					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
+					Logger.log("Gyro reports a rate of: " + gyro.getRate());
+					Logger.log("Normalized voltage currently at: " + vout);
 					rotateStartMs = System.currentTimeMillis();
 					raiseVMinAdjuster();
 				}
@@ -171,7 +175,11 @@ public class DriveTrain {
 				}
 				
 				if ((System.currentTimeMillis() - rotateStartMs) > ROTATE_INCREASE_DELAY_MS && Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
-					Logger.log("Turning rate below threshold.");
+					Logger.log("DriveTrain.checkDegreeRotateVoltage: Turning rate below threshold.");
+					Logger.log("Desired heading is: " + _heading);
+					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
+					Logger.log("Gyro reports a rate of: " + gyro.getRate());
+					Logger.log("Normalized voltage currently at: " + vout);
 					rotateStartMs = System.currentTimeMillis();
 					raiseVMinAdjuster();
 				}
@@ -180,7 +188,9 @@ public class DriveTrain {
 				Logger.log("DriveTrain.checkDegreeRotateVoltage: done rotating");
 				Logger.log("Desired heading was: " + _heading);
 				Logger.log("Gyro reports a post-rotation angle of: " + gyro.getAngle());
+				Logger.log("Gyro reports a post-rotation rate of: " + gyro.getRate());
 				Logger.log("Normalized voltage used on final approach was : " + vout);
+				Logger.log("Vmin adjuster is: " + _rotate_vmin_adjuster);
 				isDegreeRotating = false; // we take the flag down
 				stop(); // we stop the motors
 			}
