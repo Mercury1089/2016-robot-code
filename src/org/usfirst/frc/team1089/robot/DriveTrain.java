@@ -534,7 +534,7 @@ public class DriveTrain {
 	
 	public void resetVMinAdjuster() {
 		_rotate_vmin_adjuster = 0;
-		Logger.log("Changed (lowered) Rotate Vmin Adjuster to " + _rotate_vmin_adjuster);
+		Logger.log("Changed (reset) Rotate Vmin Adjuster to " + _rotate_vmin_adjuster);
 	}
 	
 	public double getVMinTotal() {
