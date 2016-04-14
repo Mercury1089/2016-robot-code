@@ -1,7 +1,16 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Current VMIN" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="987" y="191"/>
+		<width>155</width>
+		<property name="Background" value="255.153.51.255"/>
+		<property name="Font Size" value="18"/>
+	</widget>
+	<widget field="Starting VMIN" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1150" y="231"/>
+	</widget>
 	<widget field="Press" type="String" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
-		<location x="1025" y="229"/>
+		<location x="1025" y="227"/>
 		<width>115</width>
 		<height>37</height>
 		<property name="Background" value="255.204.153.255"/>
@@ -101,7 +110,7 @@
 		<location x="992" y="337"/>
 	</widget>
 	<widget field="Gyro" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1172" y="192"/>
+		<location x="1176" y="193"/>
 	</widget>
 	<widget field="Horizontal Distance: " type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1107" y="108"/>
@@ -136,11 +145,6 @@
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="639" y="409"/>
-	</static-widget>
-	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
-		<location x="6" y="3"/>
-		<width>615</width>
-		<height>444</height>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
 		<location x="632" y="443"/>
