@@ -539,8 +539,14 @@ public class Robot extends IterativeRobot {
 	 */
 	
 	public double calculateProperTurnAngle(double cameraTurnAngle, double cameraHorizontalDist) {
-		final double OFFSET_BETWEEN_CAMERA_AND_ROTATION_CENTER_FEET = 0.5; // feet
-		double dist = cameraHorizontalDist * Math.cos(Math.toRadians(cameraTurnAngle));
-		return Math.toDegrees(Math.atan(Math.tan(Math.toRadians(cameraTurnAngle))*dist/(dist + OFFSET_BETWEEN_CAMERA_AND_ROTATION_CENTER_FEET)));
+		try {
+			final double OFFSET_BETWEEN_CAMERA_AND_ROTATION_CENTER_FEET = 0.5; // feet
+			double dist = cameraHorizontalDist * Math.cos(Math.toRadians(cameraTurnAngle));
+			return Math.toDegrees(Math.atan(Math.tan(Math.toRadians(cameraTurnAngle)) * dist
+					/ (dist + OFFSET_BETWEEN_CAMERA_AND_ROTATION_CENTER_FEET)));
+		} catch (Exception e) {
+			Logger.log("Exception in proper turn angle calculation" + e.toString());
+			return 0;
+		}
 	}
 }
