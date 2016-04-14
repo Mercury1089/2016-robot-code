@@ -63,15 +63,16 @@ public class Robot extends IterativeRobot {
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new SingleSolShooter();
-		compressor = new Compressor();
-		compressor.checkCompressor();
-
-		mercEncoder = new MercEncoder();
-
-		// Set up gyro
+		
+		// Set up gyro - we do this before starting the compressor so that calibration is not affected by vibrations
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
 		gyro.reset();
 		gyro.setSensitivity((1.1 * 5 / 3.38) / 1000); // TODO Add Constants
+		
+		compressor = new Compressor();
+		compressor.checkCompressor();
+
+		mercEncoder = new MercEncoder();	
 
 		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
 		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
@@ -182,9 +183,34 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledPeriodic() {
 		camera.getNTInfo(false);
-		debug();
+		
+		cBase.update(); 
 		
 		cBase.rumble(false);
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.START)) {
+			Logger.log("INPUT: Recalibrate and reset gyro");
+			gyro.calibrate();
+			gyro.reset();
+		}
+		
+		//VMIN adjusters 
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
+			Logger.log("INPUT: Raise VMIN");
+			drive.raiseVMinAdjuster();	
+		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+			Logger.log("INPUT: Lower VMIN");
+			drive.lowerVMinAdjuster();	
+		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+			Logger.log("INPUT: Reset VMIN");
+			drive.resetVMinAdjuster();	
+		}
+		
+		debug();
 	}
 
 	@Override
@@ -221,8 +247,12 @@ public class Robot extends IterativeRobot {
 		// Aims at target / initiates asynchronous shooting sequence
 		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.LB)) {
 			Logger.log("INPUT: Aim and shoot");
-			Logger.log("SHOT!!!");
-			aimProc(); // aims at the target / initiates asynchronous shooting sequence
+			if (!isShooting) {
+				Logger.log("SHOT!!!");
+				aimProc(); // aims at the target / initiates asynchronous shooting sequence
+			} else {
+				Logger.log("A shooting sequence is already in progress. Declining order.");
+			}
 		}
 
 		// TODO maybe here we should always use AimEnum.HIGH because using a Auton setting in teleop is dangerous 
@@ -275,6 +305,22 @@ public class Robot extends IterativeRobot {
 			Logger.log("INPUT: Reverse intake");
 			intake.moveBall(1.0); // push ball out
 		}
+		
+		//VMIN adjusters 
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.B)) {
+			Logger.log("INPUT: Raise VMIN");
+			drive.raiseVMinAdjuster();	
+		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.X)) {
+			Logger.log("INPUT: Lower VMIN");
+			drive.lowerVMinAdjuster();	
+		}
+		
+		if (getPressedDown(ControllerBase.Joysticks.GAMEPAD, ControllerBase.GamepadButtons.A)) {
+			Logger.log("INPUT: Reset VMIN");
+			drive.resetVMinAdjuster();	
+		}
 
 		//makes controller rumble when the robot is able to take a shot
 		if (camera.isInDistance() && camera.isInLineWithGoal()) {
@@ -287,7 +333,6 @@ public class Robot extends IterativeRobot {
 		while(drive.checkDegreeRotateVoltage()) {
 			Timer.delay(0.1);
 		}*/
-		
 		
 		debug();
 	}
@@ -365,7 +410,7 @@ public class Robot extends IterativeRobot {
 				Logger.log("SHOOTING: Camera Horizontal Distance: " + Utilities.round(camera.getHorizontalDist(), 3) + " ft.");
 				Logger.log("SHOOTING: Camera Opening Width: " + Utilities.round(camera.getOpeningWidth(), 3) + " in.");
 				Logger.log("SHOOTING: Camera Turn Angle: " + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
-				Logger.log("SHOOTING: Accel Tilt" + Utilities.round(accel.getTilt(), 3) + " deg.");
+				Logger.log("SHOOTING: Accel Tilt: " + Utilities.round(accel.getTilt(), 3) + " deg.");
 				Logger.log("SHOOTING: Is flat: " + accel.isFlat());
 				Logger.log("SHOOTING: Pressure: " + Utilities.round(compressor.getPressurePSI(), 3) + " PSI");
 				Logger.log("SHOOTING: Is enough pressure: " + compressor.isInShotPressure());
@@ -376,9 +421,11 @@ public class Robot extends IterativeRobot {
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				shootingAttemptCounter++;
 				Logger.log("Robot.shootProc: not in turn angle, will try again");
+				Logger.log("... because Camera Turn Angle is still " + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 			} else {
 				isShooting = false; 
 				Logger.log("Robot.shootProc: gave up trying");
+				Logger.log("... because Camera Turn Angle is still " + Utilities.round(camera.getTurnAngle(), 3) + " deg.");
 			}
 		}
 	}
@@ -429,7 +476,10 @@ public class Robot extends IterativeRobot {
 				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), +1.0), 3) + " ft.");
 		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
 		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
-
+		
+		SmartDashboard.putNumber("Starting VMIN", drive.getVMinStarting());
+		SmartDashboard.putNumber("Current VMIN", drive.getVMinTotal());
+		
 		// Accelerometer
 		SmartDashboard.putNumber("Accel Z", Utilities.round(accel.getAccelZ(), 3));
 		SmartDashboard.putNumber("Accel Tilt", Utilities.round(accel.getTilt(), 3));
@@ -457,6 +507,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is enough pressure", compressor.isInShotPressure());
 	}
 	
+	/**
+	 * Logs team and alliance info
+	 */
 	public void logTeamAndAllianceInfo() {
 		if (driverStation != null) {
 			Logger.log("TEAM Location: " + driverStation.getLocation());
@@ -471,5 +524,19 @@ public class Robot extends IterativeRobot {
 				Logger.log("CONFIG: " + config.toString());
 			}
 		}				
+	}
+	
+	/**
+	 * Calculate the proper turn angle in degrees taking into account that the camera is in front of the rotation center.
+	 * 
+	 * @param cameraTurnAngle camera turn angle in degrees
+	 * @param cameraHorizontalDist camera horizontal distance in feet
+	 * @return proper turn angle in degrees
+	 */
+	
+	public double calculateProperTurnAngle(double cameraTurnAngle, double cameraHorizontalDist) {
+		final double OFFSET_BETWEEN_CAMERA_AND_ROTATION_CENTER_FEET = 0.5; // feet
+		double dist = cameraHorizontalDist * Math.cos(Math.toRadians(cameraTurnAngle));
+		return Math.toDegrees(Math.atan(Math.tan(Math.toRadians(cameraTurnAngle))*dist/(dist + OFFSET_BETWEEN_CAMERA_AND_ROTATION_CENTER_FEET)));
 	}
 }
