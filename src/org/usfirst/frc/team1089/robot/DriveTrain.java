@@ -376,7 +376,7 @@ public class DriveTrain {
 						// in check method)
 		_heading = heading; // we save where we want to go
 		_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
-		_rotate_vmin_adjuster = 0.0;
+		//_rotate_vmin_adjuster = 0.0; // we keep the value of multiple rotations
 	}
 	
 	/**
