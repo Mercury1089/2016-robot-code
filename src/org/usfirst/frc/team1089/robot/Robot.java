@@ -62,7 +62,7 @@ public class Robot extends IterativeRobot {
 				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
-		shooter = new SingleSolShooter();
+		shooter = new DoubleSolShooter();
 		
 		// Set up gyro - we do this before starting the compressor so that calibration is not affected by vibrations
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
@@ -365,6 +365,8 @@ public class Robot extends IterativeRobot {
 			}				// waits for shooter to get in position
 			isShooting = true;
 			turnAngle = camera.getTurnAngle();
+			Logger.log("Original Camera Turn Angle: " + turnAngle);
+			Logger.log("Corrected Camera Turn Angle (unused angle): " + this.calculateProperTurnAngle(turnAngle, camera.getHorizontalDist())); //unused angle
 			drive.degreeRotateVoltage(turnAngle);
 			Logger.log("Robot.aimProc: shooting sequence started. Good luck.");
 			Logger.log("Turning " + turnAngle + " degrees");
@@ -418,6 +420,8 @@ public class Robot extends IterativeRobot {
 				shooter.shoot();
 				Logger.log("Robot.shootProc: shot made!");
 			} else if (shootingAttemptCounter < MAX_SHOOTING_ATTEMPT) {
+				Logger.log("Original Camera Turn Angle: " + camera.getTurnAngle());
+				Logger.log("Corrected Camera Turn Angle (unused angle): " + this.calculateProperTurnAngle(camera.getTurnAngle(), camera.getHorizontalDist())); //unused angle
 				drive.degreeRotateVoltage(camera.getTurnAngle());
 				shootingAttemptCounter++;
 				Logger.log("Robot.shootProc: not in turn angle, will try again");
