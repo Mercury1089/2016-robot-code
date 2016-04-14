@@ -62,7 +62,7 @@ public class Robot extends IterativeRobot {
 				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
-		shooter = new Shooter();
+		shooter = new SingleSolShooter();
 		compressor = new Compressor();
 		compressor.checkCompressor();
 
