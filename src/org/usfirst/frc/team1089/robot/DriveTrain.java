@@ -146,6 +146,7 @@ public class DriveTrain {
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
 					Logger.log("Vmin adjuster is: " + _rotate_vmin_adjuster);
+					Logger.log("The current battery voltage: " + ds.getBatteryVoltage());
 					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();
 				}
 				
@@ -170,8 +171,9 @@ public class DriveTrain {
 					Logger.log("Gyro reports an angle of: " + gyro.getAngle());
 					Logger.log("Gyro reports a rate of: " + gyro.getRate());
 					Logger.log("Normalized voltage currently at: " + vout);
-					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();	
 					Logger.log("Vmin adjuster is: " + _rotate_vmin_adjuster);
+					Logger.log("The current battery voltage: " + ds.getBatteryVoltage());
+					_heading_display_reset_time_ms = Calendar.getInstance().getTimeInMillis();	
 				}
 				
 				if ((System.currentTimeMillis() - rotateStartMs) > ROTATE_INCREASE_DELAY_MS && Math.abs(gyro.getRate()) < GYRO_RATE_MIN) { // only if we are slowly rotating
