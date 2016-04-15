@@ -48,6 +48,8 @@ public class Robot extends IterativeRobot {
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
+	private PowerLogger pl;
+	
 	public void resetAll(){
 		isShooting = false;
 		isInAuton = false;
@@ -63,6 +65,9 @@ public class Robot extends IterativeRobot {
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
 		shooter = new DoubleSolShooter();
+		//Power Logger
+		pl = new PowerLogger();
+		pl.start();
 		
 		// Set up gyro - we do this before starting the compressor so that calibration is not affected by vibrations
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
