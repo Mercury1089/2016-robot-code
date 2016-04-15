@@ -64,7 +64,7 @@ public class Defense{
 			case ROCK_WALL: {
 				Logger.log("Defense ROCK_WALL/ROUGH_TERRAIN in");
 				shooter.raise(Shooter.MEDIUM);
-				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROCK_WALL + AFTER_DEFENSE_FEET, 0.4, 0, 0, 8.0); 
+				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROCK_WALL + AFTER_DEFENSE_FEET, 0.4, 0, 0, 10.0); 
 				drive.waitMove();		// full speed
 				Logger.log("Defense ROCK_WALL/ROUGH_TERRAIN out");
 				break;
