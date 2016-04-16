@@ -91,8 +91,8 @@ public class Config {
             // need to match size used in GRIP
 			HORIZONTAL_CAMERA_RES_PIXELS = 320;
 			
-			TURN_ANGLE_MIN_DEGREES = -1.0;
-			TURN_ANGLE_MAX_DEGREES = 1.0;
+			TURN_ANGLE_MIN_DEGREES = -.7;
+			TURN_ANGLE_MAX_DEGREES = .7;
 			IN_LINE_MIN = 1.2;
 			HORIZ_DIST_MIN_FEET = 7.0;
 			HORIZ_DIST_MAX_FEET = 14.0;
