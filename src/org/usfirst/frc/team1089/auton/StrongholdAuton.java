@@ -238,6 +238,12 @@ public class StrongholdAuton {
 						drive.waitDegreeRotateVoltage();
 						Logger.log("Auton STRAIGHTEN straightened using gyro");
 					}
+					else if (pos == PosEnum.POS1) {
+						Logger.log("Auton STRAIGHTEN about to straighten using gyro");
+						drive.degreeRotateVoltage(-gyro.getAngle() + 5.0); // Assume gyro has been reset to zero before breaching
+						drive.waitDegreeRotateVoltage();
+						Logger.log("Auton STRAIGHTEN straightened using gyro");
+					}
 					state++;
 					Logger.log("Auton STRAIGHTEN FINISHED");
 				}
