@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
-	private PowerLogger pl;
+	//private PowerLogger pl;
 	
 	public void resetAll(){
 		isShooting = false;
