@@ -15,8 +15,8 @@ public class Defense{
 	
 					BEFORE_DEFENSE_FEET = 3, // the robot is 38-inch long with the bumper. With 2 inches above the line we are 3 feet away from defense.
 					THROUGH_DEFENSE_FEET = 4, // defenses are 4 feet by definition
-					INITIAL_CDF_FEET = 3.5, // cheval de frise
-					REMAINING_CDF_FEET = 3.5, // cheval de frise
+					INITIAL_CDF_FEET = 4.5, // cheval de frise			testing to be changed
+					REMAINING_CDF_FEET = 3.25, // cheval de frise
 					INITIAL_PORTCULLIS_FEET = 3, // Portcullis = same as CDF
 					REMAINING_PORTCULLIS_FEET = 4, // Portcullis = same as CDF
 					CORE_AFTER_DEFENSE = 3, // what we need to clear the defense (so the back of the robot goes back the defense)
@@ -75,8 +75,10 @@ public class Defense{
 				drive.moveDistance(INITIAL_CDF_FEET, 0.4, 0, 0, 4.5);
 				drive.waitMove();
 				shooter.raise(Shooter.DOWN);
+				drive.moveDistance(0.5, 0.4, 0.0, 0.0, 4.5);
+				drive.waitMove();
 				Timer.delay(1);
-				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 4.5); 
+				drive.moveDistance(REMAINING_CDF_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 6.0); 
 				drive.waitMove();
 				Logger.log("Defense CHEVAL_DE_FRISE out");
 				break;

@@ -66,8 +66,8 @@ public class Robot extends IterativeRobot {
 		accel = new MercAccelerometer();
 		shooter = new DoubleSolShooter();
 		//Power Logger
-		pl = new PowerLogger();
-		pl.start();
+		//pl = new PowerLogger();
+		//pl.start();
 		
 		// Set up gyro - we do this before starting the compressor so that calibration is not affected by vibrations
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
