@@ -2,6 +2,7 @@ package org.usfirst.frc.team1089.auton;
 
 
 import org.usfirst.frc.team1089.robot.Camera;
+import org.usfirst.frc.team1089.robot.Config;
 import org.usfirst.frc.team1089.robot.DriveTrain;
 import org.usfirst.frc.team1089.robot.Intake;
 import org.usfirst.frc.team1089.robot.Logger;
@@ -19,6 +20,8 @@ import edu.wpi.first.wpilibj.AnalogGyro;
  */
 public class StrongholdAuton {
 	// states of auton
+	private Config config;
+	
 	private static final int START = 0, BREACH = 1, STRAIGHTEN = 2,
 								MOVE1 = 3, ROTATE1 = 4,
 								CALCULATE = 5, MOVE2 = 6, AIM = 7, SHOOT = 8, 
@@ -115,6 +118,7 @@ public class StrongholdAuton {
 	 */
 	public StrongholdAuton(DriveTrain d, Camera c, Shooter s, Intake i, AnalogGyro g, PosEnum p,
 							AimEnum a, DefenseEnum dE, MercAccelerometer ac, Robot r) {
+		config = Config.getInstance();
 		drive = d;
 		camera = c;
 		pos = p;
@@ -658,7 +662,7 @@ public class StrongholdAuton {
 					Logger.log("Auton AIM started aim proc");
 				}
 				
-				if(!drive.checkDegreeRotateVoltage()) {
+				if(!drive.checkDegreeRotateVoltage(config.TURN_ANGLE_MIN_DEGREES, config.TURN_ANGLE_MAX_DEGREES)) {
 					state++;
 					Logger.log("Auton AIM FINISHED ");
 				}

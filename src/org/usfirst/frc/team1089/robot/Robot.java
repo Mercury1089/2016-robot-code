@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
-	//private PowerLogger pl;
+	private PowerLogger pl;
 	
 	public void resetAll(){
 		isShooting = false;
@@ -66,8 +66,8 @@ public class Robot extends IterativeRobot {
 		accel = new MercAccelerometer();
 		shooter = new SingleSolShooter();
 		//Power Logger
-		//pl = new PowerLogger();
-		//pl.start();
+		pl = new PowerLogger();
+		pl.start();
 		
 		// Set up gyro - we do this before starting the compressor so that calibration is not affected by vibrations
 		gyro = new AnalogGyro(Ports.Analog.GYRO);
@@ -391,7 +391,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void shootProc(AimEnum aim) {
 		double recenteredMoveDistance;
-		if (!drive.checkDegreeRotateVoltage() && isShooting) { 
+		if (!drive.checkDegreeRotateVoltage(config.TURN_ANGLE_MIN_DEGREES, config.TURN_ANGLE_MAX_DEGREES) && isShooting) { 
 			Logger.log("Robot.shootProc: done rotating, shooting sequence continuing");
 			camera.getNTInfo(true);
 

@@ -121,7 +121,7 @@ public class DriveTrain {
 	 * @return true if the robot is rotating, false
 	 *         if otherwise.
 	 */ 
-	public boolean checkDegreeRotateVoltage() {
+	public boolean checkDegreeRotateVoltage(double turnAngleThreshMin, double turnAngleThreshMax) {
 		if (isDegreeRotating) { // only if we have been told to rotate
 			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
 			double vmax = Math.pow(0.7, 1.0/BOOST); // WAS 0.77 FOR OLD DRIVETRAIN, BUT CONSIDER REDUCING FURTHER (E.G. 0.67 IF KEEPING VMIN AS 0.27)
@@ -134,7 +134,7 @@ public class DriveTrain {
 			double vout = 0;
 			double offset = 0; // 5
 
-			if (error > config.TURN_ANGLE_MAX_DEGREES) {
+			if (error > turnAngleThreshMax) {
 				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error-offset))));
 				vout = Math.pow(vout, BOOST);
 				speedRotate(vout); // we rotate until we are told otherwise
@@ -160,7 +160,7 @@ public class DriveTrain {
 					raiseVMinAdjuster();
 				}
 			}
-			else if (error < config.TURN_ANGLE_MIN_DEGREES) {
+			else if (error < turnAngleThreshMin) {
 				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+offset))));
 				vout = Math.pow(vout, BOOST);
 				speedRotate(vout); // we rotate until we are told otherwise
@@ -601,7 +601,7 @@ public class DriveTrain {
 	public void waitDegreeRotateVoltage() {
 		long start = Calendar.getInstance().getTimeInMillis();
 		// Assumes we only use in Auton
-		while (checkDegreeRotateVoltage()) {
+		while (checkDegreeRotateVoltage(config.COARSE_TURN_ANGLE_MIN_DEGREES, config.COARSE_TURN_ANGLE_MAX_DEGREES)) {
 			if(!ds.isAutonomous() || (Calendar.getInstance().getTimeInMillis()  - start) >= WAIT_MOVE_OR_ROTATE_TIMEOUT_MS) {
 				Logger.log("DriveTrain.waitDegreeRotateVoltage: TIMEOUT!");
 				stop(); // we stop everything

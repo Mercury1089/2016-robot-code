@@ -9,7 +9,7 @@ public class PowerLogger extends TimerTask{
 	private PowerDistributionPanel pdp;
 	
 	public PowerLogger() {
-		pdp = new PowerDistributionPanel();
+		pdp = new PowerDistributionPanel(5);
 	}
 	
 	public void start() {

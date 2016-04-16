@@ -10,6 +10,8 @@ public class Config {
 	public final double HORIZONTAL_CAMERA_RES_PIXELS;
 	public final double TURN_ANGLE_MIN_DEGREES;
 	public final double TURN_ANGLE_MAX_DEGREES;
+	public final double COARSE_TURN_ANGLE_MIN_DEGREES;
+	public final double COARSE_TURN_ANGLE_MAX_DEGREES;
 	public final double IN_LINE_MIN;
 	public final double HORIZ_DIST_MIN_FEET;
 	public final double HORIZ_DIST_MAX_FEET;
@@ -66,6 +68,8 @@ public class Config {
 			
 			TURN_ANGLE_MIN_DEGREES = -1.0;
 			TURN_ANGLE_MAX_DEGREES = 1.0;
+			COARSE_TURN_ANGLE_MIN_DEGREES = -2.0;
+			COARSE_TURN_ANGLE_MAX_DEGREES = 2.0;
 			IN_LINE_MIN = 1.2;
 			HORIZ_DIST_MIN_FEET = 7.0;
 			HORIZ_DIST_MAX_FEET = 11.0;
@@ -93,6 +97,8 @@ public class Config {
 			
 			TURN_ANGLE_MIN_DEGREES = -.7;
 			TURN_ANGLE_MAX_DEGREES = .7;
+			COARSE_TURN_ANGLE_MIN_DEGREES = -2.0;
+			COARSE_TURN_ANGLE_MAX_DEGREES = 2.0;
 			IN_LINE_MIN = 1.2;
 			HORIZ_DIST_MIN_FEET = 7.0;
 			HORIZ_DIST_MAX_FEET = 14.0;
