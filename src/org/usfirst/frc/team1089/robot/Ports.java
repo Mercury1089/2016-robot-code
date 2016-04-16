@@ -57,7 +57,7 @@ public class Ports {
 	 * The {@code PCM} subclass contains all the ports for anything connected to the pneumatics control module (PCM).
 	 */
 	public static class PCM {
-		public static final int SINGLE_SHOOTER = 0;
+		public static final int SINGLE_SHOOTER = 7;
 		public static final int DOUBLE_SHOOTER_FORWARD = 0;
 		public static final int DOUBLE_SHOOTER_REVERSE = 7;
 		public static final int SHOOTER_ELEVATOR_LOW_FORWARD = 4;
