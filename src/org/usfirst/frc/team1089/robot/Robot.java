@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot {
 				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
-		shooter = new DoubleSolShooter();
+		shooter = new SingleSolShooter();
 		//Power Logger
 		//pl = new PowerLogger();
 		//pl.start();
