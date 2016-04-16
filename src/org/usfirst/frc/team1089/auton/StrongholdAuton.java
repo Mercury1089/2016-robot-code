@@ -63,14 +63,14 @@ public class StrongholdAuton {
 						ROTATE_POST_DEFENSE_P5_DEGREES_SECRET_PATH = -60;
 	
 	// maximum optimal shooting distances
-	private static double SHOOT_DISTANCE_P1_P3_P4_FEET = 9, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
+	private static double SHOOT_DISTANCE_P1_P3_P4_FEET = 10, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P2_FEET_LEFT_PATH = 5,	// shooting from left, short shot
-					SHOOT_DISTANCE_P2_FEET_CENTER_PATH = 9,	//shooting from center, long shot 
+					SHOOT_DISTANCE_P2_FEET_CENTER_PATH = 10,	//shooting from center, long shot 
 					/*SHOOT_DISTANCE_P3_FEET = 11,
 					SHOOT_DISTANCE_P4_FEET = 11,*/ 
 					SHOOT_DISTANCE_P5_FEET_RIGHT_PATH = 5, // maximum distance for short shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P5_FEET_HAILMARY_PATH = 10,	//value not decided, can be changed later
-					SHOOT_DISTANCE_P5_FEET_SECRET_PATH = 9, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
+					SHOOT_DISTANCE_P5_FEET_SECRET_PATH = 10, // maximum distance for long shot (farthest optimal distance) - need to be within shooting range!
 					SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH = 8.75, //minimum distance 
 					SHOOT_DISTANCE_P2_FEET_BACKWARD_PATH = 9;
 	
