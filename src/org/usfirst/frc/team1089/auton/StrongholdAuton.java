@@ -661,6 +661,9 @@ public class StrongholdAuton {
 				break;
 			}
 			case AIM: {// Aim
+				drive.resetVMinAdjuster();	// we reset the vmin adjuster so that we don't risk it being too high
+											// (e.g. if we got stuck rotating in a prior step) 
+				
 				if (centerAttempts == 0) {
 					Logger.log("Auton AIM about to start aim proc");
 					robot.aimProc();
