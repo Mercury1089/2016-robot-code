@@ -443,6 +443,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS1, POS3 or POS4");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -457,6 +458,7 @@ public class StrongholdAuton {
 							else {
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS1, POS3 or POS4");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 						}
 						break;
@@ -465,6 +467,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_CENTER_PATH");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -479,6 +482,7 @@ public class StrongholdAuton {
 							else {
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_CENTER_PATH");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 						}
 						break;
@@ -487,6 +491,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_LEFT_PATH");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -501,6 +506,7 @@ public class StrongholdAuton {
 							else {
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS2_LEFT_PATH");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 						}
 						break;
@@ -509,6 +515,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_BACKWARD_PATH");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							centeredMoveDistance = camera.getHorizontalDist() - SHOOT_DISTANCE_P2_FEET_BACKWARD_PATH;
@@ -518,6 +525,7 @@ public class StrongholdAuton {
 								//if we have to move too much - something must have gone wrong
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_BACKWARD_PATH");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 							
 							if (centeredMoveDistance < PERFECT_ALIGNMENT){		
@@ -545,6 +553,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_HAIL_MARY");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -560,6 +569,7 @@ public class StrongholdAuton {
 							else {
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_HAIL_MARY");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 						}
 						break;
@@ -568,6 +578,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							centeredMoveDistance = camera.getHorizontalDist() - SHOOT_DISTANCE_P5_FEET_BACKWARD_PATH;
@@ -577,6 +588,7 @@ public class StrongholdAuton {
 								//if we have to move too much - something must have gone wrong
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 							
 							if (centeredMoveDistance < PERFECT_ALIGNMENT){		
@@ -604,6 +616,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_RIGHT_PATH");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -618,6 +631,7 @@ public class StrongholdAuton {
 							else {
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_RIGHT_PATH");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 						}
 						break;
@@ -627,6 +641,7 @@ public class StrongholdAuton {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
 							state = DONE;
 							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET/CENTER_PATH");
+							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
 							//Assume we are looking at the correct goal
@@ -641,6 +656,7 @@ public class StrongholdAuton {
 							else {
 								state = DONE;
 								Logger.log("Auton CALCULATE FINISHED (abnormal centered move distance) PosEnum.POS5_SECRET/CENTER_PATH");
+								Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 							}
 						}
 						break;
