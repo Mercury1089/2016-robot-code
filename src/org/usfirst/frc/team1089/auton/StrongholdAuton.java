@@ -441,8 +441,8 @@ public class StrongholdAuton {
 					case POS3: 
 					case POS4: {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS1, POS3 or POS4");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS1, POS3 or POS4");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
@@ -465,8 +465,8 @@ public class StrongholdAuton {
 					}
 					case POS2_CENTER_PATH: {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_CENTER_PATH");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS2_CENTER_PATH");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
@@ -489,8 +489,8 @@ public class StrongholdAuton {
 					}
 					case POS2_LEFT_PATH: {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_LEFT_PATH");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS2_LEFT_PATH");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
@@ -513,8 +513,8 @@ public class StrongholdAuton {
 					}
 					case POS2_BACKWARD_PATH: {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS2_BACKWARD_PATH");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS2_BACKWARD_PATH");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
@@ -551,8 +551,8 @@ public class StrongholdAuton {
 					}
 					case POS5_HAILMARY: {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_HAIL_MARY");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS5_HAIL_MARY");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
@@ -576,8 +576,8 @@ public class StrongholdAuton {
 					}	
 					case POS5_BACKWARD_PATH: {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS5_BACKWARD_PATH");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
@@ -614,8 +614,8 @@ public class StrongholdAuton {
 					}
 					case POS5_RIGHT_PATH: {
 						if (camera.getHorizontalDist() > MAX_CLOSE_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_CLOSE_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_RIGHT_PATH");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS5_RIGHT_PATH");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
@@ -639,8 +639,8 @@ public class StrongholdAuton {
 					case POS5_CENTER_PATH: 
 					case POS5_SECRET_PATH: {
 						if (camera.getHorizontalDist() > MAX_DISTANCE_TO_GOAL_FEET || camera.getHorizontalDist() < MIN_DISTANCE_TO_GOAL_FEET){
-							state = DONE;
-							Logger.log("Auton CALCULATE FINISHED (abnormal horizontal distance) PosEnum.POS5_SECRET/CENTER_PATH");
+							state = CALCULATE;
+							Logger.log("Auton CALCULATE RETRY (abnormal horizontal distance) PosEnum.POS5_SECRET/CENTER_PATH");
 							Logger.log("Horizontal Distance is " + camera.getHorizontalDist());
 						}
 						else {
