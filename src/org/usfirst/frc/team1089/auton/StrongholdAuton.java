@@ -130,7 +130,7 @@ public class StrongholdAuton {
 		accel = ac;
 		robot = r;
 		intake = i;
-		defense = new Defense(drive, shooter, dE);
+		defense = new Defense(drive, shooter, dE, intake);
 	}
 
 	public void resetState() {

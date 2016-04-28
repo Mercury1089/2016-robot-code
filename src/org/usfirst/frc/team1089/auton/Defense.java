@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1089.auton;
 
 import org.usfirst.frc.team1089.robot.DriveTrain;
+import org.usfirst.frc.team1089.robot.Intake;
 import org.usfirst.frc.team1089.robot.Logger;
 import org.usfirst.frc.team1089.robot.Shooter;
 
@@ -10,6 +11,7 @@ public class Defense{
 	private DefenseEnum defenseEnum;
 	private DriveTrain drive;
 	private Shooter shooter;
+	private Intake intake;
 	
 	public static final double 
 	
@@ -28,10 +30,12 @@ public class Defense{
 					ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET = 2, // should be adjusted so that back is about two feet (or rather BUFFER_AFTER_DEFENSE) away from defense after breaching it
 					THROUGH_DEFENSE_FEET_ROUGH_TERRAIN =  THROUGH_DEFENSE_FEET + ROUGH_TERRAIN_SLIPPAGE_COMPENSATION_FEET;  // for rough terrain we add 2 feet to allow for huge slippage + buffer
 	
-	public Defense(DriveTrain d, Shooter s, DefenseEnum dE) {
+	public Defense(DriveTrain d, Shooter s, DefenseEnum dE, Intake in) {
 		drive = d;
 		defenseEnum = dE;
 		shooter  = s;
+		intake = in;
+		
 	}
 	
 	public void breach() {
@@ -47,16 +51,20 @@ public class Defense{
 			case MOAT: {
 				Logger.log("Defense MOAT in");
 				shooter.raise(Shooter.MEDIUM);
+				intake.moveBall(-1.0);
 				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET + MOAT_SLIPPAGE_COMPENSATION_FEET, 0.4, 0, 0, 12.0); //TODO test and change ALL these values
 				drive.waitMove();		//full speed
+				intake.moveBall(0.0);
 				Logger.log("Defense MOAT out");
 				break;
 			}
 			case RAMPARTS: {
 				Logger.log("Defense RAMPARTS in");
 				shooter.raise(Shooter.MEDIUM);
+				intake.moveBall(-1.0);
 				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET + AFTER_DEFENSE_FEET, 0.4, 0, 0, 9.0); 	//ramparts is now moat speed
 				drive.waitMove();		//human speed
+				intake.moveBall(0.0);
 				Logger.log("Defense RAMPARTS out");
 				break;
 			}
@@ -64,8 +72,10 @@ public class Defense{
 			case ROCK_WALL: {
 				Logger.log("Defense ROCK_WALL/ROUGH_TERRAIN in");
 				shooter.raise(Shooter.MEDIUM);
+				intake.moveBall(-1.0);
 				drive.moveDistance(BEFORE_DEFENSE_FEET + THROUGH_DEFENSE_FEET_ROCK_WALL + AFTER_DEFENSE_FEET, 0.4, 0, 0, 10.0); 
 				drive.waitMove();		// full speed
+				intake.moveBall(0.0);
 				Logger.log("Defense ROCK_WALL/ROUGH_TERRAIN out");
 				break;
 			}
