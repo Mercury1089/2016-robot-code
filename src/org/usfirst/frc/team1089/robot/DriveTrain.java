@@ -35,7 +35,7 @@ public class DriveTrain {
 	private double _heading = 0.0; // heading when rotating
 	private long _heading_display_reset_time_ms = 0; // to log time 
 	private double _rotate_vmin_adjuster = 0.0; // to adjust vmin dynamically
-	private static final double STARTING_VMIN = 0.45;
+	private static final double STARTING_VMIN = 0.20;
 	long rotateStartMs;
 
 	private static final long ROTATE_INCREASE_DELAY_MS = 1000;

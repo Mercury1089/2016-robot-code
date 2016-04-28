@@ -53,7 +53,8 @@ public class StrongholdAuton {
 						MOVE_DISTANCE_POST_DEFENSE_P5_FEET_SECRET_PATH = 9.0 - Defense.AFTER_DEFENSE_FEET;
 	
 	// angles for ROTATE1
-	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 58,
+	private static int ROTATE_POST_DEFENSE_P1_DEGREES = 55,
+						P1_STRAIGHTEN_OFFSET_DEGREES = 5,
 						ROTATE_POST_DEFENSE_P2_DEGREES_LEFT_PATH = 60, 
 						ROTATE_POST_DEFENSE_P2_DEGREES_CENTER_PATH = 45,
 						/*ROTATE_POST_DEFENSE_P3_DEGREES = 0,*/
@@ -240,7 +241,7 @@ public class StrongholdAuton {
 					}
 					else if (pos == PosEnum.POS1) {
 						Logger.log("Auton STRAIGHTEN about to straighten using gyro");
-						drive.degreeRotateVoltage(-gyro.getAngle() + 2.0); // Assume gyro has been reset to zero before breaching
+						drive.degreeRotateVoltage(-gyro.getAngle() + P1_STRAIGHTEN_OFFSET_DEGREES); // Assume gyro has been reset to zero before breaching
 						drive.waitDegreeRotateVoltage();
 						Logger.log("Auton STRAIGHTEN straightened using gyro");
 					}

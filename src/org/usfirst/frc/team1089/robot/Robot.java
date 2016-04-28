@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-		camera.runListener();
+		camera.runListener();	
 				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
