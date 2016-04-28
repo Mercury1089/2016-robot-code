@@ -7,16 +7,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class Scaler {
-	private CANTalon lifter;
-	private AnalogPotentiometer scalerPot;
+	private CANTalon raise, lift;
 	private DoubleSolenoid deployer ;
 	private static final double SCALER_UP_POS = 4.375, SCALER_DOWN_POS = 1.0;
 	
-	public Scaler(CANTalon lifterMotor, CANTalon deployerMotor) {
-		lifter = lifterMotor;
-		lifter.changeControlMode(TalonControlMode.Position);
-		lifter.enableBrakeMode(true);
-		scalerPot = new AnalogPotentiometer(Ports.Analog.SCALER_POT);
+	public Scaler(CANTalon lifterMotor, CANTalon raiseMotor) {
+		lift = lifterMotor;
+		lift.changeControlMode(TalonControlMode.Position);
+		lift.enableBrakeMode(true);
+		raise = raiseMotor;
 		deployer = new DoubleSolenoid(Ports.PCM.LIFT_DEPLOYER_FORWARD, Ports.PCM.LIFT_DEPLOYER_REVERSE);
 		
 	}
@@ -24,18 +23,20 @@ public class Scaler {
 	public void raise(boolean up) {
 		if (up){
 			deployer.set(DoubleSolenoid.Value.kForward);
+			raise.set(1.0);
 		}
 		else{
 			deployer.set(DoubleSolenoid.Value.kReverse);
+			raise.set(0);
 		}
 	}
 	
 	public void lift(boolean up) {
 		if (up){
-			lifter.set(SCALER_UP_POS);
+			lift.set(SCALER_UP_POS);
 		}
 		else{
-			lifter.set(SCALER_DOWN_POS);
+			lift.set(SCALER_DOWN_POS);
 		}
 	}
 }

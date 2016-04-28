@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
 
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, lifterMotor, deployerMotor, pLifter;
+	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, sLifter, sRaiser;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
 	private ControllerBase cBase;
@@ -48,6 +48,7 @@ public class Robot extends IterativeRobot {
 	private boolean isShooting = false, isInAuton = false; 
 	private static final int MAX_SHOOTING_ATTEMPT = 5;
 	
+	//private Scaler scaler;
 	//private PowerLogger pl;
 	
 	public void resetAll(){
@@ -60,7 +61,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		config = Config.getInstance();
 		camera = new Camera("GRIP/myContoursReport");
-		camera.runListener();	
+		camera.runListener();
 				
 		driverStation = DriverStation.getInstance();
 		accel = new MercAccelerometer();
@@ -85,19 +86,18 @@ public class Robot extends IterativeRobot {
 		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
 
 		intakeMotor = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
-		lifterMotor = new CANTalon(Ports.CAN.LIFTER_TALON_ID);
-		deployerMotor = new CANTalon(Ports.CAN.ENGAGER_TALON_ID);
-		pLifter = new CANTalon(Ports.CAN.PORTCULLIS_LIFT_TALON_ID);
-
+//		sLifter = new CANTalon(Ports.CAN.SCALER_LIFTER_TALON_ID);
+//		sRaiser = new CANTalon(Ports.CAN.SCALER_RAISER_TALON_ID);
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
 		intake = new Intake(intakeMotor);
-		
 		
 		gamepad = new Joystick(Ports.USB.GAMEPAD);
 		leftStick = new Joystick(Ports.USB.LEFT_STICK);
 		rightStick = new Joystick(Ports.USB.RIGHT_STICK);
 		cBase = new ControllerBase(gamepad, leftStick, rightStick);
-
+			
+//		scaler = new Scaler(sLifter, sRaiser);
+		
 		// Set up our 3 Sendable Choosers for the SmartDashboard
 
 		defenseChooser = new SendableChooser();
