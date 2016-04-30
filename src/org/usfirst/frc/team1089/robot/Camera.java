@@ -351,7 +351,7 @@ public class Camera {
 	 */
 	public boolean isInTurnAngle() {
 		if (isTargetFound()) {
-			return getTurnAngle() > config.TURN_ANGLE_MIN_DEGREES && getTurnAngle() < config.TURN_ANGLE_MAX_DEGREES;
+			return getTurnAngle() > config.TURN_ANGLE_MIN_DEGREES - 0.05 && getTurnAngle() < config.TURN_ANGLE_MAX_DEGREES + 0.05;
 		} else {
 			return false; // if we cannot see the target we are not in turn
 							// angle regardless of the angle value
