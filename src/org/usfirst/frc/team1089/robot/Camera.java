@@ -238,7 +238,7 @@ public class Camera {
 		if (isTargetFound()) {
 			diff = (getCenterX()[getLargestRectNum()] - (config.HORIZONTAL_CAMERA_RES_PIXELS / 2))
 					/ config.HORIZONTAL_CAMERA_RES_PIXELS;
-			return diff * config.HFOV_DEGREES + 2.5 + 1.3;//3.6 is an offset
+			return diff * config.HFOV_DEGREES + 1.3;//3.6 is an offset
 		} else {
 			return 0; // we don't know where to turn if target is not found, so
 						// we don't turn
