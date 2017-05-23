@@ -47,13 +47,6 @@
 	<widget field="Accel Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1196" y="54"/>
 	</widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="632" y="443"/>
-		<property name="Text" value="connection indicator"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="639" y="409"/>
-	</static-widget>
 	<widget field="Aim:" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="630" y="298"/>
 	</widget>
@@ -137,26 +130,7 @@
 		<property name="Text" value="connection indicator"/>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="639" y="409"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="632" y="443"/>
-		<property name="Text" value="connection indicator"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="639" y="409"/>
-	</static-widget>
-	<static-widget class="edu.wpi.grip.smartdashboard.GRIPExtension">
-		<location x="6" y="3"/>
-		<width>615</width>
-		<height>444</height>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="632" y="443"/>
-		<property name="Text" value="connection indicator"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="639" y="409"/>
+		<location x="633" y="405"/>
 	</static-widget>
 </dashboard>
 <live-window>

@@ -1,10 +1,9 @@
 package org.usfirst.frc.team1089.robot;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class Scaler {
 	private CANTalon raise, lift;

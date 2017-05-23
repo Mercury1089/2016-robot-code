@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1089.robot;
 
 //import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 
 public class PortcullisLifter {
 	private CANTalon lift;
