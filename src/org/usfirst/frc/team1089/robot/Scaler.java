@@ -3,7 +3,9 @@ package org.usfirst.frc.team1089.robot;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Scaler {
 	private CANTalon raise, lift;

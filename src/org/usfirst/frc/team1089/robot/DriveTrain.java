@@ -5,6 +5,7 @@ import java.util.Calendar;
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;

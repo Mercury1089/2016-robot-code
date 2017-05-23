@@ -2,7 +2,6 @@ package org.usfirst.frc.team1089.robot;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
