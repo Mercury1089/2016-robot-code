@@ -6,7 +6,7 @@ import jaci.openrio.gradle.frc.RoboRIO
 import jaci.openrio.gradle.wpi.WPIExtension
 
 def TEAM = 1089
-def ROBOT_CLASS = "org.usfirst.frc.org.usfirst.frc.team1089.robot.Robot"
+def ROBOT_CLASS = "org.usfirst.frc.team1089.robot.Robot"
 def wpiext = project.extensions.getByType(WPIExtension)
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -31,8 +31,6 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
-    compile pathfinder()
-    profileGenerator 'com.github.endoman123:motion-profile-generator:v1.4.0-RC3'
     outlineViewer 'edu.wpi.first.wpilib:OutlineViewer:2.0.6'
     nativeLib fileTree(dir: 'lib', include: '*.so')
 }
@@ -51,23 +49,6 @@ deploy {
             after('configCollectionArtifact')
             after('trajectoryCollectionArtifact')
         }
-
-        fileCollectionArtifact('configCollectionArtifact') {
-            targets << 'roborio'
-            files = project.configurations.config
-        }
-
-        fileCollectionArtifact('trajectoryCollectionArtifact') {
-            targets << 'roborio'
-            directory = 'trajectories'
-            files = fileTree(dir: "${buildDir}\\trajectories", exclude: "**/*_source_detailed.*")
-
-            dependsOn('generateTrajectories')
-
-            predeploy << {
-                execute 'rm -rf /home/lvuser/trajectories'
-            }
-        }
     }
 }
 
@@ -83,19 +64,6 @@ task shuffleboard(overwrite: true) {
     }
 }
 
-task runProfileGenerator(type: Exec) {
-    group = 'other'
-    description = "Executes the motion profile generator app"
-
-    def config = project.configurations.profileGenerator
-
-    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "motion-profile-generator" })
-
-
-    workingDir = "${projectDir}\\trajectories\\"
-    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
-}
-
 task runOutlineViewer(type: Exec) {
     group = 'gradlerio'
     description = "Runs the outline viewer to see network table values"
@@ -109,26 +77,6 @@ task runOutlineViewer(type: Exec) {
     // Exec task fields
     workingDir = "${projectDir}"
     commandLine 'java', '-jar', "${jarfiles.first().absolutePath}"
-}
-
-task clearTrajectories(type: Delete) {
-    group = 'other'
-    description = "Deletes trajectories build folder"
-    delete "${buildDir}\\trajectories"
-}
-
-task generateTrajectories(type: Exec) {
-    group = 'build'
-    description = "Generates all the trajectories from the project files"
-    dependsOn "clearTrajectories"
-
-    def config = project.configurations.profileGenerator
-
-    Set<File> jarfiles = config.files(config.dependencies.find { d -> d.name == "motion-profile-generator" })
-
-    workingDir = "${projectDir}\\"
-    commandLine 'java', '-jar', "${jarfiles.first().absolutePath}", "--no-gui",
-                "-i", "trajectories", "-o", "build\\trajectories", "-x", "traj"
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
