@@ -40,4 +40,4 @@ Thumbs.db
 junit/
 
 # Easily uncheck folders beginning with periods
-.*/
+**/.*/
