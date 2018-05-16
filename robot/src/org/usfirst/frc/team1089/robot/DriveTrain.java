@@ -208,84 +208,6 @@ public class DriveTrain {
 		return isDegreeRotating;
 	}
 
-	public void turnDistance(double changePos) {
-		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
-		startPosL = leftFrontTalon.getEncPosition();
-		startPosR = rightFrontTalon.getEncPosition();
-		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
-		endPosR = startPosR - changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(0.2, 0.000, -0.000);
-		rightFrontTalon.setPID(0.2, 0.000, -0.000);
-		leftFrontTalon.configPeakOutputVoltage(9.0, -9.0);
-		leftFrontTalon.configNominalOutputVoltage(4, -4);
-		rightFrontTalon.configPeakOutputVoltage(9.0, -9.0);
-		rightFrontTalon.configNominalOutputVoltage(4, -4);
-		leftFrontTalon.setCloseLoopRampRate(.01);
-		rightFrontTalon.setCloseLoopRampRate(.01);
-		setToAuto();
-		leftFrontTalon.enableControl();
-		rightFrontTalon.enableControl();
-		leftFrontTalon.set(endPosL);
-		rightFrontTalon.set(endPosR);
-	}
-
-	public boolean checkMove2() {
-		double leftPos = leftFrontTalon.getEncPosition();
-		double rightPos = rightFrontTalon.getEncPosition();
-		double leftVel = leftFrontTalon.getEncVelocity();
-		double rightVel = rightFrontTalon.getEncVelocity();
-
-		if (isMoving) {
-			/*
-			 * SmartDashboard.putNumber("left velocity", leftVel);
-			 * SmartDashboard.putNumber("right velocity", rightVel);
-			 * SmartDashboard.putNumber("left pos", leftPos);
-			 * SmartDashboard.putNumber("right pos", rightPos);
-			 */
-
-			if ((leftPos > endPosL - MOVE_THRESH_TICKS && leftPos < endPosL + MOVE_THRESH_TICKS)
-					&& (rightPos > endPosR - MOVE_THRESH_TICKS && rightPos < endPosR + MOVE_THRESH_TICKS)
-					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
-
-				Logger.log("DriveTrain.checkMove2: done moving, setting to manual");
-				setToManual();
-			}
-		}
-		return isMoving;
-	}
-	
-	
-	public boolean checkDegreeRotateVoltagePractice() {					//DMAX = 60 is best!
-		if (isDegreeRotating) { // only if we have been told to rotate
-			final double BOOST = 301.0; //3.0; //change to 1 for linear, 3 for cubic
-			double vmax = Math.pow(0.7, 1.0/BOOST); // 0.75
-			double vmin = Math.pow(0.27, 1.0/BOOST); // 0.35
-			double dmax = 60.0; // 25.0; // 20.0; // TODO ALSO TRY 60.0
-			double dmin = 0.0; // 5.0;
-			double error = _heading - gyro.getAngle();
-			double kp = (vmax - vmin) / (dmax - dmin);
-			// speed sign same as desired angle
-			double vout = 0;
-			double offset = 0; // 5
-
-			if (error > config.TURN_ANGLE_MAX_DEGREES) {
-				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error-offset))));
-				vout = Math.pow(vout, BOOST);
-				speedRotate(vout); // we rotate until we are told otherwise
-			}
-			else if (error < config.TURN_ANGLE_MIN_DEGREES) {
-				vout = Math.signum(error) * Math.min(vmax, Math.max(vmin, vmin + kp*(Math.abs(error+offset))));
-				vout = Math.pow(vout, BOOST);
-				speedRotate(vout); // we rotate until we are told otherwise
-			}
-			else {
-				Logger.log("DriveTrain.checkDegreeRotateVoltagePractice: done rotating");
-				isDegreeRotating = false; // we take the flag down
-				stop(); // we stop the motors
-			}
-		}
-		return isDegreeRotating;
-	}
 	/**
 	 * <pre>
 	 * public boolean checkDegreeRotateVoltageNew()
@@ -340,10 +262,10 @@ public class DriveTrain {
 	 *         if otherwise.
 	 */
 	public boolean checkMove() {
-		double leftPos = leftFrontTalon.getEncPosition();
-		double rightPos = rightFrontTalon.getEncPosition();
-		double leftVel = leftFrontTalon.getEncVelocity();
-		double rightVel = rightFrontTalon.getEncVelocity();
+		double leftPos = leftFrontTalon.getSelectedSensorPosition(0);
+		double rightPos = rightFrontTalon.getSelectedSensorPosition(0);
+		double leftVel = leftFrontTalon.getSelectedSensorVelocity(0);
+		double rightVel = rightFrontTalon.getSelectedSensorVelocity(0);;
 
 		if (isMoving) {
 			/*SmartDashboard.putNumber("left velocity", leftVel);
@@ -356,7 +278,6 @@ public class DriveTrain {
 					&& Math.abs(leftVel) <= TURN_THRESH_VELOCITY && Math.abs(rightVel) <= TURN_THRESH_VELOCITY) {
 
 				Logger.log("DriveTrain.checkMove: done moving, setting to manual");
-				setToManual();
 			}
 		}
 		return isMoving;
@@ -461,47 +382,15 @@ public class DriveTrain {
 
 	public void moveDistance(double changePos, double p, double i, double d, double maxV) {
 		double changePosTicks = mercEncoder.convertDistanceToEncoderTicks(changePos, 1.0);
-		startPosL = leftFrontTalon.getEncPosition();
-		startPosR = rightFrontTalon.getEncPosition();
+		startPosL = leftFrontTalon.getSelectedSensorPosition(0);
+		startPosR = rightFrontTalon.getSelectedSensorPosition(0);
 		endPosL = startPosL + changePosTicks * config.LEFT_ENC_SIGN;
 		endPosR = startPosR + changePosTicks * config.RIGHT_ENC_SIGN;
-		leftFrontTalon.setPID(p, i, d);
-		rightFrontTalon.setPID(p, i, d);
-		leftFrontTalon.configPeakOutputVoltage(maxV, -maxV);
-		leftFrontTalon.configNominalOutputVoltage(0, 0);
-		rightFrontTalon.configPeakOutputVoltage(maxV, -maxV);
-		rightFrontTalon.configNominalOutputVoltage(0.0, 0.0);
-		setToAuto();
-		leftFrontTalon.enableControl();
-		rightFrontTalon.enableControl();
+		configPID(p, i, d);
+		leftFrontTalon.configPeakOutputForward(maxV, 10);
+		configPeakOutputVoltage(maxV, -maxV);
 		leftFrontTalon.set(endPosL);
 		rightFrontTalon.set(endPosR);
-	}
-	
-	/**
-	 * <pre>
-	 * private void setToAuto()
-	 * </pre>
-	 *
-	 * Sets the control modes of the front {@code CANTalons} to Position.
-	 */
-	private void setToAuto() {
-		isMoving = true;
-		leftFrontTalon.changeControlMode(CANTalon.TalonControlMode.Position);
-		rightFrontTalon.changeControlMode(CANTalon.TalonControlMode.Position);
-	}
-	
-	/**
-	 * <pre>
-	 * private void setToManual()
-	 * </pre>
-	 *
-	 * Sets the control modes of the front {@code CANTalons} to PercentVbus.
-	 */
-	private void setToManual() {
-		isMoving = false;
-		leftFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
-		rightFrontTalon.changeControlMode(TalonControlMode.PercentVbus);
 	}
 	
 	/**
@@ -517,11 +406,8 @@ public class DriveTrain {
 	 */
 
 	public void speedRotate(double s) {
-		if (isMoving) {
-			setToManual();
-		}
-		leftFrontTalon.set(s);
-		rightFrontTalon.set(s);
+		leftFrontTalon.set(ControlMode.PercentOutput, s);
+		rightFrontTalon.set(ControlMode.PercentOutput, s);
 	}
 	
 	/**
@@ -532,7 +418,6 @@ public class DriveTrain {
 	 * Sets both {@code CANTalon} speeds to 0.
 	 */
 	public void stop() {
-		setToManual();
 		isDegreeRotating = false;
 		leftFrontTalon.set(0);
 		rightFrontTalon.set(0);
@@ -649,5 +534,22 @@ public class DriveTrain {
 				break;
 			};
 		}
+	}
+
+	private void configPID(double p, double i, double d) {
+		leftFrontTalon.config_kP(0, p, 10);
+		leftFrontTalon.config_kI(0, i, 10);
+		leftFrontTalon.config_kD(0, d, 10);
+
+		rightFrontTalon.config_kP(0, p, 10);
+		rightFrontTalon.config_kI(0, i, 10);
+		rightFrontTalon.config_kD(0, d, 10);
+	}
+
+	public void configPeakOutputVoltage(double maxForward, double maxReverse) {
+		leftFrontTalon.configPeakOutputForward(maxForward, 10);
+		leftFrontTalon.configPeakOutputReverse(maxReverse, 10);
+		rightFrontTalon.configPeakOutputForward(maxForward, 10);
+		rightFrontTalon.configPeakOutputReverse(maxReverse, 10);
 	}
 }

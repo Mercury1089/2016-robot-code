@@ -480,14 +480,14 @@ public class Robot extends IterativeRobot {
 
 		// DriveTrain
 		SmartDashboard.putString("Gyro", "" + Utilities.round(gyro.getAngle(), 3) + " deg.");
-		SmartDashboard.putNumber("Left Encoder", leftFront.getEncPosition());
-		SmartDashboard.putNumber("Right Encoder", rightFront.getEncPosition());
+		SmartDashboard.putNumber("Left Encoder", leftFront.getSelectedSensorPosition(0 ));
+		SmartDashboard.putNumber("Right Encoder", rightFront.getSelectedSensorPosition(0));
 		SmartDashboard.putString("Distance Travelled Left",
-				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getEncPosition(), +1.0), 3) + " ft.");
+				"" + Utilities.round(mercEncoder.distanceTravelled(leftFront.getSelectedSensorPosition(0), +1.0), 3) + " ft.");
 		SmartDashboard.putString("Distance Travelled Right",
-				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getEncPosition(), +1.0), 3) + " ft.");
-		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError());
-		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError());
+				"" + Utilities.round(mercEncoder.distanceTravelled(rightFront.getSelectedSensorPosition(0), +1.0), 3) + " ft.");
+		SmartDashboard.putNumber("leftFront error", leftFront.getClosedLoopError(1));
+		SmartDashboard.putNumber("rightFront error", rightFront.getClosedLoopError(1));
 		
 		SmartDashboard.putNumber("Starting VMIN", drive.getVMinStarting());
 		SmartDashboard.putNumber("Current VMIN", drive.getVMinTotal());

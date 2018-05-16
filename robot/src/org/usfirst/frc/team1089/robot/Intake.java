@@ -1,14 +1,16 @@
 package org.usfirst.frc.team1089.robot;
 
 import com.ctre.CANTalon;
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * The {@code Intake} class contains fields and methods for operating the ball intake on the robot.
  */
 public class Intake {
-	private CANTalon intake;				//controls wheels
+	private TalonSRX intake;				//controls wheels
 	private DoubleSolenoid elevator;		//wheel elevator - to hold ball in place?
 	
 	/**
@@ -20,11 +22,10 @@ public class Intake {
 	 * 
 	 * @param intakeMotor intake motor
 	 */
-	public Intake(CANTalon intakeMotor) {
+	public Intake(TalonSRX intakeMotor) {
 		intake = intakeMotor;
 		elevator = new DoubleSolenoid(Ports.CAN.PCM_ID, Ports.PCM.INTAKE_ELEVATOR_FORWARD, Ports.PCM.INTAKE_ELEVATOR_REVERSE);
-		intake.changeControlMode(TalonControlMode.PercentVbus);
-		intake.enableBrakeMode(true);
+		intake.setNeutralMode(NeutralMode.Brake);
 	}
 
 	/**
@@ -35,7 +36,7 @@ public class Intake {
 	 * @param speed speed to set the intake wheels
 	 */
 	public void moveBall(double speed) {	
-		intake.set(speed);	
+		intake.set(ControlMode.PercentOutput, speed);
 	}
 	
 	/**
@@ -45,8 +46,8 @@ public class Intake {
 	 * Gets whether or not the {@code CANTalon} for the wheels of the intake are enabled.
 	 * @return true if the {@code CANTalon} is enabled, false if the {@code CANTalon} is disabled 
 	 */
-	public boolean isOn() {						
-		return intake.isEnabled();
+	public boolean isOn() {	// Talon.isEnabled does not exist
+		return true;
 	}
 	
 	/**
