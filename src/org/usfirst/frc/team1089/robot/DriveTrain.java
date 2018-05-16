@@ -5,10 +5,14 @@ import java.util.Calendar;
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+
 import edu.wpi.first.wpilibj.DriverStation;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.Timer;
@@ -21,7 +25,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class DriveTrain {
 
-	private CANTalon leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
+	private WPI_TalonSRX leftFrontTalon, rightFrontTalon, leftBackTalon, rightBackTalon;
 	private AnalogGyro gyro;
 
 	private boolean isMoving = false; // indicates we are moving (in
@@ -63,6 +67,10 @@ public class DriveTrain {
 
 	private static final long WAIT_MOVE_OR_ROTATE_TIMEOUT_MS = 15000;
 
+	private static final int TALON_TIMEOUT_MS = 10;
+	static final int PRIMARY_PID_LOOP = 0;
+
+	
 	private static DriverStation ds = DriverStation.getInstance();
 
 	//private int autoRotCounter = 0;
@@ -82,17 +90,17 @@ public class DriveTrain {
 	 * for the wheels, and an {@code AnalogGyro} to check rotation.
 	 *
 	 * @param leftFront
-	 *            the {@code CANTalon} controlling the left front wheel
+	 *            the {@code WPI_TalonSRX} controlling the left front wheel
 	 * @param rightFront
-	 *            the {@code CANTalon} controlling the right front wheel
+	 *            the {@code WPI_TalonSRX} controlling the right front wheel
 	 * @param leftBack
-	 *            the {@code CANTalon} controlling the left back wheel
+	 *            the {@code WPI_TalonSRX} controlling the left back wheel
 	 * @param rightBack
-	 *            the {@code CANTalon} controlling the right back wheel
+	 *            the {@code WPI_TalonSRX} controlling the right back wheel
 	 * @param g
-	 *            the {@code AnalogGyro} used to track rotation
+	 *            the {@code WPI_TalonSRX} used to track rotation
 	 */
-	public DriveTrain(CANTalon leftFront, CANTalon rightFront, CANTalon leftBack, CANTalon rightBack, AnalogGyro g) {
+	public DriveTrain(WPI_TalonSRX leftFront, WPI_TalonSRX rightFront, WPI_TalonSRX leftBack, WPI_TalonSRX rightBack, AnalogGyro g) {
 		config = Config.getInstance();
 
 		mercEncoder = new MercEncoder();
@@ -100,16 +108,14 @@ public class DriveTrain {
 		rightFrontTalon = rightFront;
 		leftBackTalon = leftBack;
 		rightBackTalon = rightBack;
-		leftFrontTalon.enableBrakeMode(true);
-		rightFrontTalon.enableBrakeMode(true);
-		leftBackTalon.enableBrakeMode(true);
-		rightBackTalon.enableBrakeMode(true);
-		leftFrontTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		rightFrontTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		leftBackTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightBackTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftBackTalon.set(leftFrontTalon.getDeviceID());
-		rightBackTalon.set(rightFrontTalon.getDeviceID());
+		leftFrontTalon.setNeutralMode(NeutralMode.Brake);
+		rightFrontTalon.setNeutralMode(NeutralMode.Brake);
+		leftBackTalon.setNeutralMode(NeutralMode.Brake);
+		rightBackTalon.setNeutralMode(NeutralMode.Brake);
+		leftFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, PRIMARY_PID_LOOP, TALON_TIMEOUT_MS);
+		rightFrontTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, PRIMARY_PID_LOOP, TALON_TIMEOUT_MS);
+		leftBackTalon.follow(leftFrontTalon);
+		rightBackTalon.follow(rightFrontTalon);
 		gyro = g;
 	}
 

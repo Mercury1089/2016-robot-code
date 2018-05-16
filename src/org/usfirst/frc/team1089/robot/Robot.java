@@ -11,7 +11,9 @@ import org.usfirst.frc.team1089.auton.StrongholdAuton;
 import org.usfirst.frc.team1089.robot.ControllerBase.Joysticks;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -31,7 +33,7 @@ public class Robot extends IterativeRobot {
 
 	private MercEncoder mercEncoder; // only used for debugging purpose
 	private AnalogGyro gyro;
-	private CANTalon leftFront, rightFront, leftBack, rightBack, intakeMotor, sLifter, sRaiser;
+	private WPI_TalonSRX leftFront, rightFront, leftBack, rightBack, intakeMotor, sLifter, sRaiser;
 	private DriveTrain drive;
 	private MercAccelerometer accel;
 	private ControllerBase cBase;
@@ -81,12 +83,12 @@ public class Robot extends IterativeRobot {
 
 		mercEncoder = new MercEncoder();	
 
-		leftFront = new CANTalon(Ports.CAN.LEFT_FRONT_TALON_ID);
-		leftBack = new CANTalon(Ports.CAN.LEFT_BACK_TALON_ID);
-		rightFront = new CANTalon(Ports.CAN.RIGHT_FRONT_TALON_ID);
-		rightBack = new CANTalon(Ports.CAN.RIGHT_BACK_TALON_ID);
+		leftFront = new WPI_TalonSRX(Ports.CAN.LEFT_FRONT_TALON_ID);
+		leftBack = new WPI_TalonSRX(Ports.CAN.LEFT_BACK_TALON_ID);
+		rightFront = new WPI_TalonSRX(Ports.CAN.RIGHT_FRONT_TALON_ID);
+		rightBack = new WPI_TalonSRX(Ports.CAN.RIGHT_BACK_TALON_ID);
 
-		intakeMotor = new CANTalon(Ports.CAN.INTAKE_TALON_ID);
+		intakeMotor = new WPI_TalonSRX(Ports.CAN.INTAKE_TALON_ID);
 //		sLifter = new CANTalon(Ports.CAN.SCALER_LIFTER_TALON_ID);
 //		sRaiser = new CANTalon(Ports.CAN.SCALER_RAISER_TALON_ID);
 		drive = new DriveTrain(leftFront, rightFront, leftBack, rightBack, gyro);
